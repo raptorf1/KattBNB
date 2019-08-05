@@ -7,4 +7,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   include DeviseTokenAuth::Concerns::User
+
+  validates :nickname, uniqueness: true, presence: true
+  validates :location, presence: true
 end

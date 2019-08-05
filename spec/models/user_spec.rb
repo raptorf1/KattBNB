@@ -28,5 +28,37 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_db_column :updated_at }
     it { is_expected.to have_db_column :location }
   end
-  
+
+  describe 'Uniqueness validation' do
+    before do
+      FactoryBot.create(:user)
+    end
+    it { is_expected.to validate_uniqueness_of :nickname }
+  end
+
+  describe 'Validations' do
+    it { is_expected.to validate_presence_of :nickname }
+    it { is_expected.to validate_presence_of :email }
+    it { is_expected.to validate_presence_of :password }
+    it { is_expected.to validate_presence_of :location }
+    it { is_expected.to validate_confirmation_of :password }
+
+    context 'should not have an invalid email address' do
+      emails = ['stefan@ craft.com', '@felix.com', 'test mail@gmail.com',
+                'user@mail', 'foobar@.yo. .yo', 'wazzup@.dawg']
+
+      emails.each do |email|
+        it { is_expected.not_to allow_value(email).for(:email) }
+      end
+    end
+
+    context 'should have a valid email address' do
+      emails = ['felix@craft.com', 'foobar@craft.co.uk', 'carla123@craft.se',
+                'george@craft.gr']
+
+      emails.each do |email|
+        it { is_expected.to allow_value(email).for(:email) }
+      end
+    end
+  end
 end
