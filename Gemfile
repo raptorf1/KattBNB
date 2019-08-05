@@ -13,6 +13,7 @@ gem 'puma', '~> 3.11'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'jbuilder', '~> 2.5'
 gem 'rack-cors', require: 'rack/cors'
+gem 'devise_token_auth'
 
 
 group :development, :test do
