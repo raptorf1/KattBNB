@@ -11,8 +11,8 @@ RSpec.describe "Sessions", type: :request do
       expected_response = {
         "data" => {
           "id" => user.id, "uid" => user.email, "email" => user.email,
-          "provider" => "email", "name" => nil, "nickname" => user.nickname, "location" => user.location,
-          "image" => nil, "level" => user.level, "allow_password_change" => false
+          "provider" => "email", "name" => nil, "nickname" => user.nickname, 
+          "location" => user.location, "image" => nil, "allow_password_change" => false
         }    
       }
 
