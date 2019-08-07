@@ -11,9 +11,9 @@ RSpec.describe "Sessions", type: :request do
       expected_response = {
         "data" => {
           "id" => user.id, "uid" => user.email, "email" => user.email,
-          "provider" => "email", "name" => nil, "nickname" => user.nickname, 
+          "provider" => "email", "name" => nil, "nickname" => user.nickname,
           "location" => user.location, "image" => nil, "allow_password_change" => false
-        }    
+        }
       }
 
       expect(json_response).to eq expected_response
@@ -41,4 +41,4 @@ RSpec.describe "Sessions", type: :request do
       expect(response.status).to eq 401
     end
   end
-end  
+end
