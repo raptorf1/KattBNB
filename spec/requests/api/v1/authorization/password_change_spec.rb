@@ -18,14 +18,14 @@ RSpec.describe 'User Changes Password and API', type: :request do
     new_user_token = response.headers['access-token']
     new_user_client = response.headers['client']
 
-    put '/api/v1/auth', params: { current_password: 'password',
-                                  password: '123456',
-                                  password_confirmation: '123456',
-                                  uid: new_user_uid,
-                                  'access-token': new_user_token,
-                                  client: new_user_client
-                                 }, headers: headers
-    expect(json_response['status']).to eq 'success'
+    put '/api/v1/auth/password', params: { current_password: 'password',
+                                           password: '123456',
+                                           password_confirmation: '123456',
+                                           uid: new_user_uid,
+                                           'access-token': new_user_token,
+                                           client: new_user_client
+                                         }, headers: headers
+    expect(json_response['success']).to eq true
     expect(response.status).to eq 200
 
     post "/api/v1/auth/sign_in", params: { email: 'zane@craft.se',
@@ -61,14 +61,14 @@ RSpec.describe 'User Changes Password and API', type: :request do
     new_user_token = response.headers['access-token']
     new_user_client = response.headers['client']
 
-    put '/api/v1/auth', params: { current_password: 'password',
-                                  password: '123456',
-                                  password_confirmation: '123456',
-                                  uid: new_user_uid,
-                                  'access-token': new_user_token,
-                                  client: new_user_client
-                                 }, headers: headers
-    expect(json_response['status']).to eq 'error'
+    put '/api/v1/auth/password', params: { current_password: 'password',
+                                           password: '123456',
+                                           password_confirmation: '123456',
+                                           uid: new_user_uid,
+                                           'access-token': new_user_token,
+                                           client: new_user_client
+                                         }, headers: headers
+    expect(json_response['success']).to eq false
     expect(response.status).to eq 422
     expect(json_response['errors']['full_messages']).to eq ['Current password is invalid']
     expect(User.all.length).to eq 1
@@ -92,14 +92,14 @@ RSpec.describe 'User Changes Password and API', type: :request do
     new_user_token = response.headers['access-token']
     new_user_client = response.headers['client']
 
-    put '/api/v1/auth', params: { current_password: 'passwordC',
-                                  password: '123456a',
-                                  password_confirmation: '123456',
-                                  uid: new_user_uid,
-                                  'access-token': new_user_token,
-                                  client: new_user_client
-                                 }, headers: headers
-    expect(json_response['status']).to eq 'error'
+    put '/api/v1/auth/password', params: { current_password: 'passwordC',
+                                           password: '123456a',
+                                           password_confirmation: '123456',
+                                           uid: new_user_uid,
+                                           'access-token': new_user_token,
+                                           client: new_user_client
+                                         }, headers: headers
+    expect(json_response['success']).to eq false
     expect(response.status).to eq 422
     expect(json_response['errors']['full_messages']).to eq ["Password confirmation doesn't match Password"]
     expect(User.all.length).to eq 1
