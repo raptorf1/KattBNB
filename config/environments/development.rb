@@ -42,7 +42,7 @@ Rails.application.configure do
   authentication: :plain,
   enable_starttls_auto: true,
   user_name: 'kattbnb@gmail.com',
-  password: ''
+  password: Rails.application.credentials.GMAIL_PASSWORD
   }
   config.action_mailer.default_options = { from: 'kattbnb@gmail.com' }
   config.action_mailer.default_url_options = { host: "localhost", port: 3007 }
