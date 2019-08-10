@@ -66,7 +66,7 @@ Rails.application.configure do
     password: Rails.application.credentials.GMAIL_PASSWORD
   }
   config.action_mailer.default_options = { from: 'KattBNB Authorization Service' }
-  config.action_mailer.default_url_options = { :host => "kattbnb.com" }
+  config.action_mailer.default_url_options = { :host => "https://katt-bnb.herokuapp.com/" }
 
   config.action_mailer.perform_caching = false
 
