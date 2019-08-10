@@ -7,10 +7,9 @@ RSpec.describe 'User Registration', type: :request do
                                      password: 'password',
                                      password_confirmation: 'password',
                                      nickname: 'KittenPrincess',
-                                     location: 'Gothenburg',
-                                     confirm_success_url: 'localhost:3000'
+                                     location: 'Gothenburg'
                                   }, headers: headers
-                                  
+
       expect(json_response['status']).to eq 'success'
       expect(response.status).to eq 200
     end
