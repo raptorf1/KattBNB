@@ -65,7 +65,7 @@ Rails.application.configure do
   user_name: 'kattbnb@gmail.com',
   password: Rails.application.credentials.GMAIL_PASSWORD
   }
-  config.action_mailer.default_options = { from: 'kattbnb@gmail.com' }
+  config.action_mailer.default_options = { from: 'KattBnB Authorization Service' }
   config.action_mailer.default_url_options = { :host => "kattbnb.com" }
 
   config.action_mailer.perform_caching = false
