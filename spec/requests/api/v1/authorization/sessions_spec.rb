@@ -19,6 +19,16 @@ RSpec.describe "Sessions", type: :request do
       expect(json_response).to eq expected_response
     end
 
+    it "does not allow user to sign in unless he clicks on the activation link sent by email from the API" do
+      user2 = User.create(email: 'alonso@formula1.com', password: 'password', password_confirmation: 'password', location: 'Athens', nickname: 'boa')
+      post "/api/v1/auth/sign_in", params: { email: user2.email,
+                                             password: user2.password
+                                          }, headers: headers
+      expect(response.status).to eq 401
+      expect(json_response['success']).to eq false
+      expect(json_response['errors']).to eq ["A confirmation email was sent to your account at 'alonso@formula1.com'. You must follow the instructions in the email before your account can be activated"]
+    end
+
     it "invalid password returns an error message" do
       post "/api/v1/auth/sign_in", params: { email: user.email,
                                              password: "bad_password"
