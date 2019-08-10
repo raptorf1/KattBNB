@@ -10,7 +10,7 @@ RSpec.describe 'User Registration', type: :request do
                                      location: 'Gothenburg',
                                      confirm_success_url: 'localhost:3000'
                                   }, headers: headers
-                                  binding.pry
+                                  
       expect(json_response['status']).to eq 'success'
       expect(response.status).to eq 200
     end
