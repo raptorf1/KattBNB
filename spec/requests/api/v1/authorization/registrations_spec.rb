@@ -7,7 +7,8 @@ RSpec.describe 'User Registration', type: :request do
                                      password: 'password',
                                      password_confirmation: 'password',
                                      nickname: 'KittenPrincess',
-                                     location: 'Gothenburg'
+                                     location: 'Gothenburg',
+                                     confirm_success_url: 'confirmed'
                                   }, headers: headers
       expect(json_response['status']).to eq 'success'
       expect(response.status).to eq 200
@@ -20,7 +21,8 @@ RSpec.describe 'User Registration', type: :request do
                                      password: 'password',
                                      password_confirmation: 'bad_password',
                                      nickname: 'KittenPrincess',
-                                     location: 'Gothenburg'
+                                     location: 'Gothenburg',
+                                     confirm_success_url: 'confirmed'
                                   }, headers: headers
 
       expect(json_response['errors']['password_confirmation']).to eq ["doesn't match Password"]
@@ -32,7 +34,8 @@ RSpec.describe 'User Registration', type: :request do
                                      password: 'password',
                                      password_confirmation: 'password',
                                      nickname: 'raptorf1',
-                                     location: 'Stockholm'
+                                     location: 'Stockholm',
+                                     confirm_success_url: 'confirmed'
                                   }, headers: headers
 
       expect(json_response['errors']['email']).to eq ['is not an email']
@@ -51,7 +54,8 @@ RSpec.describe 'User Registration', type: :request do
                                      password: 'password',
                                      password_confirmation: 'password',
                                      nickname: 'MergerOfConflicts',
-                                     location: 'Stockholm'
+                                     location: 'Stockholm',
+                                     confirm_success_url: 'confirmed'
                                   }, headers: headers
 
       expect(json_response['errors']['email']).to eq ['has already been taken']
@@ -70,7 +74,8 @@ RSpec.describe 'User Registration', type: :request do
                                      password: 'password',
                                      password_confirmation: 'password',
                                      nickname: 'KattenFelix',
-                                     location: 'Stockholm'
+                                     location: 'Stockholm',
+                                     confirm_success_url: 'confirmed'
                                   }, headers: headers
 
       expect(json_response['errors']['nickname']).to eq ['has already been taken']

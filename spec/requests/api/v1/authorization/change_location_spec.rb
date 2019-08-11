@@ -7,7 +7,8 @@ RSpec.describe 'User Changes Location Information and API', type: :request do
                                    password: 'password',
                                    password_confirmation: 'password',
                                    nickname: 'FlavioB',
-                                   location: 'Tokyo'
+                                   location: 'Tokyo',
+                                   confirm_success_url: 'confirmed'
                                 }, headers: headers
     
     User.last.update_attribute(:confirmed_at, '2019-08-10 09:56:34.588757')

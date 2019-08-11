@@ -32,9 +32,7 @@ DeviseTokenAuth.setup do |config|
   # password is updated.
   config.check_current_password_before_update = :attributes
 
-  development = 'http://localhost:3000'
-  production = 'https://www.kattbnb.com/'
-  config.default_confirm_success_url = development
+  # config.default_confirm_success_url = 'confirmed'
 
   # By default we will use callbacks for single omniauth.
   # It depends on fields like email, provider and uid.
