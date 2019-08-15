@@ -11,6 +11,6 @@ class User < ActiveRecord::Base
 
   include DeviseTokenAuth::Concerns::User
   
-  validates :nickname, uniqueness: true, presence: true
+  validates :nickname, uniqueness: { case_sensitive: false }, presence: true
   validates :location, presence: true
 end
