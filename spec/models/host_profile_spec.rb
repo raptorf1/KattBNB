@@ -25,7 +25,14 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to validate_presence_of :long }
   end
 
-  describe "Associations" do
+  describe 'Associations' do
     it { is_expected.to belong_to(:user) }
+  end
+
+  describe 'Default values' do
+    it 'returns Array as class for availability field' do
+      FactoryBot.create(:host_profile)
+      expect(HostProfile.last.availability.class).to eq Array
+    end
   end
 end
