@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :host_profile do
-    user { nil }
+    association :user
     description { "I am a man of constant sorrow and I love cats... I think" }
     full_address { "Kalamon 16, 2044, Strovolos, Nicosia, Cyprus" }
     price_per_day_1_cat { "100.35" }
