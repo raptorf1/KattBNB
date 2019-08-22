@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   include DeviseTokenAuth::Concerns::User
+
+  has_one :host_profile, dependent: :delete
   
   validates :nickname, uniqueness: { case_sensitive: false }, presence: true
   validates :location, presence: true
