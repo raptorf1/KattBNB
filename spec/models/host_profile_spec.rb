@@ -35,4 +35,15 @@ RSpec.describe HostProfile, type: :model do
       expect(HostProfile.last.availability.class).to eq Array
     end
   end
+
+  describe 'Delete dependent setting' do
+    it 'profile is deleted when associated user is deleted from the database' do
+      FactoryBot.create(:host_profile)
+      expect(HostProfile.all.length).to eq 1
+      expect(User.all.length).to eq 1
+      User.last.destroy
+      expect(HostProfile.all.length).to eq 0
+      expect(User.all.length).to eq 0
+    end
+  end
 end
