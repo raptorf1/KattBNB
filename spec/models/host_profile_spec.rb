@@ -45,5 +45,14 @@ RSpec.describe HostProfile, type: :model do
       expect(HostProfile.all.length).to eq 0
       expect(User.all.length).to eq 0
     end
+
+    it 'user is not deleted when associated profile is deleted from the database' do
+      FactoryBot.create(:host_profile)
+      expect(HostProfile.all.length).to eq 1
+      expect(User.all.length).to eq 1
+      HostProfile.last.destroy
+      expect(HostProfile.all.length).to eq 0
+      expect(User.all.length).to eq 1
+    end
   end
 end
