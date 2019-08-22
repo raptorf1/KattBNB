@@ -4,7 +4,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
   let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
   let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
 
-  describe "POST /api/v1/host_profile do
+  describe "POST /api/v1/host_profile" do
 
     describe "successfully" do
       before do
@@ -13,10 +13,10 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
           full_address: 'Solvarvsgatan 32, 41508, Göteborg, Sweden',
           price_per_day_1_cat: '100',
           supplement_price_per_cat_per_day: '35',
-          max_cats_accepted: 3,
+          max_cats_accepted: '3',
           availability: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000],
-          lat: '57.746517'
-          long: '12.028278'
+          lat: '57.746517',
+          long: '12.028278',
           user_id: user.id
         }, 
         headers: headers
@@ -35,10 +35,10 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
           full_address: 'Solvarvsgatan 32, 41508, Göteborg, Sweden',
           price_per_day_1_cat: '100',
           supplement_price_per_cat_per_day: '35',
-          max_cats_accepted: 3,
+          max_cats_accepted: '3',
           availability: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000],
-          lat: '57.746517'
-          long: '12.028278'
+          lat: '57.746517',
+          long: '12.028278',
           user_id: user.id
         }, 
         headers: headers
