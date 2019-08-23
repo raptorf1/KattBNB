@@ -1,6 +1,6 @@
 class Api::V1::HostProfilesController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:create, :destroy]
+  before_action :authenticate_api_v1_user!, only: [:create, :destroy, :update]
 
 
   def create
@@ -11,6 +11,9 @@ class Api::V1::HostProfilesController < ApplicationController
     else
       render json: { error: profile.errors.full_messages }, status: 422
     end    
+  end
+
+  def update
   end
 
   def destroy

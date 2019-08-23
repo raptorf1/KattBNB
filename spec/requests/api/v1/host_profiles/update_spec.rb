@@ -23,7 +23,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
     end
 
     it "does not update another user's host profile" do
-      patch "/api/v1/posts/#{host_profile_user2.id}", params: {
+      patch "/api/v1/host_profiles/#{host_profile_user2.id}", params: {
         full_address: 'Charles de Gaulle Airport, Paris, France',
         price_per_day_1_cat: '250'
       }, 
