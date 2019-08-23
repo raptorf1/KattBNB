@@ -37,4 +37,41 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
     end
   end
+
+  describe 'PUT /api/v1/host_profiles/id' do
+
+    it "updates all fields of associated user's host profile according to params" do
+      put "/api/v1/host_profiles/#{host_profile_user.id}", params: {
+        description: 'I am the best cat sitter in the whole wide world!!!',
+        full_address: 'Charles de Gaulle Airport, Paris, France',
+        price_per_day_1_cat: '250',
+        supplement_price_per_cat_per_day: '150',
+        max_cats_accepted: '5',
+        availability: '[125, 126, 127, 128]'
+      },
+      headers: headers_user
+      expect(response.status).to eq 200
+      expect(json_response['message']).to eq 'You have successfully updated your host profile'
+    end
+
+    it "does not update another user's host profile" do
+      put "/api/v1/host_profiles/#{host_profile_user2.id}", params: {
+        description: 'I am the best cat sitter in the whole wide world!!!',
+        full_address: 'Charles de Gaulle Airport, Paris, France',
+        price_per_day_1_cat: '250',
+        supplement_price_per_cat_per_day: '150',
+        max_cats_accepted: '5',
+        availability: '[125, 126, 127, 128]'
+      }, 
+      headers: headers_user
+      expect(response.status).to eq 422
+      expect(json_response['error']).to eq 'You cannot perform this action'
+    end
+
+    it 'does not update any host profile if user is not authenticated' do
+      put "/api/v1/host_profiles/#{host_profile_user.id}", headers: headers_no_auth
+      expect(response.status).to eq 401
+      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+    end
+  end
 end
