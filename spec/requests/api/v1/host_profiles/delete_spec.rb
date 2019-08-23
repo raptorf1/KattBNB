@@ -11,10 +11,14 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
 
   describe 'DELETE /api/v1/host_profiles/id' do
 
-    it 'deletes the host profile of the associated user' do
+    it 'deletes the host profile of the associated user and does not delete the user' do
       delete "/api/v1/host_profiles/#{host_profile_user.id}", headers: user_headers
       expect(response.status).to eq 200
       expect(json_response['message']).to eq 'You have successfully deleted your host profile'
+      expect(User.all.length).to eq 1
+      expect(User.last.present?).to eq true
+      expect(User.last.uid).to eq 'george@mail.com'
+      expect(HostProfile.all.length).to eq 0
     end
 
     it 'does not delete host profile associated with another user' do
