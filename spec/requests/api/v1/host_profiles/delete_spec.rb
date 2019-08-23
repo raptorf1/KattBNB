@@ -1,6 +1,6 @@
 RSpec.describe Api::V1::HostProfilesController, type: :request do
-  let(:user) { FactoryBot.create(:user, email: 'george@mail.com') }
-  let(:user2) { FactoryBot.create(:user, email: 'zane@mail.com') }
+  let(:user) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
+  let(:user2) { FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten') }
   let(:host_profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
   let(:host_profile_user2) { FactoryBot.create(:host_profile, user_id: user2.id) }
   let(:user_credentials) { user.create_new_auth_token }
