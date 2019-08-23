@@ -1,8 +1,8 @@
 RSpec.describe Api::V1::HostProfilesController, type: :request do
   let(:user) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
   let(:user2) { FactoryBot.create(:user, email: 'noel@craft.com', nickname: 'MacOS') }
-  let(:host_profile_user) { FactoryBot.create(:host_profile) }
-  let(:host_profile_user2) { FactoryBot.create(:host_profile) }
+  let(:host_profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
+  let(:host_profile_user2) { FactoryBot.create(:host_profile, user_id: user2.id) }
   let(:credentials_user) { user.create_new_auth_token }
   let(:credentials_user2) { user2.create_new_auth_token }
   let(:headers_user) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials_user) }
@@ -17,9 +17,8 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
         availability: '[125, 126, 127, 128]'
       },
       headers: headers_user
-   #   host_profile.reload
       expect(response.status).to eq 200
-      expect(json_response['message']).to eq 'Profile successfully updated'
+      expect(json_response['message']).to eq 'You have successfully updated your host profile'
     end
 
     it "does not update another user's host profile" do
@@ -28,7 +27,6 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
         price_per_day_1_cat: '250'
       }, 
       headers: headers_user
-#      host_profile.reload
       expect(response.status).to eq 422
       expect(json_response['error']).to eq 'You cannot perform this action'
     end
