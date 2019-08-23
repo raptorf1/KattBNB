@@ -19,6 +19,8 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       headers: headers_user
       expect(response.status).to eq 200
       expect(json_response['message']).to eq 'You have successfully updated your host profile'
+      host_profile_user.reload
+      expect(host_profile_user.description).to eq 'I am the best cat sitter in the whole wide world!!!'
     end
 
     it "does not update another user's host profile" do
@@ -52,6 +54,9 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       headers: headers_user
       expect(response.status).to eq 200
       expect(json_response['message']).to eq 'You have successfully updated your host profile'
+      host_profile_user.reload
+      expect(host_profile_user.price_per_day_1_cat).to eq 250
+      expect(host_profile_user.max_cats_accepted).to eq 5
     end
 
     it "does not update another user's host profile" do
