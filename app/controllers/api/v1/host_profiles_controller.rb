@@ -2,6 +2,10 @@ class Api::V1::HostProfilesController < ApplicationController
   
   before_action :authenticate_api_v1_user!, only: [:create]
 
+  def index
+    profile = HostProfile.where(user_id: params[:user_id])
+    render json: profile
+  end
 
   def create
     profile = HostProfile.create(host_profile_params)
