@@ -11,6 +11,7 @@ class Api::V1::HostProfilesController < ApplicationController
     end
       render json: profiles, each_serializer: HostProfiles::IndexSerializer
   end
+  
 
   def show
     profile = HostProfile.find(params[:id])
