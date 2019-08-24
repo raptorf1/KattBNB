@@ -10,32 +10,15 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       profile_another_user = FactoryBot.create(:host_profile, user_id: another_user.id)
     end
 
-    it 'returns a collection of host profiles' do
+    it 'does not return a collection of host profiles to protect user data' do
       get '/api/v1/host_profiles', headers: headers
-      expect(json_response.count).to eq 2
+      expect(json_response.count).to eq 0
+      expect(HostProfile.all.length).to eq 2
     end
 
     it 'returns 200 response' do
       get '/api/v1/host_profiles', headers: headers
       expect(response.status).to eq 200
-    end
-    
-    it 'has correct keys in the response' do
-      get '/api/v1/host_profiles', headers: headers
-
-      profiles = HostProfile.all
-
-      profiles.each do |profile|
-        expect(json_response[profiles.index(profile)]).to include('id')
-        expect(json_response[profiles.index(profile)]).to include('price_per_day_1_cat')
-        expect(json_response[profiles.index(profile)]).to include('supplement_price_per_cat_per_day')
-        expect(json_response[profiles.index(profile)]).to include('max_cats_accepted')
-        expect(json_response[profiles.index(profile)]).to include('availability')
-        expect(json_response[profiles.index(profile)]).to include('lat')
-        expect(json_response[profiles.index(profile)]).to include('long')
-        expect(json_response[profiles.index(profile)]).to include('user')
-        expect(json_response[profiles.index(profile)].count).to eq 8
-      end
     end
 
     describe 'for a specific user' do

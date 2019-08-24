@@ -9,7 +9,7 @@ class Api::V1::HostProfilesController < ApplicationController
     elsif params[:location]
       profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
     else
-      profiles = HostProfile.all
+      profiles = []
     end
       render json: profiles, each_serializer: HostProfiles::IndexSerializer
   end
