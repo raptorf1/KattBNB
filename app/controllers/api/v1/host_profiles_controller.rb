@@ -4,6 +4,12 @@ class Api::V1::HostProfilesController < ApplicationController
 
 
   def index
+    if params[:user_id]
+      profiles = HostProfile.where(user_id: params[:user_id])
+    else
+      profiles = HostProfile.all
+    end
+      render json: { data: profiles }
   end
   
   def create

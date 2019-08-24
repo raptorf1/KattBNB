@@ -12,7 +12,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
 
     it 'returns a collection of host profiles' do
       get '/api/v1/host_profiles', headers: headers
-      expect(json_response.count).to eq 2
+      expect(json_response['data'].count).to eq 2
     end
 
     it 'returns 200 response' do
@@ -39,9 +39,9 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
     describe 'for a specific user' do
       
       it "responds with specific user's host profile" do
-        get '/api/v1/host_profiles', params: {user_id: another_user.id} 
+        get '/api/v1/host_profiles', params: {user_id: another_user.id}
         user_profile = HostProfile.where(user_id: another_user.id)
-        expect(json_response[user_profile]['user']['id']).to eq another_user.id
+        expect(json_response['data'][0]['user_id']).to eq another_user.id
         expect(json_response.count).to eq 1
       end
     end
