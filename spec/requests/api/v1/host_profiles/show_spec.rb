@@ -29,7 +29,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
 
       it 'returns a specific host profile' do
         profile = HostProfile.last
-        expect(json_response['id']).to eq profile.id
+        expect(json_response['data']['id']).to eq profile.id
       end
     end
   end

@@ -13,6 +13,8 @@ class Api::V1::HostProfilesController < ApplicationController
   end
 
   def show
+    profile = HostProfile.find(params[:id])
+    render json: { data: profile }
   end
 
 
