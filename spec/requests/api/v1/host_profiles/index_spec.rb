@@ -12,8 +12,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
 
     it 'returns a collection of host profiles' do
       get '/api/v1/host_profiles', headers: headers
-      binding.pry
-      expect(json_response['data'].count).to eq 2
+      expect(json_response.count).to eq 2
     end
 
     it 'returns 200 response' do
@@ -27,13 +26,15 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       profiles = HostProfile.all
 
       profiles.each do |profile|
-        expect(json_response['data'][profiles.index(profile)]).to include('id')
-        expect(json_response['data'][profiles.index(profile)]).to include('price_per_day_1_cat')
-        expect(json_response['data'][profiles.index(profile)]).to include('supplement_price_per_cat_per_day')
-        expect(json_response['data'][profiles.index(profile)]).to include('max_cats_accepted')
-        expect(json_response['data'][profiles.index(profile)]).to include('availability')
-        expect(json_response['data'][profiles.index(profile)]).to include('lat')
-        expect(json_response['data'][profiles.index(profile)]).to include('long')
+        expect(json_response[profiles.index(profile)]).to include('id')
+        expect(json_response[profiles.index(profile)]).to include('price_per_day_1_cat')
+        expect(json_response[profiles.index(profile)]).to include('supplement_price_per_cat_per_day')
+        expect(json_response[profiles.index(profile)]).to include('max_cats_accepted')
+        expect(json_response[profiles.index(profile)]).to include('availability')
+        expect(json_response[profiles.index(profile)]).to include('lat')
+        expect(json_response[profiles.index(profile)]).to include('long')
+        expect(json_response[profiles.index(profile)]).to include('user')
+        expect(json_response[profiles.index(profile)].count).to eq 8
       end
     end
 
@@ -42,7 +43,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       it "responds with specific user's host profile" do
         get '/api/v1/host_profiles', params: {user_id: another_user.id}
         user_profile = HostProfile.where(user_id: another_user.id)
-        expect(json_response['data'][0]['user_id']).to eq another_user.id
+        expect(json_response[0]['user']['id']).to eq another_user.id
         expect(json_response.count).to eq 1
       end
     end
