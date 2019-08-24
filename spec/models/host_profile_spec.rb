@@ -12,6 +12,8 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to have_db_column :availability }
     it { is_expected.to have_db_column :lat }
     it { is_expected.to have_db_column :long }
+    it { is_expected.to have_db_column :latitude }
+    it { is_expected.to have_db_column :longitude }
   end
 
   describe 'Validations' do
@@ -23,6 +25,8 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to validate_presence_of :availability }
     it { is_expected.to validate_presence_of :lat }
     it { is_expected.to validate_presence_of :long }
+    it { is_expected.to validate_presence_of :latitude }
+    it { is_expected.to validate_presence_of :longitude }
   end
 
   describe 'Associations' do

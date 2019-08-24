@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
     namespace :v1 do
       mount_devise_token_auth_for 'User', at: 'auth', skip: [:omniauth_callbacks]
-      resources :host_profiles, only: [:create, :destroy, :update]
+      resources :host_profiles, only: [:index, :show, :create, :destroy, :update]
     end
   end
 end

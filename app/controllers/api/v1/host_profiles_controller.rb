@@ -1,6 +1,24 @@
 class Api::V1::HostProfilesController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:create, :destroy, :update]
+  before_action :authenticate_api_v1_user!, only: [:show, :create, :destroy, :update]
+
+
+  def index
+    if params[:user_id]
+      profiles = HostProfile.where(user_id: params[:user_id])
+    elsif params[:location]
+      profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
+    else
+      profiles = []
+    end
+      render json: profiles, each_serializer: HostProfiles::IndexSerializer
+  end
+  
+
+  def show
+    profile = HostProfile.find(params[:id])
+    render json: profile, serializer: HostProfiles::ShowSerializer
+  end
 
 
   def create
@@ -46,7 +64,7 @@ class Api::V1::HostProfilesController < ApplicationController
   private
 
   def host_profile_params
-    params.permit(:description, :full_address, :price_per_day_1_cat, :supplement_price_per_cat_per_day, :max_cats_accepted, :availability, :lat, :long, :user_id)
+    params.permit(:description, :full_address, :price_per_day_1_cat, :supplement_price_per_cat_per_day, :max_cats_accepted, :availability, :lat, :long, :latitude, :longitude, :user_id)
   end
 
 end

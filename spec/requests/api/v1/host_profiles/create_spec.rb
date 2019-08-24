@@ -17,6 +17,8 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
           availability: '[1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000]',
           lat: '57.746517',
           long: '12.028278',
+          latitude: '57.746517',
+          longitude: '12.028278',
           user_id: user.id
         }, 
         headers: headers
@@ -39,6 +41,8 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
           availability: '[1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000]',
           lat: '57.746517',
           long: '12.028278',
+          latitude: '57.746517',
+          longitude: '12.028278',
           user_id: user.id
         }, 
         headers: headers
