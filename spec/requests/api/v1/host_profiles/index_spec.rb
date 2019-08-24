@@ -26,13 +26,13 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       profiles = HostProfile.all
 
       profiles.each do |profile|
-        expect(json_response[profiles.index(profile)]).to include('id')
-        expect(json_response[profiles.index(profile)]).to include('price_per_day_1_cat')
-        expect(json_response[profiles.index(profile)]).to include('supplement_price_per_cat_per_day')
-        expect(json_response[profiles.index(profile)]).to include('max_cats_accepted')
-        expect(json_response[profiles.index(profile)]).to include('availability')
-        expect(json_response[profiles.index(profile)]).to include('lat')
-        expect(json_response[profiles.index(profile)]).to include('long')
+        expect(json_response['data'][profiles.index(profile)]).to include('id')
+        expect(json_response['data'][profiles.index(profile)]).to include('price_per_day_1_cat')
+        expect(json_response['data'][profiles.index(profile)]).to include('supplement_price_per_cat_per_day')
+        expect(json_response['data'][profiles.index(profile)]).to include('max_cats_accepted')
+        expect(json_response['data'][profiles.index(profile)]).to include('availability')
+        expect(json_response['data'][profiles.index(profile)]).to include('lat')
+        expect(json_response['data'][profiles.index(profile)]).to include('long')
       end
     end
 
