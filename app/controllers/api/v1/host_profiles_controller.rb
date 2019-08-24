@@ -3,6 +3,9 @@ class Api::V1::HostProfilesController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:create, :destroy, :update]
 
 
+  def index
+  end
+  
   def create
     profile = HostProfile.create(host_profile_params)
     
