@@ -9,7 +9,7 @@ class Api::V1::HostProfilesController < ApplicationController
     else
       profiles = HostProfile.all
     end
-      render json: { data: profiles }
+      render json: profiles, each_serializer: HostProfiles::IndexSerializer
   end
   
   def create

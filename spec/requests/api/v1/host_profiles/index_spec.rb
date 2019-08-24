@@ -12,6 +12,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
 
     it 'returns a collection of host profiles' do
       get '/api/v1/host_profiles', headers: headers
+      binding.pry
       expect(json_response['data'].count).to eq 2
     end
 
