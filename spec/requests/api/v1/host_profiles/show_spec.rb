@@ -24,6 +24,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       end
 
       it 'returns a success response' do
+        binding.pry
         expect(response.status).to eq 200
       end
 
