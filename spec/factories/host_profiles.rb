@@ -9,5 +9,7 @@ FactoryBot.define do
     availability { [1560, 1561, 1562, 1563] }
     lat { "35.1018" }
     long { "33.38" }
+    latitude { "35.1018" }
+    longitude { "33.38" }
   end
 end
