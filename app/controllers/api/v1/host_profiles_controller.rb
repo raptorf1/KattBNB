@@ -1,6 +1,6 @@
 class Api::V1::HostProfilesController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:create, :destroy, :update]
+  before_action :authenticate_api_v1_user!, only: [:show, :create, :destroy, :update]
 
 
   def index
@@ -11,7 +11,11 @@ class Api::V1::HostProfilesController < ApplicationController
     end
       render json: profiles, each_serializer: HostProfiles::IndexSerializer
   end
-  
+
+  def show
+  end
+
+
   def create
     profile = HostProfile.create(host_profile_params)
     
