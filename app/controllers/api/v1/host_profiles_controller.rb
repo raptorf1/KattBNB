@@ -6,6 +6,8 @@ class Api::V1::HostProfilesController < ApplicationController
   def index
     if params[:user_id]
       profiles = HostProfile.where(user_id: params[:user_id])
+    elsif params[:location]
+      profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
     else
       profiles = HostProfile.all
     end

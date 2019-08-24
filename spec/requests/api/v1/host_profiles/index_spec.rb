@@ -1,6 +1,6 @@
 RSpec.describe Api::V1::HostProfilesController, type: :request do
-  let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:another_user) { FactoryBot.create(:user, email: 'felix@craft.com', nickname: 'Planner') }
+  let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens') }
+  let(:another_user) { FactoryBot.create(:user, email: 'felix@craft.com', nickname: 'Planner', location: 'Crete') }
   let(:headers) { { HTTP_ACCEPT: 'application/json' } }
 
   describe 'GET /api/v1/host_profiles' do
@@ -42,8 +42,16 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       
       it "responds with specific user's host profile" do
         get '/api/v1/host_profiles', params: {user_id: another_user.id}
-        user_profile = HostProfile.where(user_id: another_user.id)
         expect(json_response[0]['user']['id']).to eq another_user.id
+        expect(json_response.count).to eq 1
+      end
+    end
+
+    describe 'for a specific location' do
+      
+      it "responds with specific host profiles according to user's location" do
+        get '/api/v1/host_profiles', params: {location: another_user.location}
+        expect(json_response[0]['user']['location']).to eq another_user.location
         expect(json_response.count).to eq 1
       end
     end
