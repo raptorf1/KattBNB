@@ -23,10 +23,6 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to validate_presence_of :supplement_price_per_cat_per_day }
     it { is_expected.to validate_presence_of :max_cats_accepted }
     it { is_expected.to validate_presence_of :availability }
-    it { is_expected.to validate_presence_of :lat }
-    it { is_expected.to validate_presence_of :long }
-    it { is_expected.to validate_presence_of :latitude }
-    it { is_expected.to validate_presence_of :longitude }
   end
 
   describe 'Associations' do
