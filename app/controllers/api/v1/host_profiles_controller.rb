@@ -64,7 +64,7 @@ class Api::V1::HostProfilesController < ApplicationController
   private
 
   def host_profile_params
-    params.permit(:description, :full_address, :price_per_day_1_cat, :supplement_price_per_cat_per_day, :max_cats_accepted, :availability, :lat, :long, :latitude, :longitude, :user_id)
+    params.permit(:description, :full_address, :price_per_day_1_cat, :supplement_price_per_cat_per_day, :max_cats_accepted, :lat, :long, :latitude, :longitude, :user_id, :availability => [])
   end
 
 end
