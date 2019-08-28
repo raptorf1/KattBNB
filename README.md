@@ -24,9 +24,7 @@ This application consists of a back-end API and a front-end Client.
 
 The GitHub repository for the API is [here](https://github.com/raptorf1/KattBNB_API) and the one for the Client is [here](https://github.com/zanenkn/KattBNB_client).
 
-The API is deployed using Heroku on [this address](https://katt-bnb.herokuapp.com/).
-
-The client is deployed via Netlify [here](https://kattbnb.netlify.com/).
+The application is deployed on Netlify [here](https://kattbnb.netlify.com/).
 
 # Tests, Test Coverage & CI
 
