@@ -22,7 +22,6 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to validate_presence_of :price_per_day_1_cat }
     it { is_expected.to validate_presence_of :supplement_price_per_cat_per_day }
     it { is_expected.to validate_presence_of :max_cats_accepted }
-    it { is_expected.to validate_presence_of :availability }
   end
 
   describe 'Associations' do
