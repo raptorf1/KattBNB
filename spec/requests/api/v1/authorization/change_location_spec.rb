@@ -22,8 +22,7 @@ RSpec.describe 'User Changes Location Information and API', type: :request do
     new_user_client = response.headers['client']
     new_user_id = json_response['data']['id']
 
-    put '/api/v1/auth', params: { current_password: 'password',
-                                  location: 'Japan',
+    put '/api/v1/auth', params: { location: 'Japan',
                                   uid: new_user_uid,
                                   'access-token': new_user_token,
                                   client: new_user_client
