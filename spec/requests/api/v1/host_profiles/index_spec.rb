@@ -10,9 +10,9 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       profile_another_user = FactoryBot.create(:host_profile, user_id: another_user.id)
     end
 
-    it 'does not return a collection of host profiles to protect user data' do
+    it 'returns a collection of host profiles' do
       get '/api/v1/host_profiles', headers: headers
-      expect(json_response.count).to eq 0
+      expect(json_response.count).to eq 2
       expect(HostProfile.all.length).to eq 2
     end
 
