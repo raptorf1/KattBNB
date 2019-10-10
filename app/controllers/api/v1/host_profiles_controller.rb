@@ -17,7 +17,12 @@ class Api::V1::HostProfilesController < ApplicationController
 
   def show
     profile = HostProfile.find(params[:id])
-    render json: profile, serializer: HostProfiles::ShowSerializer
+
+    if current_api_v1_user.id == profile.user_id
+      render json: profile, serializer: HostProfiles::ShowSerializer
+    else
+      render json: profile, serializer: HostProfiles::ShowSerializerNoAddress
+    end
   end
 
 
