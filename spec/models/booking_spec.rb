@@ -22,4 +22,12 @@ RSpec.describe Booking, type: :model do
   describe 'Associations' do
     it { is_expected.to belong_to(:user) }
   end
+
+  describe 'Default values' do
+    it 'returns Array as class for dates field' do
+      FactoryBot.create(:booking)
+      expect(Booking.last.dates.class).to eq Array
+    end
+  end
+
 end
