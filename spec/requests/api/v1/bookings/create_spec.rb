@@ -22,6 +22,21 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['message']).to eq 'Successfully created'
         expect(response.status).to eq 200
       end
+
+      it 'creates another booking' do
+        post '/api/v1/bookings', params: {
+          number_of_cats: '23',
+          message: 'I want my cats to have a good time, pls!',
+          host_nickname: 'Zane',
+          dates: [1562803200000, 1562889600000],
+          user_id: user.id
+        }, 
+        headers: headers
+
+        expect(json_response['message']).to eq 'Successfully created'
+        expect(response.status).to eq 200
+        expect(user.booking.length).to eq 2
+      end
     end
 
     describe 'unsuccessfully' do
