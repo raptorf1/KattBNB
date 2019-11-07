@@ -12,6 +12,7 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_one :host_profile, dependent: :delete
+  has_many :booking
   
   validates :nickname, uniqueness: { case_sensitive: false }, presence: true
   validates :location, presence: true
