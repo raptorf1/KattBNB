@@ -17,6 +17,7 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to validate_presence_of :status }
     it { is_expected.to validate_presence_of :host_nickname }
     it { is_expected.to validate_presence_of :dates }
+    it { is_expected.to validate_presence_of :user_id }
   end
 
   describe 'Associations' do
