@@ -16,7 +16,7 @@ class Api::V1::BookingsController < ApplicationController
   private
 
   def booking_params
-    params.permit(:number_of_cats, :message, :host_nickname, :user_id, :dates => [])
+    params.permit(:number_of_cats, :message, :host_nickname, :price_per_day, :price_total, :user_id, :dates => [])
   end
 
 end

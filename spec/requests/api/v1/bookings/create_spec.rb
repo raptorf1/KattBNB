@@ -13,6 +13,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           message: 'Take my cat, pls!',
           host_nickname: 'George',
           dates: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000],
+          price_per_day: '258.36',
+          price_total: '1856',
           user_id: user.id
         }, 
         headers: headers
@@ -29,6 +31,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           message: 'I want my cats to have a good time, pls!',
           host_nickname: 'Zane',
           dates: [1562803200000, 1562889600000],
+          price_per_day: '125.96',
+          price_total: '1452.36',
           user_id: user.id
         }, 
         headers: headers
@@ -45,6 +49,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           number_of_cats: '2',
           host_nickname: 'George',
           dates: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000],
+          price_per_day: '105.96',
+          price_total: '1400.36',
           user_id: user.id
         }, 
         headers: headers
