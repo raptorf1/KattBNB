@@ -45,6 +45,20 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(json_response.count).to eq 1
     end
 
+    it 'has correct keys in the response' do
+      get '/api/v1/bookings', params: {user_id: user1.id}, headers: headers1
+      expect(json_response[0]).to include('id')
+      expect(json_response[0]).to include('number_of_cats')
+      expect(json_response[0]).to include('dates')
+      expect(json_response[0]).to include('status')
+      expect(json_response[0]).to include('host_nickname')
+      expect(json_response[0]).to include('price_total')
+      expect(json_response[0]).to include('user_id')
+      expect(json_response[0]).to include('created_at')
+      expect(json_response[0]).to include('updated_at')
+      expect(json_response[0].count).to eq 9
+    end
+
     it 'does not return a booking to an uninvolved user with host_nickname param' do
       get '/api/v1/bookings', params: {host_nickname: user2.nickname}, headers: headers3
       expect(json_response.count).to eq 0

@@ -10,8 +10,7 @@ class Api::V1::BookingsController < ApplicationController
     else
       bookings = []
     end
-      render json: bookings
-      # each_serializer: HostProfiles::IndexSerializer
+    render json: bookings, each_serializer: Bookings::IndexSerializer
   end
 
   def create
