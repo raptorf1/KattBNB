@@ -1,6 +1,18 @@
 class Api::V1::BookingsController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:create]
+  before_action :authenticate_api_v1_user!, only: [:index, :create]
+
+  def index
+    if params[:host_nickname] == current_api_v1_user.nickname
+      bookings = Booking.where(host_nickname: params[:host_nickname])
+    elsif params[:user_id].to_i == current_api_v1_user.id
+      bookings = Booking.where(user_id: params[:user_id])
+    else
+      bookings = []
+    end
+      render json: bookings
+      # each_serializer: HostProfiles::IndexSerializer
+  end
 
   def create
     booking = Booking.create(booking_params)
