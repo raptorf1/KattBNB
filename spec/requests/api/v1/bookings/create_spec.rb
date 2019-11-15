@@ -59,6 +59,22 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(response.status).to eq 422
       end
 
+      it 'Booking can not be created if message is more than 400 characters in length' do
+        post '/api/v1/bookings', params: {
+          number_of_cats: '2',
+          host_nickname: 'George',
+          dates: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000],
+          price_per_day: '105.96',
+          price_total: '1400.36',
+          user_id: user.id,
+          message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        }, 
+        headers: headers
+
+        expect(json_response['error']).to eq ['Message is too long (maximum is 400 characters)']
+        expect(response.status).to eq 422
+      end
+
       it 'Booking can not be created if user is not logged in' do
         post '/api/v1/bookings', headers: not_headers
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
