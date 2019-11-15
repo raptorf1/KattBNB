@@ -22,6 +22,7 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to validate_presence_of :price_per_day }
     it { is_expected.to validate_presence_of :price_total }
     it { is_expected.to validate_presence_of :user_id }
+    it { is_expected.to validate_length_of :message }
   end
 
   describe 'Associations' do
