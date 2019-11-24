@@ -14,16 +14,15 @@ class Api::V1::BookingsController < ApplicationController
   end
 
   def create
-    @booking = Booking.create(booking_params)
+    booking = Booking.create(booking_params)
     
-    if @booking.persisted?
+    if booking.persisted?
       render json: { message: 'Successfully created' }, status: 200
-      binding.pry
-      @host = User.where(nickname: @booking.host_nickname)
-      BookingsMailer.notify_host(@host[0], @booking).deliver
+      host = User.where(nickname: booking.host_nickname)
+      BookingsMailer.notify_host(host[0], booking).deliver
     else
-      render json: { error: @booking.errors.full_messages }, status: 422
-    end    
+      render json: { error: booking.errors.full_messages }, status: 422
+    end
   end
 
  
