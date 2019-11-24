@@ -1,6 +1,6 @@
 <p> Wow guys!!!! </p>
 <p> Message: <%= @booking.message %> </p>
 <p> Number of cats: <%= @booking.number_of_cats %> </p>
-<p> Start date: <%= @start_date %> </p>
-<p> End date: <%= @end_date %> </p>
+<p> Start date: <%= @start_date.year %>-<%= @start_date.month %>-<%= @start_date.day %> </p>
+<p> End date: <%= @end_date.year %>-<%= @end_date.month %>-<%= @end_date.day %> </p>
 <p> Total price: <%= @booking.price_total %> </p>
