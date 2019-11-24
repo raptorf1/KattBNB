@@ -1,5 +1,7 @@
 RSpec.describe Api::V1::BookingsController, type: :request do
   let(:user) { FactoryBot.create(:user) }
+  let!(:user2) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens') }
+  let!(:user3) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'JJoker', location: 'Athens') }
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
   let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
@@ -11,7 +13,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         post '/api/v1/bookings', params: {
           number_of_cats: '2',
           message: 'Take my cat, pls!',
-          host_nickname: 'George',
+          host_nickname: 'Joker',
           dates: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000],
           price_per_day: '258.36',
           price_total: '1856',
@@ -29,7 +31,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         post '/api/v1/bookings', params: {
           number_of_cats: '23',
           message: 'I want my cats to have a good time, pls!',
-          host_nickname: 'Zane',
+          host_nickname: 'JJoker',
           dates: [1562803200000, 1562889600000],
           price_per_day: '125.96',
           price_total: '1452.36',
