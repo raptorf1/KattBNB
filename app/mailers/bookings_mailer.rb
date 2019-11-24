@@ -2,7 +2,7 @@ class BookingsMailer < ApplicationMailer
 
   def notify_host(host)
     @host = host
-    mail(to: @host.email, subject: 'New Booking Request Notification')
+    mail(to: @host.email, subject: 'You have a new booking request')
   end
 
 end

@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'kattbnb@gmail.com'
+  default from: 'KattBNB Notification Service'
   layout 'mailer'
 end
