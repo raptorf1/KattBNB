@@ -1,6 +1,6 @@
 class BookingsMailer < ApplicationMailer
 
-  def notify_host(host, booking)
+  def notify_host_create_booking(host, booking)
     @booking = booking
     @host = host
 
