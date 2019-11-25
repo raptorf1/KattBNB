@@ -1,0 +1,10 @@
+<h1> Hey <%= @host.nickname %>! We've got some great news for you! </h1>
+<br></br>
+
+<p><%= @user.nickname %> would like to book a stay with you for <%= @booking.number_of_cats %> <%= @booking.number_of_cats > 1 ? 'cats' : 'cat' %> during the dates of <%= @start_date.year %>-<%= @start_date.month %>-<%= @start_date.day %> until <%= @end_date.year %>-<%= @end_date.month %>-<%= @end_date.day %>.</p>
+
+<p><%= @booking.message %></p>
+
+<p>Your reward: <%= @total %> kr</p>
+
+<p>You have 3 days to approve or decline this booking request <%= link_to 'on KattBNB', 'https://kattbnb.netlify.com/incoming-bookings' %>.</p>

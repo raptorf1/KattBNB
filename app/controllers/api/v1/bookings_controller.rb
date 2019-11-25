@@ -18,9 +18,12 @@ class Api::V1::BookingsController < ApplicationController
     
     if booking.persisted?
       render json: { message: 'Successfully created' }, status: 200
+      host = User.where(nickname: booking.host_nickname)
+      user = User.where(id: booking.user_id)
+      BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver
     else
       render json: { error: booking.errors.full_messages }, status: 422
-    end    
+    end
   end
 
  
