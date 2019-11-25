@@ -27,7 +27,11 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(response.status).to eq 200
       end
 
-      it 'creates another booking' do
+      it 'sends an email upon booking creation' do
+        expect(ActionMailer::Base.deliveries.count).to eq 1
+      end
+
+      it 'creates another booking and sends a second email' do
         post '/api/v1/bookings', params: {
           number_of_cats: '23',
           message: 'I want my cats to have a good time, pls!',
@@ -42,6 +46,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['message']).to eq 'Successfully created'
         expect(response.status).to eq 200
         expect(user.booking.length).to eq 2
+        expect(ActionMailer::Base.deliveries.count).to eq 2
       end
     end
 
