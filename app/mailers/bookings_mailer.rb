@@ -1,8 +1,9 @@
 class BookingsMailer < ApplicationMailer
 
-  def notify_host_create_booking(host, booking)
+  def notify_host_create_booking(host, booking, user)
     @booking = booking
     @host = host
+    @user = user
 
     @start_date = Time.at(booking.dates[0] / 1000)
     @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
