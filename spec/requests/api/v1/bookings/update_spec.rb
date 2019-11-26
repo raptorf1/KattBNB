@@ -20,7 +20,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       headers: headers_host1
       expect(response.status).to eq 200
       expect(json_response['message']).to eq 'You have successfully updated this booking'
-    #  booking.reload
+      booking.reload
       expect(booking.status).to eq 'accepted'
     end
 
