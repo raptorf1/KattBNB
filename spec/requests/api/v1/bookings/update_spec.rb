@@ -15,18 +15,21 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
     it 'updates status of certain booking if action comes from associated host' do
       patch "/api/v1/bookings/#{booking.id}", params: {
-        status: 'accepted'
+        status: 'accepted',
+        host_message: 'accepted by host'
       },
       headers: headers_host1
       expect(response.status).to eq 200
       expect(json_response['message']).to eq 'You have successfully updated this booking'
       booking.reload
       expect(booking.status).to eq 'accepted'
+      expect(booking.host_message).to eq 'accepted by host'
     end
 
     it 'does not update status of certain booking if action comes from an unassociated host' do
       patch "/api/v1/bookings/#{booking.id}", params: {
-        status: 'declined'
+        status: 'declined',
+        host_message: 'declined by host'
       },
       headers: headers_host2
       expect(response.status).to eq 422
@@ -35,7 +38,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
     it 'does not update status of certain booking even if action comes from the user that requested it in the first place' do
       patch "/api/v1/bookings/#{booking.id}", params: {
-        status: 'accepted'
+        status: 'accepted',
+        host_message: 'accepted by host'
       },
       headers: headers_user1
       expect(response.status).to eq 422

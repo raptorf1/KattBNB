@@ -30,7 +30,7 @@ class Api::V1::BookingsController < ApplicationController
     booking = Booking.find(params[:id])
 
     if current_api_v1_user.nickname == booking.host_nickname
-      booking.update(status: params[:status])
+      booking.update(status: params[:status], host_message: params[:host_message])
       if booking.persisted? == true
         render json: { message: 'You have successfully updated this booking' }, status: 200
       else
