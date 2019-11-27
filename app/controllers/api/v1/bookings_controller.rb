@@ -31,10 +31,10 @@ class Api::V1::BookingsController < ApplicationController
 
     if current_api_v1_user.nickname == booking.host_nickname
       booking.update(status: params[:status], host_message: params[:host_message])
-      if booking.persisted? == true
+      if booking.persisted? == true && booking.host_message.length < 201
         render json: { message: 'You have successfully updated this booking' }, status: 200
       else
-        render json: { error: 'There was a problem updating this booking' }
+        render json: { error: booking.errors.full_messages }, status: 422
       end
     else
       render json: { error: 'You cannot perform this action' }, status: 422

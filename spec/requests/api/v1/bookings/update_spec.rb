@@ -26,6 +26,19 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(booking.host_message).to eq 'accepted by host'
     end
 
+    it 'does not update status of certain booking even if action comes from associated host cause host_message is more than 200 characters' do
+      patch "/api/v1/bookings/#{booking.id}", params: {
+        status: 'accepted',
+        host_message: 'accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host'
+      },
+      headers: headers_host1
+      expect(response.status).to eq 422
+      expect(json_response['error']).to eq ['Host message is too long (maximum is 200 characters)']
+      booking.reload
+      expect(booking.status).to eq 'pending'
+      expect(booking.host_message).to eq nil
+    end
+
     it 'does not update status of certain booking if action comes from an unassociated host' do
       patch "/api/v1/bookings/#{booking.id}", params: {
         status: 'declined',
