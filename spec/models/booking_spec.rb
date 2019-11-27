@@ -6,6 +6,7 @@ RSpec.describe Booking, type: :model do
   describe 'Database table' do
     it { is_expected.to have_db_column :number_of_cats }
     it { is_expected.to have_db_column :message }
+    it { is_expected.to have_db_column :host_message }
     it { is_expected.to have_db_column :status }
     it { is_expected.to have_db_column :host_nickname }
     it { is_expected.to have_db_column :dates }
@@ -23,6 +24,7 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to validate_presence_of :price_total }
     it { is_expected.to validate_presence_of :user_id }
     it { is_expected.to validate_length_of :message }
+    it { is_expected.to validate_length_of :host_message }
   end
 
   describe 'Associations' do
