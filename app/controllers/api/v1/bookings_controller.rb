@@ -22,7 +22,6 @@ class Api::V1::BookingsController < ApplicationController
       profile = HostProfile.where(user_id: host[0].id)
       new_availability = profile[0].availability - booking.dates
       profile.update(availability: new_availability)
-      #binding.pry
       user = User.where(id: booking.user_id)
       BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver
     else
