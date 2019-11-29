@@ -2,7 +2,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
   let(:host1) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
   let(:host2) { FactoryBot.create(:user, email: 'noel@craft.com', nickname: 'MacOS') }
   let(:user1) { FactoryBot.create(:user, email: 'faraz@craft.com', nickname: 'EarlyInTheMorning') }
-  let(:booking) { FactoryBot.create(:booking, host_nickname: host1.nickname, user_id: user1.id) }
+  let(:booking) { FactoryBot.create(:booking, host_nickname: host1.nickname, user_id: user1.id, dates: [1562889600000, 1562976000000]) }
+  let(:profile1) { FactoryBot.create(:host_profile, user_id: host1.id, availability: [1562803200000, 1563062400000, 1563148800000])}
   let(:credentials_host1) { host1.create_new_auth_token }
   let(:credentials_host2) { host2.create_new_auth_token }
   let(:credentials_user1) { user1.create_new_auth_token }
@@ -24,6 +25,16 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       booking.reload
       expect(booking.status).to eq 'accepted'
       expect(booking.host_message).to eq 'accepted by host'
+      expect(profile1.availability).to eq [1562803200000, 1563062400000, 1563148800000]
+    end
+
+    it 'adds back availability dates if host declines the booking' do
+      patch "/api/v1/bookings/#{booking.id}", params: {
+        status: 'declined',
+        host_message: 'iDecline!!!'
+      },
+      headers: headers_host1
+      expect(profile1.availability).to eq [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000]
     end
 
     it 'does not update status of certain booking even if action comes from associated host cause host_message is more than 200 characters' do
