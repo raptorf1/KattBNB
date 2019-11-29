@@ -33,6 +33,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       end
 
       it 'alters hosts availability' do
+        profile.reload
         expect(profile.availability).to eq [1562803200000, 1562889600000, 1563148800000]
       end
 
