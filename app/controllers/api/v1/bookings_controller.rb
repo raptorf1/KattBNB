@@ -1,6 +1,6 @@
 class Api::V1::BookingsController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:index, :create]
+  before_action :authenticate_api_v1_user!, only: [:index, :create, :update]
 
   def index
     if params[:host_nickname] == current_api_v1_user.nickname
@@ -23,6 +23,21 @@ class Api::V1::BookingsController < ApplicationController
       BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver
     else
       render json: { error: booking.errors.full_messages }, status: 422
+    end
+  end
+
+  def update
+    booking = Booking.find(params[:id])
+
+    if current_api_v1_user.nickname == booking.host_nickname
+      booking.update(status: params[:status], host_message: params[:host_message])
+      if booking.persisted? == true && booking.host_message.length < 201
+        render json: { message: 'You have successfully updated this booking' }, status: 200
+      else
+        render json: { error: booking.errors.full_messages }, status: 422
+      end
+    else
+      render json: { error: 'You cannot perform this action' }, status: 422
     end
   end
 
