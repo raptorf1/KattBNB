@@ -28,13 +28,14 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(profile1.availability).to eq [1562803200000, 1563062400000, 1563148800000]
     end
 
-    it 'adds back availability dates if host declines the booking' do
+    it 'adds back availability dates if associated host declines the booking' do
       patch "/api/v1/bookings/#{booking.id}", params: {
         status: 'declined',
         host_message: 'iDecline!!!'
       },
       headers: headers_host1
       profile1.reload
+      expect(response.status).to eq 200
       expect(profile1.availability).to eq [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000]
     end
 

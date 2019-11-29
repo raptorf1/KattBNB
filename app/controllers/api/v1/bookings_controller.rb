@@ -39,7 +39,6 @@ class Api::V1::BookingsController < ApplicationController
       elsif booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'declined'
         host = User.where(nickname: booking.host_nickname)
         profile = HostProfile.where(user_id: host[0].id)
-        #binding.pry
         new_availability = (profile[0].availability + booking.dates).sort
         profile.update(availability: new_availability)
         render json: { message: 'You have successfully updated this booking' }, status: 200
