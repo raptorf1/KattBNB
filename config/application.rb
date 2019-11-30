@@ -17,8 +17,8 @@ module KattBNBApi
     config.api_only = true
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins '*'
-        resource '*', 
+        origins 'https://kattbnb.netlify.com/'
+        resource '/api/v1/*', 
           headers: :any, 
           methods: %i[get post put patch delete],
           expose: %w(access-token expiry token-type uid client),
