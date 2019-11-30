@@ -17,13 +17,18 @@ class Api::V1::BookingsController < ApplicationController
     booking = Booking.create(booking_params)
     
     if booking.persisted?
-      render json: { message: 'Successfully created' }, status: 200
       host = User.where(nickname: booking.host_nickname)
       profile = HostProfile.where(user_id: host[0].id)
-      new_availability = profile[0].availability - booking.dates
-      profile.update(availability: new_availability)
       user = User.where(id: booking.user_id)
-      BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver
+      if (booking.dates - profile[0].availability).empty? == true
+        render json: { message: 'Successfully created' }, status: 200
+        new_availability = profile[0].availability - booking.dates
+        profile.update(availability: new_availability)
+        BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver        
+      else
+        booking.destroy
+        render json: { error: ['Someone else just booked these days with this host!'] }, status: 422        
+      end      
     else
       render json: { error: booking.errors.full_messages }, status: 422
     end

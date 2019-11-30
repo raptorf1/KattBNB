@@ -4,6 +4,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
   let!(:profile2) { FactoryBot.create(:host_profile, user_id: user2.id, availability: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000])}
   let!(:user3) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'JJoker', location: 'Athens') }
   let!(:profile3) { FactoryBot.create(:host_profile, user_id: user3.id, availability: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000])}
+  let!(:user4) { FactoryBot.create(:user, email: 'more@thestreets.com', nickname: 'Alonso', location: 'Athens') }
+  let!(:profile4) { FactoryBot.create(:host_profile, user_id: user4.id, availability: [])}
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
   let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
@@ -87,6 +89,23 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
         expect(json_response['error']).to eq ['Message is too long (maximum is 400 characters)']
         expect(response.status).to eq 422
+      end
+
+      it "Booking can not be created if host's availability is altered in the process" do
+        post '/api/v1/bookings', params: {
+          number_of_cats: '2',
+          host_nickname: 'Alonso',
+          dates: [1562803200000, 1562889600000],
+          price_per_day: '105.96',
+          price_total: '1400.36',
+          user_id: user.id,
+          message: 'Lorem Ipsum is simply dummy text.'
+        }, 
+        headers: headers
+
+        expect(json_response['error']).to eq ['Someone else just booked these days with this host!']
+        expect(response.status).to eq 422
+        expect(Booking.all.length).to eq 0
       end
 
       it 'Booking can not be created if user is not logged in' do
