@@ -53,6 +53,9 @@ class Api::V1::BookingsController < ApplicationController
     else
       render json: { error: 'You cannot perform this action' }, status: 422
     end
+
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: ['We cannot update this booking because the user requested an account deletion! Please go back to your bookings page'] }, status: :not_found
   end
 
  

@@ -77,5 +77,11 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(response.status).to eq 401
       expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
     end
+
+    it 'raises custom error in sad path where booking does not exist' do
+      patch '/api/v1/bookings/2000000000', headers: headers_user1
+      expect(response.status).to eq 404
+      expect(json_response['error']).to eq ['We cannot update this booking because the user requested an account deletion! Please go back to your bookings page']
+    end
   end
 end
