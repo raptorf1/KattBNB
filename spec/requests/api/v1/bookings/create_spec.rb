@@ -108,6 +108,23 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(Booking.all.length).to eq 0
       end
 
+      it 'Booking can not be created if host deletes her account in the proccess' do
+        post '/api/v1/bookings', params: {
+          number_of_cats: '2',
+          host_nickname: 'Batman',
+          dates: [1562803200000, 1562889600000],
+          price_per_day: '105.96',
+          price_total: '1400.36',
+          user_id: user.id,
+          message: 'Lorem Ipsum is simply dummy text.'
+        }, 
+        headers: headers
+
+        expect(json_response['error']).to eq ['Booking cannot be created because the host requested an account deletion! Please find another host in the results page.']
+        expect(response.status).to eq 422
+        expect(Booking.all.length).to eq 0
+      end
+
       it 'Booking can not be created if user is not logged in' do
         post '/api/v1/bookings', headers: not_headers
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']

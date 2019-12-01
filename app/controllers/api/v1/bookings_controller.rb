@@ -15,20 +15,25 @@ class Api::V1::BookingsController < ApplicationController
 
   def create
     booking = Booking.create(booking_params)
-    
+
     if booking.persisted?
       host = User.where(nickname: booking.host_nickname)
-      profile = HostProfile.where(user_id: host[0].id)
-      user = User.where(id: booking.user_id)
-      if (booking.dates - profile[0].availability).empty? == true
-        render json: { message: 'Successfully created' }, status: 200
-        new_availability = profile[0].availability - booking.dates
-        profile.update(availability: new_availability)
-        BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver        
+      if host.length == 1
+        profile = HostProfile.where(user_id: host[0].id)
+        user = User.where(id: booking.user_id)
+        if (booking.dates - profile[0].availability).empty? == true
+          render json: { message: 'Successfully created' }, status: 200
+          new_availability = profile[0].availability - booking.dates
+          profile.update(availability: new_availability)
+          BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver        
+        else
+          booking.destroy
+          render json: { error: ['Someone else just booked these days with this host!'] }, status: 422
+        end
       else
         booking.destroy
-        render json: { error: ['Someone else just booked these days with this host!'] }, status: 422        
-      end      
+        render json: { error: ['Booking cannot be created because the host requested an account deletion! Please find another host in the results page.'] }, status: 422
+      end
     else
       render json: { error: booking.errors.full_messages }, status: 422
     end
@@ -55,7 +60,7 @@ class Api::V1::BookingsController < ApplicationController
     end
 
   rescue ActiveRecord::RecordNotFound
-    render json: { error: ['We cannot update this booking because the user requested an account deletion! Please go back to your bookings page'] }, status: :not_found
+    render json: { error: ['We cannot update this booking because the user requested an account deletion! Please go back to your bookings page.'] }, status: :not_found
   end
 
  
