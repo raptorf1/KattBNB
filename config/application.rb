@@ -24,6 +24,14 @@ module KattBNBApi
           expose: %w(access-token expiry token-type uid client),
           max_age: 0
       end
+      allow do
+        origins 'localhost:3000'
+        resource '/api/v1/*', 
+          headers: :any, 
+          methods: %i[get post put patch delete],
+          expose: %w(access-token expiry token-type uid client),
+          max_age: 0
+      end
     end
   end
 end
