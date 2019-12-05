@@ -28,7 +28,7 @@ class Api::V1::BookingsController < ApplicationController
           BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver        
         else
           booking.destroy
-          render json: { error: ['Someone else just booked these days with this host!'] }, status: 422
+          render json: { error: ['Someone else just requested to book these days with this host!'] }, status: 422
         end
       else
         booking.destroy

@@ -103,7 +103,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         }, 
         headers: headers
 
-        expect(json_response['error']).to eq ['Someone else just booked these days with this host!']
+        expect(json_response['error']).to eq ['Someone else just requested to book these days with this host!']
         expect(response.status).to eq 422
         expect(Booking.all.length).to eq 0
       end
