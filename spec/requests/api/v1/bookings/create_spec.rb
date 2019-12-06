@@ -1,6 +1,6 @@
 RSpec.describe Api::V1::BookingsController, type: :request do
   let(:user) { FactoryBot.create(:user) }
-  let!(:user2) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens') }
+  let!(:user2) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens', avatar: 'This is my avatar!!!') }
   let!(:profile2) { FactoryBot.create(:host_profile, user_id: user2.id, availability: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000])}
   let!(:user3) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'JJoker', location: 'Athens') }
   let!(:profile3) { FactoryBot.create(:host_profile, user_id: user3.id, availability: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000])}
@@ -38,6 +38,10 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       it 'alters hosts availability' do
         profile2.reload
         expect(profile2.availability).to eq [1562803200000, 1562889600000, 1563148800000]
+      end
+
+      it "updates booking with host's avatar" do
+        expect(Booking.last.host_avatar).to eq user2.avatar
       end
 
       it 'creates another booking and sends a second email' do
