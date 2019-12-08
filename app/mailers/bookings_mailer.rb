@@ -23,6 +23,9 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
+    @start_date = Time.at(booking.dates[0] / 1000)
+    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+
     mail(to: @user.email, subject: 'Your booking request got approved!')
   end
 
