@@ -3,7 +3,7 @@ RSpec.describe BookingsMailer, type: :mailer do
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
   let(:booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname) }
   let(:new_request_mail) { BookingsMailer.notify_host_create_booking(host, booking, user) }
-  let(:accepted_request_mail) { BookingsMailer.notify_owner_accepted_booking(host, booking, user) }
+  let(:accepted_request_mail) { BookingsMailer.notify_user_accepted_booking(host, booking, user) }
 
 
   describe 'notify_host_create_booking' do
@@ -27,7 +27,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
   end
 
-  describe 'notify_owner_accepted_booking' do
+  describe 'notify_user_accepted_booking' do
     it 'renders the subject' do
       expect(accepted_request_mail.subject).to eql('Your booking request got approved!')
     end
