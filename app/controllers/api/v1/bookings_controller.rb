@@ -44,6 +44,7 @@ class Api::V1::BookingsController < ApplicationController
     booking = Booking.find(params[:id])
 
     if current_api_v1_user.nickname == booking.host_nickname
+      user = User.where(id: booking.user_id)
       host = User.where(nickname: booking.host_nickname)
       profile = HostProfile.where(user_id: host[0].id)
       booking.update(status: params[:status], host_message: params[:host_message])
