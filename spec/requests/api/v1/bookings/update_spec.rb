@@ -30,6 +30,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(booking.host_description).to eq profile1.description
       expect(booking.host_real_lat).to eq profile1.latitude
       expect(booking.host_real_long).to eq profile1.longitude
+      expect(ActionMailer::Base.deliveries.count).to eq 1
     end
 
     it 'adds back availability dates if associated host declines the booking' do
@@ -41,6 +42,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       profile1.reload
       expect(response.status).to eq 200
       expect(profile1.availability).to eq [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000]
+      expect(ActionMailer::Base.deliveries.count).to eq 1
     end
 
     it 'does not update status of certain booking even if action comes from associated host cause host_message is more than 200 characters' do
