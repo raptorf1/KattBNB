@@ -43,8 +43,8 @@ RSpec.describe BookingsMailer, type: :mailer do
 
     it "contains basic booking information and host's & user's nicknames" do
       expect(accepted_request_mail.body.encoded).to match("Hey #{user.nickname}!")
-      expect(accepted_request_mail.encoded).to match("#{host.nickname}")
-      expect(accepted_request_mail.encoded).to match("#{booking.number_of_cats}")
+      expect(accepted_request_mail.body.encoded).to match("#{host.nickname}")
+      expect(accepted_request_mail.body.encoded).to match("#{booking.number_of_cats}")
     end
   end
 
@@ -63,8 +63,9 @@ RSpec.describe BookingsMailer, type: :mailer do
 
     it "contains basic booking information and host's & user's nicknames" do
       expect(declined_request_mail.body.encoded).to match("Hey #{user.nickname}!")
-      expect(declined_request_mail.encoded).to match("#{host.nickname}")
-      expect(declined_request_mail.encoded).to match("#{booking.number_of_cats}")
+      expect(declined_request_mail.body.encoded).to match("#{host.nickname}")
+      expect(declined_request_mail.body.encoded).to match("#{booking.number_of_cats}")
+      expect(declined_request_mail.body.encoded).to match("#{booking.host_message}")
     end
   end
 end

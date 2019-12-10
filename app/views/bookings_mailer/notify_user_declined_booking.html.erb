@@ -99,7 +99,7 @@
           <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 
             <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Your booking request got accepted!</span>
+            <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Your booking request got declined!</span>
             <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
 
               <!-- START MAIN CONTENT AREA -->
@@ -111,8 +111,11 @@
                         <h1 style="font-family: sans-serif; font-size: 20px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61">Hey <%= @user.nickname %>!</h1>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Oh no!</p>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                          <strong style="color: #c90c61"><%= @host.nickname %></strong> has declined your booking request for <strong style="color: #c90c61"><%= @booking.number_of_cats %> <%= @booking.number_of_cats > 1 ? 'cats' : 'cat' %></strong> during the dates of <strong style="color: #c90c61"><%= @start_date.year %>-<%= @start_date.month %>-<%= @start_date.day %></strong> until <strong style="color: #c90c61"><%= @end_date.year %>-<%= @end_date.month %>-<%= @end_date.day %></strong>
-                        </p>                 
+                          <strong style="color: #c90c61"><%= @host.nickname %></strong> has declined your booking request for <strong style="color: #c90c61"><%= @booking.number_of_cats %> <%= @booking.number_of_cats > 1 ? 'cats' : 'cat' %></strong> during the dates of <strong style="color: #c90c61"><%= @start_date.year %>-<%= @start_date.month %>-<%= @start_date.day %></strong> until <strong style="color: #c90c61"><%= @end_date.year %>-<%= @end_date.month %>-<%= @end_date.day %></strong>:
+                        </p>
+                        <div style="margin: 2rem; padding: 1rem;">
+                          <p style="margin: 0; font-style: italic; color: #999999"><%= @booking.host_message %></p>
+                        </div>                   
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">You can search again and request a new booking <a href="https://kattbnb.netlify.com/" style="text-decoration: underline; color: #c90c61">on KattBNB</a>.</p>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; ">Best regards,</p>
                         <h2 style="font-family: sans-serif; font-size: 16px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61">KattBNB</h2>
