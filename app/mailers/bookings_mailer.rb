@@ -18,4 +18,16 @@ class BookingsMailer < ApplicationMailer
     mail(to: @host.email, subject: 'You have a new booking request!')
   end
 
+  def notify_user_accepted_booking(host, booking, user)
+    @booking = booking
+    @host = host
+    @user = user
+
+    @start_date = Time.at(booking.dates[0] / 1000)
+    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+
+    mail(to: @user.email, subject: 'Your booking request got approved!')
+  end
+
+
 end
