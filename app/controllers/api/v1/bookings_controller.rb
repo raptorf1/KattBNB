@@ -56,6 +56,7 @@ class Api::V1::BookingsController < ApplicationController
         new_availability = (profile[0].availability + booking.dates).sort
         profile.update(availability: new_availability)
         render json: { message: 'You have successfully updated this booking' }, status: 200
+        BookingsMailer.notify_user_declined_booking(host[0], booking, user[0]).deliver
       else
         render json: { error: booking.errors.full_messages }, status: 422
       end
