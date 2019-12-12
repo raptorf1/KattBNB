@@ -13,28 +13,8 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
     expect { task.execute }.to output("1 pending booking(s) succesfully cancelled!\n").to_stdout
   end
 
-  # it "emails invoices" do
-  #   subscriber = create(:subscriber)
-
-  #   task.execute
-
-  #   expect(subscriber).to have_received_invoice
-  # end
-
-  # it "checks in with Dead Mans Snitch" do
-  #   dead_mans_snitch_request = stub_request(:get, "https://nosnch.in/c2354d53d2")
-
-  #   task.execute
-
-  #   expect(dead_mans_snitch_request).to have_been_requested
-  # end
-
-  # matcher :have_received_invoice do
-  #   match_unless_raises do |subscriber|
-  #     expect(last_email_sent).to be_delivered_to subscriber.email
-  #     expect(last_email_sent).to have_subject 'Your invoice'
-  #     ...
-  #   end
-  # end
-
+  it 'emails the user and the host' do
+    task.execute
+    expect(ActionMailer::Base.deliveries.count).to eq 2
+  end
 end
