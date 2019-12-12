@@ -5,9 +5,13 @@ namespace :bookings do
     cancelled_bookings = []
     pending_bookings.each do |booking|
       if ((Time.current - booking.created_at)/1.hour).round > 72
+        user = User.where(id: booking.user_id)
+        host = User.where(nickname: booking.host_nickname)
         booking.update_column(:status, 'canceled')
         booking.update_column(:host_message, 'cancelled by system')
         cancelled_bookings.push(booking)
+        BookingsMailer.notify_user_cancelled_booking(host[0], booking, user[0]).deliver
+        BookingsMailer.notify_host_cancelled_booking(host[0], booking, user[0]).deliver
       end
     end
     puts "#{cancelled_bookings.length} pending booking(s) succesfully cancelled!"
