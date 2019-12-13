@@ -12,6 +12,11 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to have_db_column :dates }
     it { is_expected.to have_db_column :price_per_day }
     it { is_expected.to have_db_column :price_total }
+    it { is_expected.to have_db_column :host_description }
+    it { is_expected.to have_db_column :host_full_address }
+    it { is_expected.to have_db_column :host_avatar }
+    it { is_expected.to have_db_column :host_real_lat }
+    it { is_expected.to have_db_column :host_real_long }
   end
 
   describe 'Validations' do
