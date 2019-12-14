@@ -11,10 +11,13 @@ describe 'rake users:delete_unconfirmed_users', type: :task do
     expect { task.execute }.not_to raise_error
   end
 
-  it 'deletes only unconfirmed users after 24 hrs' do
+  it 'deletes only unconfirmed users after 24 hours' do
     expect(User.all.length).to eq 3
     task.execute
     expect(User.all.length).to eq 2
+    users = User.all
+    expect(users[0].email).to eq 'order@thestreets.com'
+    expect(users[1].email).to eq 'cat@woman.com'
   end
 
   it 'logs to stdout' do

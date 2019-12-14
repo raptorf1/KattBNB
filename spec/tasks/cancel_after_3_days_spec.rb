@@ -24,5 +24,4 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
     expect(booking.status).to eq 'canceled'
     expect(booking2.status).to eq 'pending'
   end
-
 end
