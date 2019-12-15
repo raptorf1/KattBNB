@@ -19,7 +19,9 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
 
   it 'logs to stdout' do
     expect { task.execute }.to output("1 pending booking(s) succesfully cancelled!\n").to_stdout
-    expect(Booking.all.length).to eq 2
+    booking.reload
+    booking2.reload
+    expect(booking.status).to eq 'canceled'
+    expect(booking2.status).to eq 'pending'
   end
-
 end
