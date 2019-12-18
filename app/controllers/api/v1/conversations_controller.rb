@@ -5,6 +5,11 @@ class Api::V1::ConversationsController < ApplicationController
 
   def create
     conversation = Conversation.create(conversation_params)
+
+    if conversation.persisted?
+      render json: { message: 'Successfully created', id: conversation.id }, status: 200
+    end
+
   end
 
  
