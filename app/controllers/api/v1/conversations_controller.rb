@@ -4,12 +4,16 @@ class Api::V1::ConversationsController < ApplicationController
 
 
   def create
-    conversation = Conversation.create(conversation_params)
+    conversation_exists = Conversation.where(user1_id: params[:user1_id], user2_id: params[:user2_id]).or(Conversation.where(user1_id: params[:user2_id], user2_id: params[:user1_id]))
 
-    if conversation.persisted?
-      render json: { message: 'Successfully created', id: conversation.id }, status: 200
+    if conversation_exists.length == 1
+      render json: { message: 'Conversation already exists', id: conversation_exists[0].id}, status: 200
+    else
+      conversation = Conversation.create(conversation_params)
+      if conversation.persisted?
+        render json: { message: 'Successfully created', id: conversation.id }, status: 200
+      end
     end
-
   end
 
  
