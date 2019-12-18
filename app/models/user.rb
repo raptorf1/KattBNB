@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
 
   has_one :host_profile, dependent: :destroy
   has_many :booking
+  has_many :conversation
   
   validates :nickname, uniqueness: { case_sensitive: false }, presence: true
   validates :location, presence: true
