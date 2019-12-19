@@ -5,6 +5,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
   let(:booking) { FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user.id, status: 'declined') }
   let(:booking2) { FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user.id, status: 'canceled') }
   let(:booking3) { FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user.id, status: 'pending', dates: [1562889600000, 1562976000000]) }
+  let(:booking4) { FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user.id, status: 'accepted', dates: [2562889600000, 2562976000000]) }
   let(:booking5) { FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000]) }
   let(:user_credentials) { user.create_new_auth_token }
   let(:user2_credentials) { user2.create_new_auth_token }
@@ -45,6 +46,12 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       expect(response.status).to eq 200
       expect(json_response['message']).to eq 'You have successfully deleted an accepted booking of the past'
       expect(Booking.all.length).to eq 0
+    end
+
+    it 'deletes the accepted upcoming booking of the associated user and sends an email to the associated host' do
+      delete "/api/v1/bookings/#{booking4.id}", headers: user_headers
+      expect(Booking.all.length).to eq 0
+      expect(ActionMailer::Base.deliveries.count).to eq 1
     end
 
     it 'does not delete booking associated with another user' do
