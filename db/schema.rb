@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_06_163345) do
+ActiveRecord::Schema.define(version: 2019_12_18_091837) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,15 @@ ActiveRecord::Schema.define(version: 2019_12_06_163345) do
     t.decimal "host_real_lat"
     t.decimal "host_real_long"
     t.index ["user_id"], name: "index_bookings_on_user_id"
+  end
+
+  create_table "conversations", force: :cascade do |t|
+    t.bigint "user1_id"
+    t.bigint "user2_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user1_id"], name: "index_conversations_on_user1_id"
+    t.index ["user2_id"], name: "index_conversations_on_user2_id"
   end
 
   create_table "host_profiles", force: :cascade do |t|
@@ -85,5 +94,7 @@ ActiveRecord::Schema.define(version: 2019_12_06_163345) do
   end
 
   add_foreign_key "bookings", "users"
+  add_foreign_key "conversations", "users", column: "user1_id"
+  add_foreign_key "conversations", "users", column: "user2_id"
   add_foreign_key "host_profiles", "users"
 end
