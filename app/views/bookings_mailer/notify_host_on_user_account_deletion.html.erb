@@ -109,16 +109,15 @@
                     <tr>
                       <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
                         <h1 style="font-family: sans-serif; font-size: 20px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61">Hey <%= @host.nickname %>!</h1>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">We've got some great news for you!</p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">We've got some news for you!</p>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                          <strong style="color: #c90c61"><%= @user.nickname %></strong> would like to book a stay with you for <strong style="color: #c90c61"><%= @booking.number_of_cats %> <%= @booking.number_of_cats > 1 ? 'cats' : 'cat' %></strong> during the dates of <strong style="color: #c90c61"><%= @start_date.year %>-<%= @start_date.month %>-<%= @start_date.day %></strong> until <strong style="color: #c90c61"><%= @end_date.year %>-<%= @end_date.month %>-<%= @end_date.day %></strong>:
+                          <strong style="color: #c90c61"><%= @user.nickname %></strong> has a scheduled stay with you for <strong style="color: #c90c61"><%= @booking.number_of_cats %> <%= @booking.number_of_cats > 1 ? 'cats' : 'cat' %></strong> during the dates of <strong style="color: #c90c61"><%= @start_date.year %>-<%= @start_date.month %>-<%= @start_date.day %></strong> until <strong style="color: #c90c61"><%= @end_date.year %>-<%= @end_date.month %>-<%= @end_date.day %></strong>:
                         </p>
                         <div style="margin: 2rem; padding: 1rem;">
-                          <p style="margin: 0; font-style: italic; color: #999999"><%= @booking.message %></p>
                           <h3 style="font-family: sans-serif; font-size: 14px; font-weight: bold; margin: 0; margin-top: 15px; color: #c90c61; text-align: center">Your reward:</h3>
                           <h1 style="font-family: sans-serif; font-size: 25px; font-weight: bold; margin: 0; color: #c90c61; text-align: center"><%= @total %> kr</h1>
                         </div>                   
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">You have 3 days to approve or decline this booking request <a href="https://kattbnb.netlify.com/all-bookings" style="text-decoration: underline; color: #c90c61">on KattBNB</a>.</p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;"><strong style="color: #c90c61"><%= @user.nickname %></strong> has requested an account deletion, so you won't be able to communicate through our platform. You can contact them directly <a href="mailto:<%= @user.email %>" style="text-decoration: underline; color: #c90c61">here</a>.</p>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; ">Best regards,</p>
                         <h2 style="font-family: sans-serif; font-size: 16px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61">KattBNB</h2>
                       </td>
