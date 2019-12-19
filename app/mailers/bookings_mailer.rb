@@ -62,4 +62,15 @@ class BookingsMailer < ApplicationMailer
     mail(to: @host.email, subject: 'Cancelled booking request!')
   end
 
+  def notify_host_on_user_account_deletion(host, booking, user)
+    @booking = booking
+    @host = host
+    @user = user
+
+    @start_date = Time.at(booking.dates[0] / 1000)
+    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+
+    mail(to: @host.email, subject: 'Pending booking after account deletion!')
+  end
+
 end

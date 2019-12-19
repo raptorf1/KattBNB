@@ -71,6 +71,7 @@ class Api::V1::BookingsController < ApplicationController
   def destroy
     booking = Booking.find(params[:id])
     host = User.where(nickname: booking.host_nickname)
+    user = User.where(id: booking.user_id)
     now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
     now_epoch_javascript = (now.to_f * 1000).to_i
 
@@ -85,7 +86,7 @@ class Api::V1::BookingsController < ApplicationController
         booking.destroy
         render json: { message: 'You have successfully deleted this pending booking' }, status: 200
       elsif booking.status == 'accepted' && booking.dates[booking.dates.length - 1] > now_epoch_javascript
-        # send email to host
+        BookingsMailer.notify_host_on_user_account_deletion(host[0], booking, user[0]).deliver
         booking.destroy
       else
         render json: { message: 'You have successfully deleted an accepted booking of the past' }, status: 200
