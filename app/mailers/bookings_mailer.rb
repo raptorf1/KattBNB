@@ -70,7 +70,7 @@ class BookingsMailer < ApplicationMailer
     @start_date = Time.at(booking.dates[0] / 1000)
     @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
 
-    mail(to: @host.email, subject: 'Pending booking after account deletion!')
+    mail(to: @host.email, subject: 'Pending booking information after account deletion request!')
   end
 
 end
