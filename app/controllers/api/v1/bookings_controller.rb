@@ -1,6 +1,6 @@
 class Api::V1::BookingsController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:index, :create, :update]
+  before_action :authenticate_api_v1_user!, only: [:index, :create, :update, :destroy]
 
   def index
     if params[:host_nickname] == current_api_v1_user.nickname
@@ -66,6 +66,17 @@ class Api::V1::BookingsController < ApplicationController
 
   rescue ActiveRecord::RecordNotFound
     render json: { error: ['We cannot update this booking because the user requested an account deletion! Please go back to your bookings page.'] }, status: :not_found
+  end
+
+  def destroy
+    booking = Booking.find(params[:id])
+    
+    if current_api_v1_user.id == booking.user_id && booking.present? == true && booking.destroyed? == false
+      booking.destroy
+      render json: { message: 'You have successfully deleted this booking' }, status: 200
+    else
+      render json: { error: 'You cannot perform this action' }, status: 422
+    end  
   end
 
  

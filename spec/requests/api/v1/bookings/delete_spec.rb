@@ -15,7 +15,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       delete "/api/v1/bookings/#{booking.id}", headers: user_headers
       expect(response.status).to eq 200
       expect(json_response['message']).to eq 'You have successfully deleted this booking'
-      expect(User.all.length).to eq 1
+      expect(User.all.length).to eq 2
       expect(User.last.present?).to eq true
       expect(User.last.uid).to eq 'george@mail.com'
       expect(Booking.all.length).to eq 0
