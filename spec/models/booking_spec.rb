@@ -43,4 +43,24 @@ RSpec.describe Booking, type: :model do
     end
   end
 
+  describe 'Delete dependent setting' do
+    it 'booking is deleted when associated user is deleted from the database' do
+      FactoryBot.create(:booking)
+      expect(Booking.all.length).to eq 1
+      expect(User.all.length).to eq 1
+      User.last.destroy
+      expect(Booking.all.length).to eq 0
+      expect(User.all.length).to eq 0
+    end
+
+    it 'user is not deleted when associated booking is deleted from the database' do
+      FactoryBot.create(:booking)
+      expect(Booking.all.length).to eq 1
+      expect(User.all.length).to eq 1
+      Booking.last.destroy
+      expect(Booking.all.length).to eq 0
+      expect(User.all.length).to eq 1
+    end
+  end
+
 end

@@ -1,4 +1,6 @@
 class Booking < ApplicationRecord
+
+  #before_destroy :test
   
   belongs_to :user
 
@@ -8,7 +10,8 @@ class Booking < ApplicationRecord
   validates :message, length: { maximum: 400 }
   validates :host_message, length: { maximum: 200 }
 
-  # def test
+  #def test
+  #  binding.pry
   #   booking = Booking.find(params[:id])
   #   host = User.where(nickname: booking.host_nickname)
   #   user = User.where(id: booking.user_id)
@@ -35,6 +38,6 @@ class Booking < ApplicationRecord
   #   else
   #     render json: { error: 'You cannot perform this action' }, status: 422
   #   end  
-  # end
+  #end
 
 end
