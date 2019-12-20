@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
 
   has_one :host_profile, dependent: :destroy
   has_many :booking
+  has_many :message
   has_many :conversation, foreign_key: 'user1_id'
   has_many :conversation, foreign_key: 'user2_id'
   

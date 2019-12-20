@@ -69,5 +69,6 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_one(:host_profile) }
     it { is_expected.to have_many(:booking) }
     it { is_expected.to have_many(:conversation) }
+    it { is_expected.to have_many(:message) }
   end
 end

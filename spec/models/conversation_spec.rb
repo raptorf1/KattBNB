@@ -19,4 +19,8 @@ RSpec.describe Conversation, type: :model do
     it { is_expected.to belong_to(:user1) }
     it { is_expected.to belong_to(:user2) }
   end
+
+  describe "Relations" do
+    it { is_expected.to have_many(:message) }
+  end
 end
