@@ -1,6 +1,6 @@
 class Api::V1::HostProfilesController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:show, :create, :destroy, :update]
+  before_action :authenticate_api_v1_user!, only: [:show, :create, :update]
 
 
   def index
@@ -51,19 +51,6 @@ class Api::V1::HostProfilesController < ApplicationController
       render json: { error: 'You cannot perform this action' }, status: 422
     end
   end
-
-
-  def destroy
-    profile = HostProfile.find(params[:id])
-    
-    if current_api_v1_user.id == profile.user_id && profile.present? == true && profile.destroyed? == false
-      profile.destroy
-      render json: { message: 'You have successfully deleted your host profile' }, status: 200
-    else
-      render json: { error: 'You cannot perform this action' }, status: 422
-    end  
-  end
-
 
   
   private
