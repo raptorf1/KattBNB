@@ -18,7 +18,7 @@ class Booking < ApplicationRecord
 
     if self.status == 'declined' || self.status == 'canceled'
       self.destroy
-    elsif self.status == 'pending'
+    elsif self.status == 'pending' && host.length == 1
       profile = HostProfile.where(user_id: host[0].id)
       new_availability = (profile[0].availability + self.dates).sort
       profile.update(availability: new_availability)
