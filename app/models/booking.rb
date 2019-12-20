@@ -16,9 +16,7 @@ class Booking < ApplicationRecord
     now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
     now_epoch_javascript = (now.to_f * 1000).to_i
 
-    if self.status == 'declined' || self.status == 'canceled'
-      self.destroy
-    elsif self.status == 'pending' && host.length == 1
+    if self.status == 'pending' && host.length == 1
       profile = HostProfile.where(user_id: host[0].id)
       new_availability = (profile[0].availability + self.dates).sort
       profile.update(availability: new_availability)
