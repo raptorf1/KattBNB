@@ -22,6 +22,9 @@ class Booking < ApplicationRecord
       profile.update(availability: new_availability)
       self.destroy
     elsif self.status == 'accepted' && self.dates[self.dates.length - 1] > now_epoch_javascript
+      profile = HostProfile.where(user_id: host[0].id)
+      new_forbidden_dates = (profile[0].forbidden_dates + self.dates).sort
+      profile.update(forbidden_dates: new_forbidden_dates)
       BookingsMailer.notify_host_on_user_account_deletion(host[0], self, user[0]).deliver
       self.destroy
     else

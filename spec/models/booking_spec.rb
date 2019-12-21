@@ -73,12 +73,15 @@ RSpec.describe Booking, type: :model do
       expect(host_profile_user2.availability).to eq [1, 2, 3, 4, 5, 1562889600000, 1562976000000]
     end
 
-    it 'accepted upcoming booking is deleted and a notification email is sent to the host when associated user is deleted from the database' do
+    it 'accepted upcoming booking is deleted and a notification email is sent to the host and host profile availability is altered when associated user is deleted from the database' do
       user1 = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
       user2 = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
+      host_profile_user2 = FactoryBot.create(:host_profile, user_id: user2.id, availability: [1, 2, 3, 4, 5], forbidden_dates: [7, 8, 9])
       booking = FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user1.id, status: 'accepted', dates: [2562889600000, 2562976000000])
       user1.destroy
+      host_profile_user2.reload
       expect(ActionMailer::Base.deliveries.count).to eq 1
+      expect(host_profile_user2.forbidden_dates).to eq [7, 8, 9, 2562889600000, 2562976000000]
     end
 
     it 'accepted past booking is deleted when associated user is deleted from the database' do
