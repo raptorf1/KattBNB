@@ -127,7 +127,6 @@ RSpec.describe BookingsMailer, type: :mailer do
     it "contains basic booking information and host's & user's nicknames" do
       expect(on_delete_account_host_mail.body.encoded).to match("Hey #{host.nickname}!")
       expect(on_delete_account_host_mail.encoded).to match("#{user.nickname}")
-      expect(on_delete_account_host_mail.encoded).to match("#{user.email}")
       expect(on_delete_account_host_mail.encoded).to match("#{booking.number_of_cats}")
       expect(on_delete_account_host_mail.encoded).to match('1550 kr')
     end
