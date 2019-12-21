@@ -28,7 +28,7 @@ class Api::V1::ConversationsController < ApplicationController
   def show
     conversation = Conversation.find(params[:id])
     if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
-      render json: conversation, each_serializer: Conversations::ShowSerializer
+      render json: conversation, serializer: Conversations::ShowSerializer
     else
       render json: { error: 'You cannot perform this action' }, status: 422
     end

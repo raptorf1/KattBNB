@@ -19,6 +19,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       end
 
       it 'views a specific conversation' do
+        binding.pry
         expect(json_response['id']).to eq conversation1.id
         expect(response.status).to eq 200
       end
