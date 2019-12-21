@@ -4,7 +4,7 @@ class Api::V1::MessagesController < ApplicationController
   def create
     conversation = Conversation.find(params[:conversation_id])
 
-    message = conversation.messages.create(message_params)
+    message = conversation.message.create(message_params)
     if message.persisted?
       render json: { message: 'Successfully created', body: message.body }
     else
