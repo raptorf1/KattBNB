@@ -35,13 +35,14 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
     end
       
     it 'returns a list of conversations to the involved user' do
-      get '/api/v1/conversations', params: {id: user1.id}, headers: headers1
-      expect(json_response[0]['user_2.id']).to eq user2.id
-      expect(json_response[1]['user_2.id']).to eq user3.id
+      get '/api/v1/conversations', params: {user_id: user1.id}, headers: headers1
+      #binding.pry
+      expect(json_response[0]['user2_id']).to eq user2.id
+      expect(json_response[1]['user2_id']).to eq user3.id
     end
 
     it 'does not return a list of conversations to an uninvolved user' do
-      get '/api/v1/conversations', params: {id: user2.id}, headers: headers3
+      get '/api/v1/conversations', params: {user_id: user2.id}, headers: headers3
       expect(json_response.count).to eq 0
       expect(Conversation.all.length).to eq 2
     end
