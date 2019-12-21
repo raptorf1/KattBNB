@@ -24,6 +24,15 @@ class Api::V1::ConversationsController < ApplicationController
     end
     render json: conversations
   end
+
+  def show
+    conversation = Conversation.find(params[:id])
+    if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
+      render json: conversation
+    else
+      render json: { error: 'You cannot perform this action' }, status: 422
+    end
+  end
  
   private
 

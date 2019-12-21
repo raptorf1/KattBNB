@@ -19,7 +19,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       end
 
       it 'views a specific conversation' do
-        expect(json_response['id']).to eq Conversation.last.id
+        expect(json_response['id']).to eq conversation1.id
         expect(response.status).to eq 200
       end
     end
@@ -34,7 +34,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       it 'Cannot see conversation that she is not a part of' do
         get "/api/v1/conversations/#{conversation2.id}", headers: headers2
         expect(response.status).to eq 422
-        expect(json_response['error']).to eq ['You cannot perform this action']
+        expect(json_response['error']).to eq 'You cannot perform this action'
       end
     end
   end
