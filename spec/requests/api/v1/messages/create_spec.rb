@@ -46,7 +46,26 @@ RSpec.describe Api::V1::MessagesController, type: :request do
           body: 'Joker, fuck you!'
         },
         headers: headers3
-        expect(json_response['error']).to eq 'You cannot perform this action'
+        expect(json_response['error']).to eq 'You cannot perform this action!'
+      end
+
+      it 'Message cannot be created without body' do
+        post "/api/v1/conversations/#{conversation.id}/messages", params: {
+          user_id: user1.id,
+          conversation_id: conversation.id
+        },
+        headers: headers1
+        expect(json_response['error']).to eq ["Body can't be blank"]
+      end
+
+      it 'Message cannot be created even if logged in user passes valid user_id params... somehow' do
+        post "/api/v1/conversations/#{conversation.id}/messages", params: {
+          user_id: user1.id,
+          conversation_id: conversation.id,
+          body: 'Joker, fuck you!'
+        },
+        headers: headers3
+        expect(json_response['error']).to eq 'You cannot perform this action!'
       end
     end
   end
