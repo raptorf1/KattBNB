@@ -1,4 +1,4 @@
 class Conversations::ShowSerializer < ActiveModel::Serializer
-  attributes :id, :user1_id, :user2_id
+  attributes :id
   has_many :message, serializer: Messages::Serializer
 end
