@@ -8,7 +8,7 @@ class Api::V1::ConversationsController < ApplicationController
     else
       conversations = []
     end
-    render json: conversations
+    render json: conversations, each_serializer: Conversations::IndexSerializer
   end
 
   def show
