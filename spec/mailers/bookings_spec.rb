@@ -113,7 +113,7 @@ RSpec.describe BookingsMailer, type: :mailer do
 
   describe 'notify_host_on_user_account_deletion' do
     it 'renders the subject' do
-      expect(on_delete_account_host_mail.subject).to eql('Pending booking information after account deletion request!')
+      expect(on_delete_account_host_mail.subject).to eql('Important information about your upcoming booking!')
     end
 
     it 'renders the receiver email' do

@@ -77,7 +77,7 @@ class BookingsMailer < ApplicationMailer
       @total = sprintf('%.2f', string_with_2_decimals)
     end
 
-    mail(to: @host.email, subject: 'Pending booking information after account deletion request!')
+    mail(to: @host.email, subject: 'Important information about your upcoming booking!')
   end
 
 end
