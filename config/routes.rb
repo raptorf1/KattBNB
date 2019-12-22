@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       mount_devise_token_auth_for 'User', at: 'auth', skip: [:omniauth_callbacks]
       resources :host_profiles, only: [:index, :show, :create, :update]
       resources :bookings, only: [:index, :create, :update]
-      resources :conversations, only: [:create, :index] do
+      resources :conversations, only: [:create, :index, :show] do
         resources :messages, only: [:create]
       end
     end
