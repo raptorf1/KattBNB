@@ -7,6 +7,7 @@ FactoryBot.define do
     supplement_price_per_cat_per_day { "50.85" }
     max_cats_accepted { 3 }
     availability { [1560, 1561, 1562, 1563] }
+    forbidden_dates { [] }
     lat { "35.1018" }
     long { "33.38" }
     latitude { "35.1018" }
