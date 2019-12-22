@@ -36,7 +36,6 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       
     it 'returns a list of conversations to the involved user' do
       get '/api/v1/conversations', params: {user_id: user1.id}, headers: headers1
-      #binding.pry
       expect(json_response[0]['user2_id']).to eq user2.id
       expect(json_response[1]['user2_id']).to eq user3.id
     end

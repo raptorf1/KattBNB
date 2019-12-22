@@ -2,6 +2,14 @@ class Api::V1::ConversationsController < ApplicationController
   
   before_action :authenticate_api_v1_user!, only: [:create, :index]
 
+  def index
+    if params[:user_id].to_i == current_api_v1_user.id
+      conversations = Conversation.where(user1_id: params[:user_id]).or(Conversation.where(user2_id: params[:user_id]))
+    else
+      conversations = []
+    end
+    render json: conversations
+  end
 
   def create
     conversation_exists = Conversation.where(user1_id: params[:user1_id], user2_id: params[:user2_id]).or(Conversation.where(user1_id: params[:user2_id], user2_id: params[:user1_id]))
@@ -16,14 +24,6 @@ class Api::V1::ConversationsController < ApplicationController
     end
   end
 
-  def index
-    if params[:user_id].to_i == current_api_v1_user.id
-      conversations = Conversation.where(user1_id: params[:user_id]).or(Conversation.where(user2_id: params[:user_id]))
-    else
-      conversations = []
-    end
-    render json: conversations
-  end
  
   private
 
