@@ -10,6 +10,7 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to have_db_column :supplement_price_per_cat_per_day }
     it { is_expected.to have_db_column :max_cats_accepted }
     it { is_expected.to have_db_column :availability }
+    it { is_expected.to have_db_column :forbidden_dates }
     it { is_expected.to have_db_column :lat }
     it { is_expected.to have_db_column :long }
     it { is_expected.to have_db_column :latitude }
@@ -32,6 +33,7 @@ RSpec.describe HostProfile, type: :model do
     it 'returns Array as class for availability field' do
       FactoryBot.create(:host_profile)
       expect(HostProfile.last.availability.class).to eq Array
+      expect(HostProfile.last.forbidden_dates.class).to eq Array
     end
   end
 

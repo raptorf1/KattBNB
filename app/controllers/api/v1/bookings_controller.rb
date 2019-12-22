@@ -28,6 +28,7 @@ class Api::V1::BookingsController < ApplicationController
           booking.update(host_avatar: host[0].avatar)
           BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver
         else
+          booking.update(status: 'canceled')
           booking.destroy
           render json: { error: ['Someone else just requested to book these days with this host!'] }, status: 422
         end
