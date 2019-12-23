@@ -40,13 +40,14 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       expect(json_response[1]['id']).to eq @conversation2.id
     end
 
-    it 'returns the last message of the conversation as a last_msg value' do
-      msg1 =  FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: "Batman, I love you!")
-      msg2 =  FactoryBot.create(:message, user_id: user2.id, conversation_id: @conversation1.id, body: "Joker, u drunk.")
+    it 'returns the last message of the conversation and created_at' do
+      msg1 =  FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: 'Batman, I love you!')
+      msg2 =  FactoryBot.create(:message, user_id: user2.id, conversation_id: @conversation1.id, body: 'Joker, u drunk.')
       msg3 =  FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: "Naw, I promise you, let's be friends!!!")
       
       get '/api/v1/conversations', params: {user_id: user1.id}, headers: headers1
-      expect(json_response[0]['last_msg']['body']).to eq msg3.body
+      expect(json_response[0]['msg_body']).to eq msg3.body
+      expect(json_response[0]).to include('msg_created')
     end
 
     it 'does not return a list of conversations to an uninvolved user' do
