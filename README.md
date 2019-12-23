@@ -46,7 +46,7 @@ Unit and request tests can be found in the `spec/models` and `spec/requests` fol
 ### CLIENT
 The Client part of the application was acceptance tested using [Cypress](https://www.cypress.io/).
 
-All API calls are handled using mock data `json` files, which can be found in the `cypress/fixtures` folder. Before you run any tests, you first need to asssign the `development` value to `axios.defaults.baseURL` and `authUrl` variables found in `src/index.js` and  `src/reduxTokenAuthConfig.js` respectively. Then you run `npm install` in your terminal to download all packages.
+All API calls are handled using mock data `json` files, which can be found in the `cypress/fixtures` folder. Before you run any tests, execute `npm install` in your terminal to download all packages.
 
 After that, use `npm run cy:open` to launch a local server instance of the application and run all acceptance tests of Cypress.
 
