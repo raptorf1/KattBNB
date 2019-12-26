@@ -58,6 +58,16 @@ RSpec.describe Api::V1::MessagesController, type: :request do
         expect(json_response['error']).to eq ["Body can't be blank"]
       end
 
+      it 'Message cannot be created if body is more than 1000 characters' do
+        post "/api/v1/conversations/#{conversation.id}/messages", params: {
+          user_id: user1.id,
+          conversation_id: conversation.id,
+          body: 'You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!You cannot go over 1000 characters!!!'
+        },
+        headers: headers1
+        expect(json_response['error']).to eq ['Body is too long (maximum is 1000 characters)']
+      end
+
       it 'Message cannot be created even if logged in user passes valid user_id params... somehow' do
         post "/api/v1/conversations/#{conversation.id}/messages", params: {
           user_id: user1.id,
