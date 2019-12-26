@@ -11,6 +11,7 @@ RSpec.describe Message, type: :model do
 
   describe 'Validations' do
     it { is_expected.to validate_presence_of :body }
+    it { is_expected.to validate_length_of :body }
   end
 
   describe 'Associations' do
