@@ -1,6 +1,7 @@
 class ConversationsChannel < ApplicationCable::Channel
 
   def subscribed
+    stop_all_streams
     stream_from "conversations_#{params['conversations_id']}_channel"
   end
 
@@ -9,7 +10,7 @@ class ConversationsChannel < ApplicationCable::Channel
   end
 
   def send_message(data)
-    message = current_api_v1_user.message.create(conversation_id: data['conversation_id'], body: ['body'])
+    message = Message.create(conversation_id: data['conversation_id'], body: data['body'], user_id: data['user_id'])
     if message.errors.present?
       transmit({type: 'errors', data: message.errors.full_messages})
     else
