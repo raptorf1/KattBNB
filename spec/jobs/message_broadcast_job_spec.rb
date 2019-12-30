@@ -28,6 +28,12 @@ RSpec.describe MessageBroadcastJob, :type => :job do
       ActiveJob::Base.queue_adapter = :test
       expect(MessageBroadcastJob.perform_now(1000000)).to eq 'Message with id 1000000 not found'
     end
+
+    it 'displays error message if message id is invalid' do
+      ActiveJob::Base.queue_adapter = :test
+      expect(MessageBroadcastJob.perform_now(message.id).inspect).to include 'PGRES_COMMAND_OK'
+      expect(MessageBroadcastJob.perform_now(message.id).result_status).to eq 1
+    end
   end
 
 end
