@@ -35,7 +35,7 @@ RSpec.describe ConversationsChannel, type: :channel do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation.id)
     subscription.send_message(conversation_id: conversation.id, user_id: user1.id, body: message.body)
-    expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
+    expect { MessageBroadcastJob.perform_later(message.id) }.to have_enqueued_job
   end
 
 end
