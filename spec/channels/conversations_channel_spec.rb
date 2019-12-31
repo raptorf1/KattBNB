@@ -19,4 +19,11 @@ RSpec.describe ConversationsChannel, type: :channel do
     expect(subscription).to be_confirmed
     expect(subscription).to have_stream_from('conversations_42_channel')
   end
+
+  it 'transmits relevant errors when message arguments are not within permitted params' do
+    subscribe(conversations_id: 42)
+    expect(subscription.send_message(conversation_id: 5)[1]['message']['type']).to eq 'errors'
+    expect(subscription.send_message(conversation_id: 5)[1]['message']['data']).to eq ["User must exist", "Conversation must exist", "Body can't be blank"]
+  end
+
 end
