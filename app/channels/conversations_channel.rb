@@ -1,8 +1,13 @@
 class ConversationsChannel < ApplicationCable::Channel
 
   def subscribed
-    stop_all_streams
-    stream_from "conversations_#{params['conversations_id']}_channel"
+    if params['conversations_id']
+      stop_all_streams
+      stream_from "conversations_#{params['conversations_id']}_channel"
+    else
+      connection.transmit error: 'No conversation specified. Connection rejected!'
+      reject
+    end
   end
 
   def unsubscribed
