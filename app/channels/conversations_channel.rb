@@ -22,4 +22,5 @@ class ConversationsChannel < ApplicationCable::Channel
       MessageBroadcastJob.perform_later(message.id)
     end
   end
+
 end

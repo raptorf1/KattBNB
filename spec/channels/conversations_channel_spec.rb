@@ -27,15 +27,15 @@ RSpec.describe ConversationsChannel, type: :channel do
 
   it 'transmits relevant errors when message arguments are not within permitted params' do
     subscribe(conversations_id: conversation.id)
-    expect(subscription.send_message(conversation_id: 5000000)[1]['message']['type']).to eq 'errors'
-    expect(subscription.send_message(conversation_id: 5000000)[1]['message']['data']).to eq ["User must exist", "Conversation must exist", "Body can't be blank"]
+    expect(subscription.send_message({'conversation_id' => 5000000})[1]['message']['type']).to eq 'errors'
+    expect(subscription.send_message({'conversation_id' => 5000000})[1]['message']['data']).to eq ["User must exist", "Conversation must exist", "Body can't be blank"]
   end
 
   it 'broadcast message when message arguments are within permitted params' do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation.id)
-    subscription.send_message(conversation_id: conversation.id, user_id: user1.id, body: message.body)
-    expect { MessageBroadcastJob.perform_later(message.id) }.to have_enqueued_job
+    subscription.send_message({'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => message.body})
+    expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
   end
 
 end
