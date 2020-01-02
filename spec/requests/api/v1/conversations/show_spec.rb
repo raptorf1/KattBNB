@@ -38,8 +38,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
         expect(json_response['message'][0]).to include('user')
         expect(json_response['message'][0].count).to eq 3
         expect(json_response['message'][0]['user']).to include('nickname')
-        expect(json_response['message'][0]['user']).to include('avatar')
-        expect(json_response['message'][0]['user'].count).to eq 2
+        expect(json_response['message'][0]['user'].count).to eq 1
       end
     end
 

@@ -13,8 +13,8 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
   describe 'GET /api/v1/conversations' do
 
     before do
-      conversation1 = FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id)
-      conversation2 = FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id)
+      @conversation1 = FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id)
+      @conversation2 = FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id)
     end
 
     it 'returns 401 response if user not logged in' do
@@ -36,8 +36,18 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       
     it 'returns a list of conversations to the involved user' do
       get '/api/v1/conversations', params: {user_id: user1.id}, headers: headers1
-      expect(json_response[0]['user2_id']).to eq user2.id
-      expect(json_response[1]['user2_id']).to eq user3.id
+      expect(json_response[0]['id']).to eq @conversation1.id
+      expect(json_response[1]['id']).to eq @conversation2.id
+    end
+
+    it 'returns the last message of the conversation and created_at' do
+      msg1 =  FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: 'Batman, I love you!')
+      msg2 =  FactoryBot.create(:message, user_id: user2.id, conversation_id: @conversation1.id, body: 'Joker, u drunk.')
+      msg3 =  FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: "Naw, I promise you, let's be friends!!!")
+      
+      get '/api/v1/conversations', params: {user_id: user1.id}, headers: headers1
+      expect(json_response[0]['msg_body']).to eq msg3.body
+      expect(json_response[0]).to include('msg_created')
     end
 
     it 'does not return a list of conversations to an uninvolved user' do

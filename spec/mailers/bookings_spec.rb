@@ -2,12 +2,14 @@ RSpec.describe BookingsMailer, type: :mailer do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
   let(:booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname) }
+  let(:booking2) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, price_total: '1550') }
   let(:new_request_mail) { BookingsMailer.notify_host_create_booking(host, booking, user) }
   let(:accepted_request_mail) { BookingsMailer.notify_user_accepted_booking(host, booking, user) }
   let(:declined_request_mail) { BookingsMailer.notify_user_declined_booking(host, booking, user) }
   let(:cancelled_request_user_mail) { BookingsMailer.notify_user_cancelled_booking(host, booking, user) }
   let(:cancelled_request_host_mail) { BookingsMailer.notify_host_cancelled_booking(host, booking, user) }
   let(:on_delete_account_host_mail) { BookingsMailer.notify_host_on_user_account_deletion(host, booking, user) }
+  let(:on_delete_account_host_mail2) { BookingsMailer.notify_host_on_user_account_deletion(host, booking2, user) }
 
   describe 'notify_host_create_booking' do
     it 'renders the subject' do
@@ -128,7 +130,11 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(on_delete_account_host_mail.body.encoded).to match("Hey #{host.nickname}!")
       expect(on_delete_account_host_mail.encoded).to match("#{user.nickname}")
       expect(on_delete_account_host_mail.encoded).to match("#{booking.number_of_cats}")
-      expect(on_delete_account_host_mail.encoded).to match('1550 kr')
+      expect(on_delete_account_host_mail.encoded).to match('1550.20 kr')
+    end
+
+    it 'the 100% spec!' do
+      expect(on_delete_account_host_mail2.encoded).to match('1550 kr')
     end
   end
 end
