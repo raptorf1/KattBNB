@@ -11,8 +11,8 @@ module ApplicationCable
 
     private
       def find_verified_user
-        if self.request.env['QUERY_STRING'] != nil
-          params = self.request.env['QUERY_STRING']
+        if self.env['QUERY_STRING'] != nil
+          params = self.env['QUERY_STRING']
           uid = params.split('uid=').last.split('&').first
           token = params.split('token=').last.split('&').first
           client_id = params.split('client=').last.split('&').first
