@@ -19,11 +19,11 @@ class ConversationsChannel < ApplicationCable::Channel
     message = Message.create(conversation_id: data['conversation_id'], body: data['body'], user_id: data['user_id'])
     if message.errors.present?
       transmit({type: 'errors', data: message.errors.full_messages})
-    elsif conversation.user1_id != data['user_id'] || conversation.user2_id != data['user_id']
+    elsif conversation.user1_id == data['user_id'] || conversation.user2_id == data['user_id']
+      MessageBroadcastJob.perform_later(message.id)
+    else
       message.destroy
       transmit({type: 'errors', data: 'You cannot send message to a conversation you are not part of!'})
-    else
-      MessageBroadcastJob.perform_later(message.id)
     end
   end
 
