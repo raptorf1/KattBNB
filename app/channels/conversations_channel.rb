@@ -1,11 +1,11 @@
 class ConversationsChannel < ApplicationCable::Channel
 
   def subscribed
-    if params['conversations_id']
+    if params['conversations_id'] && Conversation.find_by(id: params['conversations_id']) != nil
       stop_all_streams
       stream_from "conversations_#{params['conversations_id']}_channel"
     else
-      connection.transmit error: 'No conversation specified. Connection rejected!'
+      connection.transmit error: 'No conversation specified or conversation does not exist. Connection rejected!'
       reject
     end
   end
@@ -21,7 +21,7 @@ class ConversationsChannel < ApplicationCable::Channel
       transmit({type: 'errors', data: message.errors.full_messages})
     elsif conversation.user1_id != data['user_id'] || conversation.user2_id != data['user_id']
       message.destroy
-      transmit({type: 'errors', data: 'You cannot perform this action!'})
+      transmit({type: 'errors', data: 'You cannot send message to a conversation you are not part of!'})
     else
       MessageBroadcastJob.perform_later(message.id)
     end
