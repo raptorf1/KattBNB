@@ -15,9 +15,13 @@ class ConversationsChannel < ApplicationCable::Channel
   end
 
   def send_message(data)
+    conversation = Conversation.find_by(id: data['conversation_id'])
     message = Message.create(conversation_id: data['conversation_id'], body: data['body'], user_id: data['user_id'])
     if message.errors.present?
       transmit({type: 'errors', data: message.errors.full_messages})
+    elsif conversation.user1_id != data['user_id'] || conversation.user2_id != data['user_id']
+      message.destroy
+      transmit({type: 'errors', data: 'You cannot perform this action!'})
     else
       MessageBroadcastJob.perform_later(message.id)
     end

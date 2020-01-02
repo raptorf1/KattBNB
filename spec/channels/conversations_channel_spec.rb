@@ -1,8 +1,8 @@
 RSpec.describe ConversationsChannel, type: :channel do
   let!(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
+  let!(:user3) { FactoryBot.create(:user, email: 'nothing@thestreets.com', nickname: 'Deadpool') }
   let!(:conversation) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
-  let!(:message) { FactoryBot.create(:message, user_id: user1.id, conversation_id: conversation.id, body: 'Batman, I love you!') }
 
   before do
     stub_connection
@@ -26,15 +26,22 @@ RSpec.describe ConversationsChannel, type: :channel do
   end
 
   it 'transmits relevant errors when message arguments are not within permitted params' do
-    subscribe(conversations_id: conversation.id)
+    subscribe(conversations_id: 5000000)
     expect(subscription.send_message({'conversation_id' => 5000000})[1]['message']['type']).to eq 'errors'
     expect(subscription.send_message({'conversation_id' => 5000000})[1]['message']['data']).to eq ["User must exist", "Conversation must exist", "Body can't be blank"]
+  end
+
+  it 'transmits relevant error when unassociated with a conversation user tries to send message and deletes message' do
+    subscribe(conversations_id: conversation.id)
+    expect(subscription.send_message({'conversation_id' => conversation.id, 'body' => 'Happy New Year!', 'user_id' => user3.id})[1]['message']['type']).to eq 'errors'
+    expect(subscription.send_message({'conversation_id' => conversation.id, 'body' => 'Happy New Year!', 'user_id' => user3.id})[1]['message']['data']).to eq 'You cannot perform this action!'
+    expect(Message.all.length).to eq 0
   end
 
   it 'broadcast message when message arguments are within permitted params' do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation.id)
-    subscription.send_message({'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => message.body})
+    subscription.send_message({'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => 'Batman, I love you!'})
     expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
   end
 
