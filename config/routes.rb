@@ -10,9 +10,7 @@ Rails.application.routes.draw do
       mount ActionCable.server => '/cable/conversation(/:conversation_id/)'
       resources :host_profiles, only: [:index, :show, :create, :update]
       resources :bookings, only: [:index, :create, :update]
-      resources :conversations, only: [:create, :index, :show] do
-        resources :messages, only: [:create]
-      end
+      resources :conversations, only: [:create, :index, :show]
     end
   end
 
