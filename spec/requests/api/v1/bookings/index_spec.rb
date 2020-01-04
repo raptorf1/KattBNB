@@ -55,6 +55,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(json_response[0]).to include('host_nickname')
       expect(json_response[0]).to include('price_total')
       expect(json_response[0]).to include('user_id')
+      expect(json_response[0]).to include('host_id')
       expect(json_response[0]).to include('user')
       expect(json_response[0]).to include('created_at')
       expect(json_response[0]).to include('updated_at')
@@ -64,7 +65,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(json_response[0]).to include('host_real_lat')
       expect(json_response[0]).to include('host_real_long')
       expect(json_response[0]).to include('host_avatar')
-      expect(json_response[0].count).to eq 17
+      expect(json_response[0].count).to eq 18
     end
 
     it 'does not return a booking to an uninvolved user with host_nickname param' do
