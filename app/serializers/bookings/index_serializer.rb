@@ -6,12 +6,16 @@ class Bookings::IndexSerializer < ActiveModel::Serializer
 
   def host_id
     host = User.where(nickname: object.host_nickname)
-    return host[0].id
+    unless host.length == 0
+      return host[0].id
+    end
   end
 
   def host_location
     host = User.where(nickname: object.host_nickname)
-    return host[0].location
+    unless host.length == 0
+      return host[0].location
+    end
   end
 
 end
