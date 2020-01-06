@@ -1,3 +1,3 @@
 class Users::BookingsSerializer < ActiveModel::Serializer
-  attributes :nickname, :avatar
+  attributes :nickname, :avatar, :location
 end
