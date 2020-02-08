@@ -12,7 +12,8 @@ RSpec.describe "Sessions", type: :request do
         "data" => {
           "id" => user.id, "uid" => user.email, "email" => user.email,
           "provider" => "email", "name" => nil, "nickname" => user.nickname,
-          "location" => user.location, "image" => nil, "avatar" => nil, "allow_password_change" => false
+          "location" => user.location, "image" => nil, "avatar" => nil, "allow_password_change" => false,
+          "message_notification" => true
         }
       }
 
