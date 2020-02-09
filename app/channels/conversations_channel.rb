@@ -28,7 +28,7 @@ class ConversationsChannel < ApplicationCable::Channel
       end
       MessageBroadcastJob.perform_later(message.id)
       if user_receiving[0].message_notification == true
-        MessagesMailer.notify_user_new_message(user_sending[0], user_receiving[0]).deliver
+        MessagesMailer.notify_user_new_message(user_sending[0], user_receiving[0], message.body).deliver
       end
     else
       message.destroy
