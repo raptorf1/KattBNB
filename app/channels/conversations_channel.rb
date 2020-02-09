@@ -27,7 +27,9 @@ class ConversationsChannel < ApplicationCable::Channel
         user_receiving = User.where(id: conversation.user1_id)
       end
       MessageBroadcastJob.perform_later(message.id)
-      MessagesMailer.notify_user_new_message(user_sending[0], user_receiving[0]).deliver
+      if user_receiving[0].message_notification == true
+        MessagesMailer.notify_user_new_message(user_sending[0], user_receiving[0]).deliver
+      end
     else
       message.destroy
       transmit({type: 'errors', data: 'You cannot send message to a conversation you are not part of!'})
