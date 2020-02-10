@@ -1,8 +1,9 @@
 RSpec.describe ConversationsChannel, type: :channel do
   let!(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let!(:user3) { FactoryBot.create(:user, email: 'nothing@thestreets.com', nickname: 'Deadpool') }
+  let!(:user3) { FactoryBot.create(:user, email: 'nothing@thestreets.com', nickname: 'Deadpool', message_notification: false) }
   let!(:conversation) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
+  let!(:conversation2) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id) }
 
   before do
     stub_connection
@@ -44,11 +45,20 @@ RSpec.describe ConversationsChannel, type: :channel do
     expect(Message.all.length).to eq 0
   end
 
-  it 'broadcasts message when message arguments are within permitted params' do
+  it 'broadcasts message and does not send an email to receiver if she opts out of that notification' do
+    ActiveJob::Base.queue_adapter = :test
+    subscribe(conversations_id: conversation2.id)
+    subscription.send_message({'conversation_id' => conversation2.id, 'user_id' => user1.id, 'body' => 'Batman, I hate you!'})
+    expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
+    expect(ActionMailer::Base.deliveries.count).to eq 0
+  end
+
+  it 'broadcasts message and sends an email to receiver when message arguments are within permitted params' do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation.id)
     subscription.send_message({'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => 'Batman, I love you!'})
     expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
+    expect(ActionMailer::Base.deliveries.count).to eq 1
   end
 
 end

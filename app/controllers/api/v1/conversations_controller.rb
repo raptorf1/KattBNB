@@ -27,7 +27,10 @@ class Api::V1::ConversationsController < ApplicationController
     else
       conversation = Conversation.create(conversation_params)
       if conversation.persisted?
+        user1 = current_api_v1_user
+        user2 = User.where(id: conversation.user2_id)
         render json: { message: 'Successfully created', id: conversation.id }, status: 200
+        ConversationsMailer.notify_user_new_conversation(user1, user2[0]).deliver
       end
     end
   end

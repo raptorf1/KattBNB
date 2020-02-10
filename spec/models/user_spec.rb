@@ -28,6 +28,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_db_column :updated_at }
     it { is_expected.to have_db_column :location }
     it { is_expected.to have_db_column :avatar }
+    it { is_expected.to have_db_column :message_notification }
   end
 
   # The error message of the below test proves exactly what we are trying to achieve.
