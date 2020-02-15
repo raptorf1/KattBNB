@@ -35,11 +35,26 @@ class Api::V1::ConversationsController < ApplicationController
     end
   end
 
- 
+  def update
+    conversation = Conversation.find(params[:id])
+    if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
+      if conversation.hidden == null
+        profile.update(hidden: params[:hidden])
+        if conversation.persisted? == true
+          render json: { message: 'Success' }, status: 200
+        end
+      else 
+        conversation.destroy
+      end
+    else
+      render json: { error: 'You cannot perform this action!' }, status: 422
+    end
+  end
+
   private
 
   def conversation_params
-    params.permit(:user1_id, :user2_id)
+    params.permit(:user1_id, :user2_id, :hidden)
   end
 
 end
