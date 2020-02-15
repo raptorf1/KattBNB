@@ -38,8 +38,8 @@ class Api::V1::ConversationsController < ApplicationController
   def update
     conversation = Conversation.find(params[:id])
     if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
-      if conversation.hidden == null
-        profile.update(hidden: params[:hidden])
+      if conversation.hidden == nil
+        conversation.update(hidden: params[:hidden])
         if conversation.persisted? == true
           render json: { message: 'Success' }, status: 200
         end
