@@ -1,6 +1,6 @@
 class Api::V1::ConversationsController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:create, :index, :show]
+  before_action :authenticate_api_v1_user!, only: [:create, :index, :show, :update]
 
   def index
     if params[:user_id].to_i == current_api_v1_user.id
@@ -54,7 +54,7 @@ class Api::V1::ConversationsController < ApplicationController
   private
 
   def conversation_params
-    params.permit(:user1_id, :user2_id, :hidden)
+    params.permit(:user1_id, :user2_id)
   end
 
 end
