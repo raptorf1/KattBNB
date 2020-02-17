@@ -29,5 +29,21 @@ RSpec.describe Message, type: :model do
       expect(Conversation.all.length).to eq 0
       expect(Message.all.length).to eq 0
     end
+
+    it 'user association of message is nullified when associated user is deleted from the database' do
+      user1 = FactoryBot.create(:user, email: 'george@cyprus.com', nickname: 'george')
+      user2 = FactoryBot.create(:user, email: 'zane@sweden.com', nickname: 'zane')
+      conv = FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id)
+      FactoryBot.create(:message, user_id: user1.id, conversation_id: Conversation.last.id)
+      expect(User.all.length).to eq 2
+      expect(Conversation.all.length).to eq 1
+      expect(Message.all.length).to eq 1
+    #  binding.pry
+      user1.destroy
+      expect(User.all.length).to eq 1
+      expect(Conversation.all.length).to eq 1
+      expect(Message.all.length).to eq 1
+      expect(Message.last.user_id).to eq nil
+    end
   end
 end

@@ -8,7 +8,6 @@ namespace :conversations do
       deleted_conversations.push(conversation)
       conversation.destroy
     end
-
     puts "#{deleted_conversations.length} empty conversation(s) succesfully deleted!"
   end
 end
