@@ -1,4 +1,4 @@
-describe 'rake conversations:delete_empty_conversation', type: :task do
+describe 'rake conversations:delete_empty_conversations', type: :task do
   let!(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
   let!(:user3) { FactoryBot.create(:user, email: 'cat@woman.com', nickname: 'Catwoman') }
@@ -22,6 +22,6 @@ describe 'rake conversations:delete_empty_conversation', type: :task do
   end
 
   it 'logs to stdout' do
-    expect { task.execute }.to output("1 conversation(s) succesfully deleted!\n").to_stdout
+    expect { task.execute }.to output("1 empty conversation(s) succesfully deleted!\n").to_stdout
   end
 end
