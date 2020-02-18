@@ -13,11 +13,7 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
     expect(task.prerequisites).to include 'environment'
   end
 
-  it 'runs gracefully with no errors' do
-    expect { task.execute }.not_to raise_error
-  end
-
-  it 'deletes only unassociated conversations and their messages' do
+  it 'deletes only unassociated conversations and their messages and logs correct message' do
     expect(Conversation.all.length).to eq 3
     expect(Message.all.length).to eq 2
     user1.destroy
@@ -25,13 +21,14 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
     conversation1.reload
     conversation2.reload
     conversation3.reload
-    task.execute
+    expect { task.execute }.to output("2 unassociated conversation(s) succesfully deleted!\n").to_stdout
     expect(Conversation.all.length).to eq 1
     expect(Conversation.last.id).to eq conversation3.id
     expect(Message.all.length).to eq 0
   end
 
-  it 'logs to stdout' do
-    expect { task.execute }.to output("2 unassociated conversation(s) succesfully deleted!\n").to_stdout
+  it 'runs gracefully with no errors' do
+    expect { task.execute }.not_to raise_error
   end
+
 end

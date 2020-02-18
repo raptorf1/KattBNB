@@ -10,4 +10,17 @@ namespace :conversations do
     end
     puts "#{deleted_conversations.length} empty conversation(s) succesfully deleted!"
   end
+
+  desc 'Deletes all unassociated conversations'
+  task delete_unassociated_conversations: :environment do
+    conversations = Conversation.all
+    unassociated_conversations = []
+    conversations.each do |conversation|
+      if conversation.user1_id == nil && conversation.user2_id == nil
+        unassociated_conversations.push(conversation)
+        conversation.destroy
+      end
+    end
+    puts "#{unassociated_conversations.length} unassociated conversation(s) succesfully deleted!"
+  end
 end
