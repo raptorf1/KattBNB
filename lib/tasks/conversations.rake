@@ -16,10 +16,9 @@ namespace :conversations do
     conversations = Conversation.all
     unassociated_conversations = []
     conversations.each do |conversation|
-      if conversation.user1_id == nil && conversation.user2_id == nil
-        unassociated_conversations.push(conversation)
-        conversation.destroy
-      end
+      next unless conversation.user1_id == nil && conversation.user2_id == nil
+      unassociated_conversations.push(conversation)
+      conversation.destroy
     end
     puts "#{unassociated_conversations.length} unassociated conversation(s) succesfully deleted!"
   end
