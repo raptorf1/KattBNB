@@ -1,6 +1,6 @@
 class Api::V1::ConversationsController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:create, :index, :show]
+  before_action :authenticate_api_v1_user!, only: [:create, :index, :show, :update]
 
   def index
     if params[:user_id].to_i == current_api_v1_user.id
@@ -35,7 +35,22 @@ class Api::V1::ConversationsController < ApplicationController
     end
   end
 
- 
+  def update
+    conversation = Conversation.find(params[:id])
+    if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
+      if conversation.hidden == nil
+        conversation.update(hidden: params[:hidden])
+        if conversation.persisted? == true
+          render json: { message: 'Success' }, status: 200
+        end
+      else 
+        conversation.destroy
+      end
+    else
+      render json: { error: 'You cannot perform this action!' }, status: 422
+    end
+  end
+
   private
 
   def conversation_params

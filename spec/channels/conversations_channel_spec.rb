@@ -4,6 +4,7 @@ RSpec.describe ConversationsChannel, type: :channel do
   let!(:user3) { FactoryBot.create(:user, email: 'nothing@thestreets.com', nickname: 'Deadpool', message_notification: false) }
   let!(:conversation) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
   let!(:conversation2) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id) }
+  let!(:conversation3) { FactoryBot.create(:conversation, user1_id: user2.id, user2_id: user3.id, hidden: user2.id) }
 
   before do
     stub_connection
@@ -59,6 +60,16 @@ RSpec.describe ConversationsChannel, type: :channel do
     subscription.send_message({'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => 'Batman, I love you!'})
     expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
     expect(ActionMailer::Base.deliveries.count).to eq 1
+  end
+
+  it 'updates conversation hidden field to nil and broadcasts message when message arguments are within permitted params' do
+    ActiveJob::Base.queue_adapter = :test
+    subscribe(conversations_id: conversation3.id)
+    expect(conversation3.hidden).to eq user2.id
+    subscription.send_message({'conversation_id' => conversation3.id, 'user_id' => user3.id, 'body' => 'Batman, I love you!'})
+    conversation3.reload
+    expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
+    expect(conversation3.hidden).to eq nil
   end
 
 end

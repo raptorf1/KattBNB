@@ -32,7 +32,8 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       it 'has correct keys in the response' do
         expect(json_response).to include('id')
         expect(json_response).to include('message')
-        expect(json_response.count).to eq 2
+        expect(json_response).to include('hidden')
+        expect(json_response.count).to eq 3
         expect(json_response['message'][0]).to include('body')
         expect(json_response['message'][0]).to include('created_at')
         expect(json_response['message'][0]).to include('user')

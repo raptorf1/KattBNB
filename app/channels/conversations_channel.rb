@@ -16,23 +16,45 @@ class ConversationsChannel < ApplicationCable::Channel
 
   def send_message(data)
     conversation = Conversation.find_by(id: data['conversation_id'])
-    message = Message.create(conversation_id: data['conversation_id'], body: data['body'], user_id: data['user_id'])
-    if message.errors.present?
-      transmit({type: 'errors', data: message.errors.full_messages})
-    elsif conversation.user1_id == data['user_id'] || conversation.user2_id == data['user_id']
-      user_sending = User.where(id: message.user_id)
-      if conversation.user1_id == message.user_id
-        user_receiving = User.where(id: conversation.user2_id)
+    if conversation.hidden == nil
+      message = Message.create(conversation_id: data['conversation_id'], body: data['body'], user_id: data['user_id'])
+      if message.errors.present?
+        transmit({type: 'errors', data: message.errors.full_messages})
+      elsif conversation.user1_id == data['user_id'] || conversation.user2_id == data['user_id']
+        user_sending = User.where(id: message.user_id)
+        if conversation.user1_id == message.user_id
+          user_receiving = User.where(id: conversation.user2_id)
+        else
+          user_receiving = User.where(id: conversation.user1_id)
+        end
+        MessageBroadcastJob.perform_later(message.id)
+        if user_receiving[0].message_notification == true
+          MessagesMailer.notify_user_new_message(user_sending[0], user_receiving[0], message.body).deliver
+        end
       else
-        user_receiving = User.where(id: conversation.user1_id)
-      end
-      MessageBroadcastJob.perform_later(message.id)
-      if user_receiving[0].message_notification == true
-        MessagesMailer.notify_user_new_message(user_sending[0], user_receiving[0], message.body).deliver
+        message.destroy
+        transmit({type: 'errors', data: 'You cannot send message to a conversation you are not part of!'})
       end
     else
-      message.destroy
-      transmit({type: 'errors', data: 'You cannot send message to a conversation you are not part of!'})
+      conversation.update(hidden: nil)
+      message = Message.create(conversation_id: data['conversation_id'], body: data['body'], user_id: data['user_id'])
+      if message.errors.present?
+        transmit({type: 'errors', data: message.errors.full_messages})
+      elsif conversation.user1_id == data['user_id'] || conversation.user2_id == data['user_id']
+        user_sending = User.where(id: message.user_id)
+        if conversation.user1_id == message.user_id
+          user_receiving = User.where(id: conversation.user2_id)
+        else
+          user_receiving = User.where(id: conversation.user1_id)
+        end
+        MessageBroadcastJob.perform_later(message.id)
+        if user_receiving[0].message_notification == true
+          MessagesMailer.notify_user_new_message(user_sending[0], user_receiving[0], message.body).deliver
+        end
+      else
+        message.destroy
+        transmit({type: 'errors', data: 'You cannot send message to a conversation you are not part of!'})
+      end
     end
   end
 
