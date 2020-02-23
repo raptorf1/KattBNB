@@ -36,7 +36,7 @@ class ConversationsChannel < ApplicationCable::Channel
         transmit({type: 'errors', data: 'You cannot send message to a conversation you are not part of!'})
       end
     else
-      conversation.update(hidden: nil)
+      conversation.update_attribute('hidden', nil)
       message = Message.create(conversation_id: data['conversation_id'], body: data['body'], user_id: data['user_id'])
       if message.errors.present?
         transmit({type: 'errors', data: message.errors.full_messages})
