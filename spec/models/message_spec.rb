@@ -17,6 +17,14 @@ RSpec.describe Message, type: :model do
   describe 'Associations' do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:conversation) }
+    it { is_expected.to have_one(:image_attachment) }
+  end
+
+  describe 'Attached image' do
+    it 'is valid' do
+      subject.image.attach(io: File.open('spec/fixtures/greece.jpg'), filename: 'attachment.jpg', content_type: 'image/jpg')
+      expect(subject.image).to be_attached
+    end
   end
 
   describe 'Delete dependent setting' do
