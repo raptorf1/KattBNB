@@ -72,4 +72,18 @@ RSpec.describe ConversationsChannel, type: :channel do
     expect(conversation3.hidden).to eq nil
   end
 
+  it 'broadcasts message with image attached' do
+    image = {
+      type: "image/png",
+      encoder: "name=carbon (5).png;base64",
+      data: "iVBORw0KGgoAAAANSUhEUgAABjAAAAOmCAYAAABFYNwHAAAgAElEQVR4XuzdB3gU1cLG8Te9EEgISQi9I71KFbBXbFixN6zfvSiIjSuKInoVFOyIDcWuiKiIol4Q6SBVOtI7IYSWBkm+58y6yW4a2SS7O4n/eZ7vuWR35pwzvzO76zf",
+      extension: "png"
+      }
+    ActiveJob::Base.queue_adapter = :test
+    subscribe(conversations_id: conversation.id)
+    subscription.send_message({'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => 'Batman, I love you!', 'image' => image})
+    expect(Message.last.image).to be_attached
+    expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
+  end
+
 end
