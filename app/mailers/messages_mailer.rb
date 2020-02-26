@@ -4,7 +4,9 @@ class MessagesMailer < ApplicationMailer
     @user1 = user1
     @user2 = user2
 
-    if message.length > 100
+    if message == nil
+      @message = 'Image attachment'
+    elsif message.length > 100
       @message = message.slice(0,100)+'...'
     else
       @message = message

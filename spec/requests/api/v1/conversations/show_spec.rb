@@ -16,6 +16,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       before do
         FactoryBot.create(:message, user_id: user1.id, conversation_id: conversation1.id, body: 'Hello, Harley!')
         FactoryBot.create(:message, user_id: user2.id, conversation_id: conversation1.id, body: 'Hello, Joker!')
+        Message.last.image.attach(io: File.open('spec/fixtures/greece.jpg'), filename: 'attachment.jpg', content_type: 'image/jpg')
         get "/api/v1/conversations/#{conversation1.id}", headers: headers1
       end
 
@@ -38,9 +39,15 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
         expect(json_response['message'][0]).to include('created_at')
         expect(json_response['message'][0]).to include('user')
         expect(json_response['message'][0]).to include('id')
-        expect(json_response['message'][0].count).to eq 4
+        expect(json_response['message'][0]).to include('image')
+        expect(json_response['message'][0].count).to eq 5
         expect(json_response['message'][0]['user']).to include('nickname')
         expect(json_response['message'][0]['user'].count).to eq 1
+      end
+
+      it 'has URL in image response if image is attached' do
+        expect(json_response['message'][0]['image']).to eq nil
+        expect(json_response['message'][1]['image'].include?('http://localhost:3007/rails/active_storage/blobs'))
       end
     end
 
