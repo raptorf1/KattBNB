@@ -35,5 +35,5 @@ RSpec.describe MessageBroadcastJob, :type => :job do
       expect(MessageBroadcastJob.perform_now(message.id).result_status).to eq 1
     end
   end
-
+    
 end
