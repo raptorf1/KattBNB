@@ -1,12 +1,7 @@
 module DecodeImageService
 
   def self.attach_image(img, target)
-
-    if Rails.env == 'test'
-      image = img
-    else
-      image = split_base64(img[0])
-    end
+    Rails.env == 'test' ? image = img : image = split_base64(img[0])
     decoded_data = Base64.decode64(image[:data])
     io = StringIO.new
     io.puts(decoded_data)
