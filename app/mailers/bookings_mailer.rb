@@ -9,11 +9,7 @@ class BookingsMailer < ApplicationMailer
     @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
 
     string_with_2_decimals = sprintf('%.2f', booking.price_total.to_s)
-    if string_with_2_decimals[string_with_2_decimals.length - 1] == '0' && string_with_2_decimals[string_with_2_decimals.length - 2] == '0'
-      @total = string_with_2_decimals.to_i
-    else
-      @total = sprintf('%.2f', string_with_2_decimals)
-    end
+    (string_with_2_decimals[string_with_2_decimals.length - 1] == '0' && string_with_2_decimals[string_with_2_decimals.length - 2] == '0') ? @total = string_with_2_decimals.to_i : @total = sprintf('%.2f', string_with_2_decimals)
 
     mail(to: @host.email, subject: 'You have a new booking request!')
   end
@@ -71,11 +67,7 @@ class BookingsMailer < ApplicationMailer
     @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
 
     string_with_2_decimals = sprintf('%.2f', booking.price_total.to_s)
-    if string_with_2_decimals[string_with_2_decimals.length - 1] == '0' && string_with_2_decimals[string_with_2_decimals.length - 2] == '0'
-      @total = string_with_2_decimals.to_i
-    else
-      @total = sprintf('%.2f', string_with_2_decimals)
-    end
+    (string_with_2_decimals[string_with_2_decimals.length - 1] == '0' && string_with_2_decimals[string_with_2_decimals.length - 2] == '0') ? @total = string_with_2_decimals.to_i : @total = sprintf('%.2f', string_with_2_decimals)
 
     mail(to: @host.email, subject: 'Important information about your upcoming booking!')
   end

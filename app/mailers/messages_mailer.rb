@@ -4,13 +4,7 @@ class MessagesMailer < ApplicationMailer
     @user1 = user1
     @user2 = user2
 
-    if message == nil
-      @message = 'Image attachment'
-    elsif message.length > 100
-      @message = message.slice(0,100)+'...'
-    else
-      @message = message
-    end
+    message == nil ? @message = 'Image attachment' : message.length > 100 ? @message = message.slice(0,100)+'...' : @message = message
 
     mail(to: @user2.email, subject: "New message from #{@user1.nickname}!")
   end
