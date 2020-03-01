@@ -3,19 +3,12 @@ class Api::V1::BookingsController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:index, :create, :update]
 
   def index
-    if params[:host_nickname] == current_api_v1_user.nickname
-      bookings = Booking.where(host_nickname: params[:host_nickname])
-    elsif params[:user_id].to_i == current_api_v1_user.id
-      bookings = Booking.where(user_id: params[:user_id])
-    else
-      bookings = []
-    end
+    params[:host_nickname] == current_api_v1_user.nickname ? bookings = Booking.where(host_nickname: params[:host_nickname]) : params[:user_id].to_i == current_api_v1_user.id ? bookings = Booking.where(user_id: params[:user_id]) : bookings = []
     render json: bookings, each_serializer: Bookings::IndexSerializer
   end
 
   def create
     booking = Booking.create(booking_params)
-
     if booking.persisted?
       host = User.where(nickname: booking.host_nickname)
       if host.length == 1
@@ -43,7 +36,6 @@ class Api::V1::BookingsController < ApplicationController
 
   def update
     booking = Booking.find(params[:id])
-
     if current_api_v1_user.nickname == booking.host_nickname
       user = User.where(id: booking.user_id)
       host = User.where(nickname: booking.host_nickname)

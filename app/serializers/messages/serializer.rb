@@ -8,13 +8,7 @@ class Messages::Serializer < ActiveModel::Serializer
 
 
   def image
-    if object.image.attached?
-      if Rails.env.test?
-        rails_blob_url(object.image)
-      else
-        object&.image&.service_url(expires_in: 1.hour, disposition: 'inline')
-      end
-    end
+    object.image.attached? ? (Rails.env.test? ? rails_blob_url(object.image) : object&.image&.service_url(expires_in: 1.hour, disposition: 'inline')) : nil
   end
 
 end

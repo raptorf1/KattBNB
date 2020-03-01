@@ -10,6 +10,7 @@ module ApplicationCable
 
 
     private
+
       def find_verified_user
         if self.env['QUERY_STRING'] != nil
           params = self.env['QUERY_STRING']
@@ -17,15 +18,12 @@ module ApplicationCable
           token = params.split('token=').last.split('&').first
           client_id = params.split('client=').last.split('&').first
           user = User.find_by_uid(uid)
-          if user && user.valid_token?(token, client_id)
-            user
-          else
-            reject_unauthorized_connection
-          end
+          (user && user.valid_token?(token, client_id)) ? user : reject_unauthorized_connection
         else
           reject_unauthorized_connection
         end
       end
+      
   end
 
 end

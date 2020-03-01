@@ -3,21 +3,13 @@ class Api::V1::ConversationsController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:create, :index, :show, :update]
 
   def index
-    if params[:user_id].to_i == current_api_v1_user.id
-      conversations = Conversation.where(user1_id: params[:user_id]).or(Conversation.where(user2_id: params[:user_id]))
-    else
-      conversations = []
-    end
+    params[:user_id].to_i == current_api_v1_user.id ? conversations = Conversation.where(user1_id: params[:user_id]).or(Conversation.where(user2_id: params[:user_id])) : conversations = []
     render json: conversations, each_serializer: Conversations::IndexSerializer
   end
 
   def show
     conversation = Conversation.find(params[:id])
-    if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
-      render json: conversation, include: [message: [:user]], serializer: Conversations::ShowSerializer
-    else
-      render json: { error: 'You cannot perform this action!' }, status: 422
-    end
+    conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id ? (render json: conversation, include: [message: [:user]], serializer: Conversations::ShowSerializer) : (render json: { error: 'You cannot perform this action!' }, status: 422)
   end
 
   def create
@@ -40,9 +32,7 @@ class Api::V1::ConversationsController < ApplicationController
     if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
       if conversation.hidden == nil
         conversation.update_attribute('hidden', params[:hidden])
-        if conversation.persisted? == true
-          render json: { message: 'Success' }, status: 200
-        end
+        conversation.persisted? == true && (render json: { message: 'Success' }, status: 200)
       else 
         conversation.destroy
       end
@@ -50,6 +40,7 @@ class Api::V1::ConversationsController < ApplicationController
       render json: { error: 'You cannot perform this action!' }, status: 422
     end
   end
+
 
   private
 

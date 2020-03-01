@@ -4,36 +4,20 @@ class Api::V1::HostProfilesController < ApplicationController
 
 
   def index
-    if params[:user_id]
-      profiles = HostProfile.where(user_id: params[:user_id])
-    elsif params[:location]
-      profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
-    else
-      profiles = HostProfile.all
-    end
-      render json: profiles, each_serializer: HostProfiles::IndexSerializer
+    params[:user_id] ? profiles = HostProfile.where(user_id: params[:user_id]) : params[:location] ? profiles = HostProfile.joins(:user).where(users: {location: params[:location]}) : profiles = HostProfile.all
+    render json: profiles, each_serializer: HostProfiles::IndexSerializer
   end
   
 
   def show
     profile = HostProfile.find(params[:id])
-
-    if current_api_v1_user.id == profile.user_id
-      render json: profile, serializer: HostProfiles::ShowSerializer
-    else
-      render json: profile, serializer: HostProfiles::ShowSerializerNoAddress
-    end
+    current_api_v1_user.id == profile.user_id ? (render json: profile, serializer: HostProfiles::ShowSerializer) : (render json: profile, serializer: HostProfiles::ShowSerializerNoAddress)
   end
 
 
   def create
     profile = HostProfile.create(host_profile_params)
-    
-    if profile.persisted?
-      render json: { message: 'Successfully created' }, status: 200
-    else
-      render json: { error: profile.errors.full_messages }, status: 422
-    end    
+    profile.persisted? ? (render json: { message: 'Successfully created' }, status: 200) : (render json: { error: profile.errors.full_messages }, status: 422)
   end
 
 
@@ -42,9 +26,7 @@ class Api::V1::HostProfilesController < ApplicationController
 
     if current_api_v1_user.id == profile.user_id
       profile.update(host_profile_params)
-      if profile.persisted? == true
-        render json: { message: 'You have successfully updated your host profile' }, status: 200
-      end
+      profile.persisted? == true && (render json: { message: 'You have successfully updated your host profile' }, status: 200)
     else
       render json: { error: 'You cannot perform this action' }, status: 422
     end
