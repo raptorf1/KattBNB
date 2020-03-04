@@ -50,6 +50,13 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       expect(json_response[0]).to include('msg_created')
     end
 
+    it 'returns fixed text if the last message is an image attachment' do
+      msg1 =  FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: '')
+      
+      get '/api/v1/conversations', params: {user_id: user1.id}, headers: headers1
+      expect(json_response[0]['msg_body']).to eq 'Image attachment'
+    end
+
     it 'does not return a list of conversations to an uninvolved user' do
       get '/api/v1/conversations', params: {user_id: user2.id}, headers: headers3
       expect(json_response.count).to eq 0

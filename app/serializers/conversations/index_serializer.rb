@@ -6,7 +6,7 @@ class Conversations::IndexSerializer < ActiveModel::Serializer
   
   def msg_body
     unless object.message.last == nil
-      return object.message.last.body
+      object.message.last.body == '' ? (return 'Image attachment') : (return object.message.last.body)
     end
   end
 
