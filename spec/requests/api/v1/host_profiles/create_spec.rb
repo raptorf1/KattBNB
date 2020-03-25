@@ -25,7 +25,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       end
 
       it 'creates a host profile' do
-        expect(json_response['message']).to eq 'Successfully created'
+        expect(json_response['message']).to eq 'Successfully created!'
         expect(response.status).to eq 200
       end
     end

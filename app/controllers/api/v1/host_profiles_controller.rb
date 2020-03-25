@@ -17,7 +17,7 @@ class Api::V1::HostProfilesController < ApplicationController
 
   def create
     profile = HostProfile.create(host_profile_params)
-    profile.persisted? ? (render json: { message: 'Successfully created' }, status: 200) : (render json: { error: profile.errors.full_messages }, status: 422)
+    profile.persisted? ? (render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200) : (render json: { error: profile.errors.full_messages }, status: 422)
   end
 
 
@@ -26,9 +26,9 @@ class Api::V1::HostProfilesController < ApplicationController
 
     if current_api_v1_user.id == profile.user_id
       profile.update(host_profile_params)
-      profile.persisted? == true && (render json: { message: 'You have successfully updated your host profile' }, status: 200)
+      profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
     else
-      render json: { error: 'You cannot perform this action' }, status: 422
+      render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
     end
   end
 

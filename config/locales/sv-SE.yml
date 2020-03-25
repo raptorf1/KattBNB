@@ -11,6 +11,8 @@ sv-SE:
     conversations:
       create_exists: ""
       update_success: ""
+    host_profiles:
+      update_success: ""
   channels:
     conversations:
       sub_error: ""
