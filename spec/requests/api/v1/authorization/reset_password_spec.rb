@@ -8,7 +8,7 @@ RSpec.describe "Reset Password", type: :request do
                                               redirect_url: 'confirmed'
                                            }, headers: headers
       expect(json_response['success']).to eq true
-      expect(json_response['message']). to eq "An email has been sent to 'kattbnb@fgreat.com' containing instructions for resetting your password."
+      expect(json_response['message']). to eq "An email has been sent to kattbnb@fgreat.com containing instructions for resetting your password."
       expect(response.status).to eq 200
     end
 
@@ -17,7 +17,7 @@ RSpec.describe "Reset Password", type: :request do
                                               redirect_url: 'confirmed'
                                            }, headers: headers
       expect(json_response['success']).to eq false
-      expect(json_response['errors']). to eq ["Unable to find user with email 'gameofthrones@mail.ru'."]
+      expect(json_response['errors']). to eq ["Unable to find user with email gameofthrones@mail.ru."]
       expect(response.status).to eq 404
     end
   end
