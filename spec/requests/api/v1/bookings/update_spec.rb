@@ -21,7 +21,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       },
       headers: headers_host1
       expect(response.status).to eq 200
-      expect(json_response['message']).to eq 'You have successfully updated this booking'
+      expect(json_response['message']).to eq 'You have successfully updated this booking!'
       booking.reload
       expect(booking.status).to eq 'accepted'
       expect(booking.host_message).to eq 'accepted by host'
@@ -65,7 +65,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       },
       headers: headers_host2
       expect(response.status).to eq 422
-      expect(json_response['error']).to eq 'You cannot perform this action'
+      expect(json_response['error']).to eq 'You cannot perform this action!'
     end
 
     it 'does not update status of certain booking even if action comes from the user that requested it in the first place' do
@@ -75,7 +75,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       },
       headers: headers_user1
       expect(response.status).to eq 422
-      expect(json_response['error']).to eq 'You cannot perform this action'
+      expect(json_response['error']).to eq 'You cannot perform this action!'
     end
 
     it 'does not update any booking if user is not authenticated' do

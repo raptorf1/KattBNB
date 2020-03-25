@@ -1,4 +1,12 @@
 sv-SE:
+  controllers:
+    bookings:
+      create_success: ""
+      create_error_1: ""
+      create_error_2: ""
+      update_success: ""
+      update_error_1: ""
+      update_error_2: ""
   channels:
     conversations:
       sub_error: ""
