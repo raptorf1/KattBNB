@@ -19,7 +19,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       end
 
       it 'creates a new conversation' do
-        expect(json_response['message']).to eq 'Successfully created'
+        expect(json_response['message']).to eq 'Successfully created!'
         expect(json_response['id']).to eq Conversation.last.id
         expect(response.status).to eq 200
       end
@@ -35,7 +35,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
         }, 
         headers: headers
 
-        expect(json_response['message']).to eq 'Conversation already exists'
+        expect(json_response['message']).to eq 'Conversation already exists!'
         expect(json_response['id']).to eq conversation.id
         expect(response.status).to eq 200
       end

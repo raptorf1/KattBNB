@@ -8,6 +8,9 @@ sv-SE:
       create_error_2: ""
       update_success: ""
       update_error: ""
+    conversations:
+      create_exists: ""
+      update_success: ""
   channels:
     conversations:
       sub_error: ""
