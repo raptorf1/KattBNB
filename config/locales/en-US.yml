@@ -1,4 +1,8 @@
 en-US:
+  channels:
+    conversations:
+      sub_error: "No conversation specified or conversation does not exist. Connection rejected!"
+      message_error: "You cannot send message to a conversation you are not part of!"
   activerecord:
     attributes:
       user:
