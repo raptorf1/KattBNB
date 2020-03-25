@@ -1,4 +1,11 @@
 sv-SE:
+  activerecord:
+    attributes:
+      booking:
+        message: ""
+        host_message: ""
+      host_profile:
+        description: ""
   devise:
     confirmations:
       confirmed: "Ditt konto har bekräftats. Du är nu inloggad."

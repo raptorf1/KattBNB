@@ -1,4 +1,11 @@
 en-US:
+  activerecord:
+    attributes:
+      booking:
+        message: "Message"
+        host_message: "Host message"
+      host_profile:
+        description: "Description"
   devise:
     confirmations:
       confirmed: "Your email address has been successfully confirmed."
