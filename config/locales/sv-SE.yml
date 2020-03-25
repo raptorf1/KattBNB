@@ -1,6 +1,10 @@
 sv-SE:
   activerecord:
     attributes:
+      user:
+        password: "Lösenord"
+        password_confirmation: "Bekräfta lösenord"
+        current_password: "Nuvarande lösenord"
       booking:
         message: ""
         host_message: ""

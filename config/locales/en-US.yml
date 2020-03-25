@@ -1,6 +1,10 @@
 en-US:
   activerecord:
     attributes:
+      user:
+        password: "Password"
+        password_confirmation: "Password confirmation"
+        current_password: "Current password"
       booking:
         message: "Message"
         host_message: "Host message"
