@@ -14,6 +14,7 @@ class ApplicationController < ActionController::API
   end
 
 
+
   private
 
   def set_locale
@@ -25,8 +26,8 @@ class ApplicationController < ActionController::API
     I18n.available_locales.map(&:to_s).include?(parsed_locale) ? parsed_locale : nil
   end
 
+  def default_url_options
+    { locale: I18n.locale }
+  end
+
 end
-
-
-
-
