@@ -15,7 +15,7 @@ class Api::V1::BookingsController < ApplicationController
         profile = HostProfile.where(user_id: host[0].id)
         user = User.where(id: booking.user_id)
         if (booking.dates - profile[0].availability).empty? == true
-          render json: { message: I18n.t('controllers.bookings.create_success') }, status: 200
+          render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200
           new_availability = profile[0].availability - booking.dates
           profile.update(availability: new_availability)
           booking.update(host_avatar: host[0].avatar)
@@ -54,11 +54,11 @@ class Api::V1::BookingsController < ApplicationController
         render json: { error: booking.errors.full_messages }, status: 422
       end
     else
-      render json: { error: I18n.t('controllers.bookings.update_error_1') }, status: 422
+      render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
     end
 
   rescue ActiveRecord::RecordNotFound
-    render json: { error: [I18n.t('controllers.bookings.update_error_2')] }, status: :not_found
+    render json: { error: [I18n.t('controllers.bookings.update_error')] }, status: :not_found
   end
 
  
