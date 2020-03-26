@@ -20,6 +20,10 @@ sv-SE:
   jobs:
     message_broadcast:
       error: ""
+  serializers:
+    conversations:
+      index:
+        image_attachment: ""
   activerecord:
     attributes:
       user:

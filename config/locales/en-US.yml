@@ -20,6 +20,10 @@ en-US:
   jobs:
     message_broadcast:
       error: "Message with id %{message} not found"
+  serializers:
+    conversations:
+      index:
+        image_attachment: "Image attachment"
   activerecord:
     attributes:
       user:
