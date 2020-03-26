@@ -1,4 +1,6 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'KattBNB Notification Service'
+
+  default from: I18n.t('mailers.sender_kattbnb')
   layout 'mailer'
+
 end

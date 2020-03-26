@@ -24,6 +24,15 @@ en-US:
     conversations:
       index:
         image_attachment: "Image attachment"
+  mailers:
+    sender_kattbnb: "KattBNB Notification Service"
+    bookings:
+      notify_host_create_booking: "You have a new booking request!"
+      notify_user_accepted_booking: "Your booking request got approved!"
+      notify_user_declined_booking: "Your booking request got declined!"
+      notify_user_cancelled_booking: "Your booking request got cancelled!"
+      notify_host_cancelled_booking: "Cancelled booking request!"
+      notify_host_on_user_account_deletion: "Important information about your upcoming booking!"
   activerecord:
     attributes:
       user:

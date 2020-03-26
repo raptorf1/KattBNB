@@ -24,6 +24,15 @@ sv-SE:
     conversations:
       index:
         image_attachment: ""
+  mailers:
+    sender_kattbnb: ""
+    bookings:
+      notify_host_create_booking: ""
+      notify_user_accepted_booking: ""
+      notify_user_declined_booking: ""
+      notify_user_cancelled_booking: ""
+      notify_host_cancelled_booking: ""
+      notify_host_on_user_account_deletion: ""
   activerecord:
     attributes:
       user:
