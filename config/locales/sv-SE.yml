@@ -17,6 +17,9 @@ sv-SE:
     conversations:
       sub_error: ""
       message_error: ""
+  jobs:
+    message_broadcast:
+      error: ""
   activerecord:
     attributes:
       user:

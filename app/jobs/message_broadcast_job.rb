@@ -8,7 +8,7 @@ class MessageBroadcastJob < ApplicationJob
       serialized_data = ActiveModelSerializers::Adapter::Json.new(Messages::Serializer.new(message)).serializable_hash
       ActionCable.server.broadcast("conversations_#{message.conversation.id}_channel", serialized_data)
     else
-      return "Message with id #{message_id} not found"
+      return I18n.t('jobs.message_broadcast.error', message: message_id)
     end
   end
 
