@@ -25,6 +25,7 @@ en-US:
       index:
         image_attachment: "Image attachment"
   mailers:
+    default_option: "KattBNB Authorization Service"
     sender_kattbnb: "KattBNB Notification Service"
     bookings:
       notify_host_create_booking: "You have a new booking request!"

@@ -25,6 +25,7 @@ sv-SE:
       index:
         image_attachment: ""
   mailers:
+    default_option: ""
     sender_kattbnb: ""
     bookings:
       notify_host_create_booking: ""
