@@ -38,6 +38,27 @@ sv-SE:
       notify_user_new_conversation: ""
     messages:
       notify_user_new_message: ""
+    views:
+      reusable:
+        hey: ""
+        cats:
+          one: ""
+          other: ""
+        during: ""
+        until: ""
+        on_kattbnb: ""
+        regards: ""
+        no_reply: ""
+        feedback: ""
+        about: ""
+        contact: ""
+        faq: ""
+      booking:
+        notify_host_create_booking:
+          great_news: ""
+          would_like: ""
+          reward: ""
+          3_days: ""
   activerecord:
     attributes:
       user:

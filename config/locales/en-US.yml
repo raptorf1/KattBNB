@@ -38,6 +38,27 @@ en-US:
       notify_user_new_conversation: "%{user} started a conversation with you!"
     messages:
       notify_user_new_message: "New message from %{user}!"
+    views:
+      reusable:
+        hey: "Hey"
+        cats:
+          one: "1 cat"
+          other: "%{count} cats"
+        during: "during the dates of"
+        until: "until"
+        on_kattbnb: "on KattBNB"
+        regards: "Best regards,"
+        no_reply: "Please don't reply to this e-mail."
+        feedback: "We are happy to receive your feedback or answer your questions via links below."
+        about: "About"
+        contact: "Contact us"
+        faq: "FAQ"
+      booking:
+        notify_host_create_booking:
+          great_news: "We've got some great news for you!"
+          would_like: "would like to book a stay with you for"
+          reward: "Your reward:"
+          3_days: "You have 3 days to approve or decline this booking request"
   activerecord:
     attributes:
       user:
