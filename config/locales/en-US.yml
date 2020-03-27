@@ -36,6 +36,8 @@ en-US:
       notify_host_on_user_account_deletion: "Important information about your upcoming booking!"
     conversations:
       notify_user_new_conversation: "%{user} started a conversation with you!"
+    messages:
+      notify_user_new_message: "New message from %{user}!"
   activerecord:
     attributes:
       user:

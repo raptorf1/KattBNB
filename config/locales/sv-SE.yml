@@ -36,6 +36,8 @@ sv-SE:
       notify_host_on_user_account_deletion: ""
     conversations:
       notify_user_new_conversation: ""
+    messages:
+      notify_user_new_message: ""
   activerecord:
     attributes:
       user:
