@@ -34,6 +34,8 @@ en-US:
       notify_user_cancelled_booking: "Your booking request got cancelled!"
       notify_host_cancelled_booking: "Cancelled booking request!"
       notify_host_on_user_account_deletion: "Important information about your upcoming booking!"
+    conversations:
+      notify_user_new_conversation: "%{user} started a conversation with you!"
   activerecord:
     attributes:
       user:
