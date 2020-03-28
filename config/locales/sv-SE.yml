@@ -56,6 +56,10 @@ sv-SE:
         about: ""
         contact: ""
         faq: ""
+      conversation:
+        notify_user_new_conversation:
+          started: ""
+          check: ""
       booking:
         notify_host_create_booking:
           great_news: ""

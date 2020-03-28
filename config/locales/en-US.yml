@@ -56,6 +56,10 @@ en-US:
         about: "About"
         contact: "Contact us"
         faq: "FAQ"
+      conversation:
+        notify_user_new_conversation:
+          started: "has just started a conversation with you."
+          check: "You can check it out"
       booking:
         notify_host_create_booking:
           great_news: "We've got some great news for you!"
