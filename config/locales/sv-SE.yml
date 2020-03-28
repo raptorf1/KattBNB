@@ -141,14 +141,19 @@ sv-SE:
       unconfirmed: "Du måste bekräfta ditt konto innan du kan fortsätta."
     mailer:
       confirmation_instructions:
+        from: ""
         subject: "Instruktioner för att bekräfta konto"
       reset_password_instructions:
+        from: ""
         subject: "Instrukionter för att återställa lösenord"
       unlock_instructions:
+        from: ""
         subject: "Instruktioner för att låsa up konto"
       email_changed:
+        from: ""
         subject: ""
       password_change:
+        from: ""
         subject: ""
     omniauth_callbacks:
       failure: "Kunde inte autentisera dig med %{kind} för \"%{reason}\"."

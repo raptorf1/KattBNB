@@ -141,14 +141,19 @@ en-US:
       unconfirmed: "You have to confirm your email address before continuing."
     mailer:
       confirmation_instructions:
+        from: "KattBNB Authorization Service"
         subject: "Confirmation instructions"
       reset_password_instructions:
+        from: "KattBNB Authorization Service"
         subject: "Reset password instructions"
       unlock_instructions:
+        from: "KattBNB Authorization Service"
         subject: "Unlock instructions"
       email_changed:
+        from: "KattBNB Authorization Service"
         subject: "Email Changed"
       password_change:
+        from: "KattBNB Authorization Service"
         subject: "Password Changed"
     omniauth_callbacks:
       failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
