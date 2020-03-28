@@ -70,6 +70,10 @@ sv-SE:
           main_desc: ""
           directly: ""
           here: ""
+        notify_user_accepted_booking:
+          happy: ""
+          approved: ""
+          more_details: ""
   activerecord:
     attributes:
       user:

@@ -70,6 +70,10 @@ en-US:
           main_desc: "has requested an account deletion, so you won't be able to communicate through our platform and won't be able to see the booking in your incoming bookings. You can contact"
           directly: "directly"
           here: "here"
+        notify_user_accepted_booking:
+          happy: "Happy days!"
+          approved: "has approved your booking request for"
+          more_details: "You can find more details about your booking"
   activerecord:
     attributes:
       user:
