@@ -46,6 +46,7 @@ en-US:
           other: "%{count} cats"
         during: "during the dates of"
         until: "until"
+        reward: "Your reward:"
         on_kattbnb: "on KattBNB"
         regards: "Best regards,"
         no_reply: "Please don't reply to this e-mail."
@@ -57,13 +58,18 @@ en-US:
         notify_host_create_booking:
           great_news: "We've got some great news for you!"
           would_like: "would like to book a stay with you for"
-          reward: "Your reward:"
           3_days: "You have 3 days to approve or decline this booking request"
         notify_host_cancelled_booking:
           nooo: "Oh no!"
           a_request: "A booking request from"
           got_cancelled: "got automatically cancelled due to no answer from you within 3 days time."
           see_you: "We hope to see you soon"
+        notify_host_on_user_account_deletion:
+          important_info: "We've got some important information for you!"
+          scheduled: "has a scheduled stay with you for"
+          main_desc: "has requested an account deletion, so you won't be able to communicate through our platform and won't be able to see the booking in your incoming bookings. You can contact"
+          directly: "directly"
+          here: "here"
   activerecord:
     attributes:
       user:
