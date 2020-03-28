@@ -56,6 +56,13 @@ sv-SE:
         about: ""
         contact: ""
         faq: ""
+      message:
+        notify_user_new_message:
+          new: ""
+          click: ""
+          check: ""
+          turn_off: ""
+          page: ""
       conversation:
         notify_user_new_conversation:
           started: ""

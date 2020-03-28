@@ -56,6 +56,13 @@ en-US:
         about: "About"
         contact: "Contact us"
         faq: "FAQ"
+      message:
+        notify_user_new_message:
+          new: "has just sent you a new message."
+          click: "Click here"
+          check: "to check it out."
+          turn_off: "You can turn off this notification in"
+          page: "your profile page"
       conversation:
         notify_user_new_conversation:
           started: "has just started a conversation with you."
