@@ -82,6 +82,9 @@ sv-SE:
           try_to: ""
           search: ""
           we_hope: ""
+        notify_user_declined_booking:
+          declined: ""
+          search_again: ""
   activerecord:
     attributes:
       user:

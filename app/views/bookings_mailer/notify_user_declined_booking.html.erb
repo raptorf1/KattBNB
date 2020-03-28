@@ -99,7 +99,6 @@
           <div class="content" style="box-sizing: border-box; display: block; Margin: 0 auto; max-width: 580px; padding: 10px;">
 
             <!-- START CENTERED WHITE CONTAINER -->
-            <span class="preheader" style="color: transparent; display: none; height: 0; max-height: 0; max-width: 0; opacity: 0; overflow: hidden; mso-hide: all; visibility: hidden; width: 0;">Your booking request got declined!</span>
             <table class="main" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background: #ffffff; border-radius: 3px;">
 
               <!-- START MAIN CONTENT AREA -->
@@ -108,16 +107,16 @@
                   <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                     <tr>
                       <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
-                        <h1 style="font-family: sans-serif; font-size: 20px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61">Hey <%= @user.nickname %>!</h1>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">Oh no!</p>
+                        <h1 style="font-family: sans-serif; font-size: 20px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61"> <%= t 'mailers.views.reusable.hey' %> <%= @user.nickname %>!</h1>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;"> <%= t 'mailers.views.reusable.nooo' %> </p>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                          <strong style="color: #c90c61"><%= @host.nickname %></strong> has declined your booking request for <strong style="color: #c90c61"><%= @booking.number_of_cats %> <%= @booking.number_of_cats > 1 ? 'cats' : 'cat' %></strong> during the dates of <strong style="color: #c90c61"><%= @start_date.year %>-<%= @start_date.month %>-<%= @start_date.day %></strong> until <strong style="color: #c90c61"><%= @end_date.year %>-<%= @end_date.month %>-<%= @end_date.day %></strong>:
+                          <strong style="color: #c90c61"><%= @host.nickname %></strong> <%= t 'mailers.views.booking.notify_user_declined_booking.declined' %> <strong style="color: #c90c61"> <%= t 'mailers.views.reusable.cats', count: @booking.number_of_cats %> </strong> <%= t 'mailers.views.reusable.during' %> <strong style="color: #c90c61"><%= @start_date.year %>-<%= @start_date.month %>-<%= @start_date.day %></strong> <%= t 'mailers.views.reusable.until' %> <strong style="color: #c90c61"><%= @end_date.year %>-<%= @end_date.month %>-<%= @end_date.day %></strong>:
                         </p>
                         <div style="margin: 2rem; padding: 1rem;">
                           <p style="margin: 0; font-style: italic; color: #999999"><%= @booking.host_message %></p>
-                        </div>                   
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">You can search again and request a new booking <a href="https://www.kattbnb.se/" style="text-decoration: underline; color: #c90c61">on KattBNB</a>.</p>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; ">Best regards,</p>
+                        </div>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;"> <%= t 'mailers.views.booking.notify_user_declined_booking.search_again' %> <a href="https://www.kattbnb.se/" style="text-decoration: underline; color: #c90c61"> <%= t 'mailers.views.reusable.on_kattbnb' %> </a>.</p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; "> <%= t 'mailers.views.reusable.regards' %> </p>
                         <h2 style="font-family: sans-serif; font-size: 16px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61">KattBNB</h2>
                       </td>
                     </tr>
@@ -133,17 +132,17 @@
               <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                 <tr>
                   <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Please don't reply to this e-mail.</span>
+                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.no_reply' %> </span>
                     <br>
-                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">We are happy to receive your feedback or answer your questions via links below.</span>
+                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.feedback' %> </span>
                   </td>
                 </tr>
                 <tr>
                   <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                    <a href="https://www.kattbnb.se/about-us" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">About</a> | <a href="https://www.kattbnb.se/contact-us" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">Contact us</a> | <a href="https://www.kattbnb.se/faq" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">FAQ</a>
+                    <a href="https://www.kattbnb.se/about-us" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.about' %> </a> | <a href="https://www.kattbnb.se/contact-us" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.contact' %> </a> | <a href="https://www.kattbnb.se/faq" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.faq' %> </a>
                   </td>
                 </tr>
-                
+
                 <tr>
                   <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
                     © KattBNB 2020

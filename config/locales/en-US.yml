@@ -82,6 +82,9 @@ en-US:
           try_to: "Try to"
           search: "search again"
           we_hope: ", we hope you find a perfect host soon!"
+        notify_user_declined_booking:
+          declined: "has declined your booking request for"
+          search_again: "You can search again and request a new booking"
   activerecord:
     attributes:
       user:
