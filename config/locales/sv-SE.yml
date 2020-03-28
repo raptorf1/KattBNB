@@ -46,6 +46,7 @@ sv-SE:
           one: ""
           other: ""
         during: ""
+        for_dates: ""
         until: ""
         reward: ""
         on_kattbnb: ""
@@ -74,6 +75,13 @@ sv-SE:
           happy: ""
           approved: ""
           more_details: ""
+        notify_user_cancelled_booking:
+          your_request: ""
+          got_cancelled: ""
+          no_respone: ""
+          try_to: ""
+          search: ""
+          we_hope: ""
   activerecord:
     attributes:
       user:

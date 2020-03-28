@@ -46,6 +46,7 @@ en-US:
           one: "1 cat"
           other: "%{count} cats"
         during: "during the dates of"
+        for_dates: "for the dates of"
         until: "until"
         reward: "Your reward:"
         on_kattbnb: "on KattBNB"
@@ -74,6 +75,13 @@ en-US:
           happy: "Happy days!"
           approved: "has approved your booking request for"
           more_details: "You can find more details about your booking"
+        notify_user_cancelled_booking:
+          your_request: "Your booking request with"
+          got_cancelled: "got automatically cancelled due to"
+          no_respone: "not responding for 3 days."
+          try_to: "Try to"
+          search: "search again"
+          we_hope: ", we hope you find a perfect host soon!"
   activerecord:
     attributes:
       user:
