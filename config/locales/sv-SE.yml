@@ -41,6 +41,7 @@ sv-SE:
     views:
       reusable:
         hey: ""
+        nooo: ""
         cats:
           one: ""
           other: ""
@@ -60,7 +61,6 @@ sv-SE:
           would_like: ""
           3_days: ""
         notify_host_cancelled_booking:
-          nooo: ""
           a_request: ""
           got_cancelled: ""
           see_you: ""

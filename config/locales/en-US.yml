@@ -41,6 +41,7 @@ en-US:
     views:
       reusable:
         hey: "Hey"
+        nooo: "Oh no!"
         cats:
           one: "1 cat"
           other: "%{count} cats"
@@ -60,7 +61,6 @@ en-US:
           would_like: "would like to book a stay with you for"
           3_days: "You have 3 days to approve or decline this booking request"
         notify_host_cancelled_booking:
-          nooo: "Oh no!"
           a_request: "A booking request from"
           got_cancelled: "got automatically cancelled due to no answer from you within 3 days time."
           see_you: "We hope to see you soon"
