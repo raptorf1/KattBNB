@@ -40,7 +40,7 @@ en-US:
       notify_user_new_message: "New message from %{user}!"
     views:
       reusable:
-        hey: "Hey"
+        hey: "Hey,"
         nooo: "Oh no!"
         cats:
           one: "1 cat"
@@ -188,6 +188,9 @@ en-US:
       reset_password_instructions:
         from: "KattBNB Authorization Service"
         subject: "Reset password instructions"
+        no_worries: "Forgot your password? No worries, you can change it."
+        change: "Change password"
+        ignore: "If you didn't request this, just ignore this email. Your password won't change until you click the button above and create a new one."
       unlock_instructions:
         from: "KattBNB Authorization Service"
         subject: "Unlock instructions"

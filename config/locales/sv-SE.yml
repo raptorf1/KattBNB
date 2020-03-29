@@ -188,6 +188,9 @@ sv-SE:
       reset_password_instructions:
         from: ""
         subject: "Instrukionter för att återställa lösenord"
+        no_worries: ""
+        change: ""
+        ignore: ""
       unlock_instructions:
         from: ""
         subject: "Instruktioner för att låsa up konto"
