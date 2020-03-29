@@ -21,7 +21,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(new_request_mail.from).to eql('KattBNB Notification Service')
+      expect(new_request_mail.from).to eql('KattBNB mewo-reply')
     end
 
     it "contains basic booking information and host's & user's nicknames" do
@@ -42,7 +42,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(accepted_request_mail.from).to eql('KattBNB Notification Service')
+      expect(accepted_request_mail.from).to eql('KattBNB mewo-reply')
     end
 
     it "contains basic booking information and host's & user's nicknames" do
@@ -62,7 +62,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(declined_request_mail.from).to eql('KattBNB Notification Service')
+      expect(declined_request_mail.from).to eql('KattBNB mewo-reply')
     end
 
     it "contains basic booking information and host's & user's nicknames" do
@@ -83,7 +83,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(cancelled_request_user_mail.from).to eql('KattBNB Notification Service')
+      expect(cancelled_request_user_mail.from).to eql('KattBNB mewo-reply')
     end
 
     it "contains basic booking information and host's & user's nicknames" do
@@ -103,7 +103,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(cancelled_request_host_mail.from).to eql('KattBNB Notification Service')
+      expect(cancelled_request_host_mail.from).to eql('KattBNB mewo-reply')
     end
 
     it "contains basic booking information and host's & user's nicknames" do
@@ -123,7 +123,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(on_delete_account_host_mail.from).to eql('KattBNB Notification Service')
+      expect(on_delete_account_host_mail.from).to eql('KattBNB mewo-reply')
     end
 
     it "contains basic booking information and host's & user's nicknames" do

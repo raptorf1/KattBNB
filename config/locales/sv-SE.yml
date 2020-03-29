@@ -25,8 +25,6 @@ sv-SE:
       index:
         image_attachment: ""
   mailers:
-    default_option: ""
-    sender_kattbnb: ""
     bookings:
       notify_host_create_booking: ""
       notify_user_accepted_booking: ""
@@ -181,7 +179,6 @@ sv-SE:
       unconfirmed: "Du måste bekräfta ditt konto innan du kan fortsätta."
     mailer:
       confirmation_instructions:
-        from: ""
         subject: "Instruktioner för att bekräfta konto"
         welcome: ""
         onboard: ""
@@ -189,19 +186,15 @@ sv-SE:
         confirm: ""
         see_you: ""
       reset_password_instructions:
-        from: ""
         subject: "Instrukionter för att återställa lösenord"
         no_worries: ""
         change: ""
         ignore: ""
       unlock_instructions:
-        from: ""
         subject: "Instruktioner för att låsa up konto"
       email_changed:
-        from: ""
         subject: ""
       password_change:
-        from: ""
         subject: ""
     omniauth_callbacks:
       failure: "Kunde inte autentisera dig med %{kind} för \"%{reason}\"."
