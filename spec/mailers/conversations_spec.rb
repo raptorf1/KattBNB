@@ -18,7 +18,7 @@ RSpec.describe ConversationsMailer, type: :mailer do
     end
 
     it "contains users' nicknames" do
-      expect(new_conversation_mail.body.encoded).to match("Hey #{user2.nickname}!")
+      expect(new_conversation_mail.body.encoded).to match("Hey, #{user2.nickname}!")
       expect(new_conversation_mail.body.encoded).to match("#{user1.nickname}")
     end
   end

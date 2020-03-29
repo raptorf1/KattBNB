@@ -25,7 +25,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it "contains basic booking information and host's & user's nicknames" do
-      expect(new_request_mail.body.encoded).to match("Hey #{host.nickname}!")
+      expect(new_request_mail.body.encoded).to match("Hey, #{host.nickname}!")
       expect(new_request_mail.body.encoded).to match("#{booking.message}")
       expect(new_request_mail.body.encoded).to match("#{user.nickname}")
       expect(new_request_mail.body.encoded).to match("#{booking.number_of_cats}")
@@ -46,7 +46,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it "contains basic booking information and host's & user's nicknames" do
-      expect(accepted_request_mail.body.encoded).to match("Hey #{user.nickname}!")
+      expect(accepted_request_mail.body.encoded).to match("Hey, #{user.nickname}!")
       expect(accepted_request_mail.body.encoded).to match("#{host.nickname}")
       expect(accepted_request_mail.body.encoded).to match("#{booking.number_of_cats}")
     end
@@ -66,7 +66,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it "contains basic booking information and host's & user's nicknames" do
-      expect(declined_request_mail.body.encoded).to match("Hey #{user.nickname}!")
+      expect(declined_request_mail.body.encoded).to match("Hey, #{user.nickname}!")
       expect(declined_request_mail.body.encoded).to match("#{host.nickname}")
       expect(declined_request_mail.body.encoded).to match("#{booking.number_of_cats}")
       expect(declined_request_mail.body.encoded).to match("#{booking.host_message}")
@@ -87,7 +87,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it "contains basic booking information and host's & user's nicknames" do
-      expect(cancelled_request_user_mail.body.encoded).to match("Hey #{user.nickname}!")
+      expect(cancelled_request_user_mail.body.encoded).to match("Hey, #{user.nickname}!")
       expect(cancelled_request_user_mail.encoded).to match("#{host.nickname}")
       expect(cancelled_request_user_mail.encoded).to match("#{booking.number_of_cats}")
     end
@@ -107,7 +107,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it "contains basic booking information and host's & user's nicknames" do
-      expect(cancelled_request_host_mail.body.encoded).to match("Hey #{host.nickname}!")
+      expect(cancelled_request_host_mail.body.encoded).to match("Hey, #{host.nickname}!")
       expect(cancelled_request_host_mail.encoded).to match("#{user.nickname}")
       expect(cancelled_request_host_mail.encoded).to match("#{booking.number_of_cats}")
     end
@@ -127,7 +127,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it "contains basic booking information and host's & user's nicknames" do
-      expect(on_delete_account_host_mail.body.encoded).to match("Hey #{host.nickname}!")
+      expect(on_delete_account_host_mail.body.encoded).to match("Hey, #{host.nickname}!")
       expect(on_delete_account_host_mail.encoded).to match("#{user.nickname}")
       expect(on_delete_account_host_mail.encoded).to match("#{booking.number_of_cats}")
       expect(on_delete_account_host_mail.encoded).to match('1550.20 kr')
