@@ -85,6 +85,9 @@ sv-SE:
         notify_user_accepted_booking:
           happy: ""
           approved: ""
+          check: ""
+          guidelines: ""
+          consider: ""
           more_details: ""
         notify_user_cancelled_booking:
           your_request: ""

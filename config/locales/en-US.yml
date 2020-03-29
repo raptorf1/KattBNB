@@ -85,6 +85,9 @@ en-US:
         notify_user_accepted_booking:
           happy: "Happy days!"
           approved: "has approved your booking request for"
+          check: "Check out our helpful"
+          guidelines: "guidelines"
+          consider: "on what to consider before your stay!"
           more_details: "You can find more details about your booking"
         notify_user_cancelled_booking:
           your_request: "Your booking request with"
