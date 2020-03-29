@@ -180,6 +180,11 @@ en-US:
       confirmation_instructions:
         from: "KattBNB Authorization Service"
         subject: "Confirmation instructions"
+        welcome: "Welcome to KattBNB!"
+        onboard: "We are happy to have you onboard!"
+        account: "To start using our services, please confirm your account."
+        confirm: "Confirm"
+        see_you: "We hope to see you soon"
       reset_password_instructions:
         from: "KattBNB Authorization Service"
         subject: "Reset password instructions"

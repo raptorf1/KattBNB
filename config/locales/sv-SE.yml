@@ -180,6 +180,11 @@ sv-SE:
       confirmation_instructions:
         from: ""
         subject: "Instruktioner för att bekräfta konto"
+        welcome: ""
+        onboard: ""
+        account: ""
+        confirm: ""
+        see_you: ""
       reset_password_instructions:
         from: ""
         subject: "Instrukionter för att återställa lösenord"
