@@ -33,7 +33,7 @@ Rails.application.configure do
   
   config.action_mailer.raise_delivery_errors = true
   
-  config.action_mailer.default_options = { from: 'KattBNB mewo-reply' }
+  config.action_mailer.default_options = { from: 'KattBNB meow-reply' }
   config.action_mailer.default_url_options = { host: 'localhost', port: 3007 }
 
   config.action_mailer.perform_caching = false

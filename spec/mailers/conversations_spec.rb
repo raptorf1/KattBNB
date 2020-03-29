@@ -14,7 +14,7 @@ RSpec.describe ConversationsMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(new_conversation_mail.from).to eql('KattBNB mewo-reply')
+      expect(new_conversation_mail.from).to eql('KattBNB meow-reply')
     end
 
     it "contains users' nicknames" do
