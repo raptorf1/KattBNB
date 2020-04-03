@@ -56,11 +56,9 @@ sv-SE:
         faq: ""
       message:
         notify_user_new_message:
-          new: ""
-          click: ""
-          check: ""
-          turn_off: ""
-          page: ""
+          new_html: ""
+          view_html: ""
+          turn_off_html: ""
       conversation:
         notify_user_new_conversation:
           started: ""

@@ -38,7 +38,7 @@ en-US:
       notify_user_new_message: "New message from %{user}!"
     views:
       reusable:
-        hey: "Hey,"
+        hey: "Hey, %{user}!"
         nooo: "Oh no!"
         cats:
           one: "1 cat"
@@ -56,11 +56,9 @@ en-US:
         faq: "FAQ"
       message:
         notify_user_new_message:
-          new: "has just sent you a new message."
-          click: "Click here"
-          check: "to check it out."
-          turn_off: "You can turn off this notification in"
-          page: "your profile page"
+          new_html: "<strong>%{user}</strong> has just sent you a new message."
+          view_html: "<a href='%{link}' class='%{class}'>Click here</a> to check it out."
+          turn_off_html: "<strong>PS.</strong> Too many emails? You can turn off this notification in <a href='%{link}' class='%{class}'>your profile page</a>."
       conversation:
         notify_user_new_conversation:
           started: "has just started a conversation with you."
