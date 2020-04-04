@@ -40,14 +40,7 @@ sv-SE:
       reusable:
         hey: ""
         nooo: ""
-        cats:
-          one: ""
-          other: ""
-        during: ""
-        for_dates: ""
-        until: ""
         reward: ""
-        on_kattbnb: ""
         regards: ""
         no_reply: ""
         feedback: ""
@@ -61,40 +54,39 @@ sv-SE:
           turn_off_html: ""
       conversation:
         notify_user_new_conversation:
-          started: ""
-          check: ""
+          started_html: ""
+          view_html: ""
       booking:
         notify_host_create_booking:
           great_news: ""
-          would_like: ""
-          3_days: ""
+          details_html: ""
+            one: ""
+            other: ""
+          3_days_html: ""
         notify_host_cancelled_booking:
-          a_request: ""
-          got_cancelled: ""
-          see_you: ""
+          cancelled_html: ""
+          see_you_html: ""
         notify_host_on_user_account_deletion:
           important_info: ""
-          scheduled: ""
-          main_desc: ""
-          directly: ""
-          here: ""
+          details_html: ""
+            one: ""
+            other: ""
+          deletion_html: ""
         notify_user_accepted_booking:
           happy: ""
-          approved: ""
-          check: ""
-          guidelines: ""
-          consider: ""
-          more_details: ""
+          details_html: ""
+            one: ""
+            other: ""
+          guidelines_html: ""
+          more_details_html: ""
         notify_user_cancelled_booking:
-          your_request: ""
-          got_cancelled: ""
-          no_respone: ""
-          try_to: ""
-          search: ""
-          we_hope: ""
+          cancelled_html: ""
+          search_again_html: ""
         notify_user_declined_booking:
-          declined: ""
-          search_again: ""
+          details_html: ""
+            one: ""
+            other: ""
+          search_again_html: ""
   activerecord:
     attributes:
       user:
@@ -182,7 +174,7 @@ sv-SE:
         onboard: ""
         account: ""
         confirm: ""
-        see_you: ""
+        see_you_html: ""
       reset_password_instructions:
         subject: "Instrukionter för att återställa lösenord"
         no_worries: ""
