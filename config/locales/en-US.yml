@@ -66,12 +66,13 @@ en-US:
       booking:
         notify_host_create_booking:
           great_news: "We've got some great news for you!"
-          would_like: "would like to book a stay with you for"
-          3_days: "You have 3 days to approve or decline this booking request"
+          details_html:
+            one: "<strong>%{user}</strong> would like to book a stay with you for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> would like to book a stay with you for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"          
+          3_days_html: "You have 3 days to approve or decline this booking request <a href='%{link}' class='%{class}'>on KattBNB</a>."
         notify_host_cancelled_booking:
-          a_request: "A booking request from"
-          got_cancelled: "got automatically cancelled due to no answer from you within 3 days time."
-          see_you: "We hope to see you soon"
+          cancelled_html: "A booking request from <strong>%{user}</strong> for the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong> got automatically cancelled due to no answer from you within 3 days time."
+          see_you_html: "We hope to see you soon <a href='%{link}' class='%{class}'>on KattBNB</a>."
         notify_host_on_user_account_deletion:
           important_info: "We've got some important information for you!"
           scheduled: "has a scheduled stay with you for"
