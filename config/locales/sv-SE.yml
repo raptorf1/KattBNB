@@ -59,7 +59,7 @@ sv-SE:
       booking:
         notify_host_create_booking:
           great_news: ""
-          details_html: ""
+          details_html:
             one: ""
             other: ""
           3_days_html: ""
@@ -68,13 +68,13 @@ sv-SE:
           see_you_html: ""
         notify_host_on_user_account_deletion:
           important_info: ""
-          details_html: ""
+          details_html:
             one: ""
             other: ""
           deletion_html: ""
         notify_user_accepted_booking:
           happy: ""
-          details_html: ""
+          details_html:
             one: ""
             other: ""
           guidelines_html: ""
@@ -83,7 +83,7 @@ sv-SE:
           cancelled_html: ""
           search_again_html: ""
         notify_user_declined_booking:
-          details_html: ""
+          details_html:
             one: ""
             other: ""
           search_again_html: ""
