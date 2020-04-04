@@ -87,12 +87,8 @@ en-US:
           guidelines_html: "Check out our helpful <a href='%{link}' class='%{class}'>guidelines</a> on what to consider before your stay!"
           more_details_html: "You can find more details about your booking <a href='%{link}' class='%{class}'>on KattBNB</a>."
         notify_user_cancelled_booking:
-          your_request: "Your booking request with"
-          got_cancelled: "got automatically cancelled due to"
-          no_respone: "not responding for 3 days."
-          try_to: "Try to"
-          search: "search again"
-          we_hope: ", we hope you find a perfect host soon!"
+          cancelled_html: "Your booking request with <strong>%{user}</strong> for the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong> got automatically cancelled due to <strong>%{user}</strong> not responding for 3 days."
+          search_again_html: "Try to <a href='%{link}' class='%{class}'>search again</a>, we hope you find a perfect host soon!"
         notify_user_declined_booking:
           declined: "has declined your booking request for"
           search_again: "You can search again and request a new booking"
