@@ -40,14 +40,7 @@ en-US:
       reusable:
         hey: "Hey, %{user}!"
         nooo: "Oh no!"
-        cats:
-          one: "1 cat"
-          other: "%{count} cats"
-        during: "during the dates of"
-        for_dates: "for the dates of"
-        until: "until"
         reward: "Your reward:"
-        on_kattbnb: "on KattBNB"
         regards: "Best regards,"
         no_reply: "Please don't reply to this e-mail."
         feedback: "We are happy to receive your feedback or answer your questions via links below."
@@ -77,21 +70,23 @@ en-US:
           important_info: "We've got some important information for you!"
           details_html:
             one: "<strong>%{user}</strong> has booked a stay with you for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
-            other: "<strong>%{user}</strong> has booked a stay with you for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>."          
+            other: "<strong>%{user}</strong> has booked a stay with you for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"          
           deletion_html: "<strong>%{user}</strong> has requested an account deletion. You won't be able to communicate through KattBNB and won't be able to see the booking in your incoming bookings. You can contact <strong>%{user}</strong> directly <a href='%{link}' class='%{class}'>here</a>."
         notify_user_accepted_booking:
           happy: "Happy days!"
           details_html:
             one: "<strong>%{user}</strong> has approved your booking request for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
-            other: "<strong>%{user}</strong> has approved your booking request for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>."
+            other: "<strong>%{user}</strong> has approved your booking request for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
           guidelines_html: "Check out our helpful <a href='%{link}' class='%{class}'>guidelines</a> on what to consider before your stay!"
           more_details_html: "You can find more details about your booking <a href='%{link}' class='%{class}'>on KattBNB</a>."
         notify_user_cancelled_booking:
           cancelled_html: "Your booking request with <strong>%{user}</strong> for the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong> got automatically cancelled due to <strong>%{user}</strong> not responding for 3 days."
           search_again_html: "Try to <a href='%{link}' class='%{class}'>search again</a>, we hope you find a perfect host soon!"
         notify_user_declined_booking:
-          declined: "has declined your booking request for"
-          search_again: "You can search again and request a new booking"
+          details_html:
+            one: "<strong>%{user}</strong> has declined your booking request for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> has declined your booking request for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+          search_again_html: "You can search again and request a new booking <a href='%{link}' class='%{class}'>on KattBNB</a>."
   activerecord:
     attributes:
       user:
@@ -179,7 +174,7 @@ en-US:
         onboard: "We are happy to have you onboard!"
         account: "To start using our services, please confirm your account."
         confirm: "Confirm"
-        see_you: "We hope to see you soon"
+        see_you_html: "We hope to see you soon <a href='%{link}' class='%{class}'>on KattBNB</a>."
       reset_password_instructions:
         subject: "Reset password instructions"
         no_worries: "Forgot your password? No worries, you can change it."
