@@ -75,10 +75,10 @@ en-US:
           see_you_html: "We hope to see you soon <a href='%{link}' class='%{class}'>on KattBNB</a>."
         notify_host_on_user_account_deletion:
           important_info: "We've got some important information for you!"
-          scheduled: "has a scheduled stay with you for"
-          main_desc: "has requested an account deletion, so you won't be able to communicate through our platform and won't be able to see the booking in your incoming bookings. You can contact"
-          directly: "directly"
-          here: "here"
+          details_html:
+            one: "<strong>%{user}</strong> has booked a stay with you for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> has booked a stay with you for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>."          
+          deletion_html: "<strong>%{user}</strong> has requested an account deletion. You won't be able to communicate through KattBNB and won't be able to see the booking in your incoming bookings. You can contact <strong>%{user}</strong> directly <a href='%{link}' class='%{class}'>here</a>."
         notify_user_accepted_booking:
           happy: "Happy days!"
           approved: "has approved your booking request for"
