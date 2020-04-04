@@ -81,11 +81,11 @@ en-US:
           deletion_html: "<strong>%{user}</strong> has requested an account deletion. You won't be able to communicate through KattBNB and won't be able to see the booking in your incoming bookings. You can contact <strong>%{user}</strong> directly <a href='%{link}' class='%{class}'>here</a>."
         notify_user_accepted_booking:
           happy: "Happy days!"
-          approved: "has approved your booking request for"
-          check: "Check out our helpful"
-          guidelines: "guidelines"
-          consider: "on what to consider before your stay!"
-          more_details: "You can find more details about your booking"
+          details_html:
+            one: "<strong>%{user}</strong> has approved your booking request for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> has approved your booking request for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>."
+          guidelines_html: "Check out our helpful <a href='%{link}' class='%{class}'>guidelines</a> on what to consider before your stay!"
+          more_details_html: "You can find more details about your booking <a href='%{link}' class='%{class}'>on KattBNB</a>."
         notify_user_cancelled_booking:
           your_request: "Your booking request with"
           got_cancelled: "got automatically cancelled due to"
