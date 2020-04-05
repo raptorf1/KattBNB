@@ -77,7 +77,7 @@ sv-SE:
           details_html:
             one: "<strong>%{user}</strong> har godkänt din bokningsförfrågan för <strong>1 katt</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
             other: "<strong>%{user}</strong> har godkänt din bokningsförfrågan för <strong>%{count} katter</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
-          guidelines_html: "Kolla in våra hjälpsamma <a href='%{link}' class='%{class}'>riktlinjer</a> om vad du kan tänka på innan din vistelse!"
+          guidelines_html: "Kolla in våra hjälpsamma <a href='%{link}' class='%{class}'>riktlinjer</a> om vad du bör tänka på innan din vistelse!"
           more_details_html: "Du kan hitta mer information om din bokning <a href='%{link}' class='%{class}'>på KattBNB</a>."
         notify_user_cancelled_booking:
           cancelled_html: "Din bokningsförfrågan med <strong>%{user}</strong> för datumen <strong>%{start_date}</strong> till <strong>%{end_date}</strong> avbröts automatiskt på grund av att <strong>%{user}</strong> inte svarade inom 3 dagar."
