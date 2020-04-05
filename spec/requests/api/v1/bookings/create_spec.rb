@@ -27,7 +27,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       end
 
       it 'creates a booking' do
-        expect(json_response['message']).to eq 'Successfully created'
+        expect(json_response['message']).to eq 'Successfully created!'
         expect(response.status).to eq 200
       end
 
@@ -56,7 +56,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         }, 
         headers: headers
 
-        expect(json_response['message']).to eq 'Successfully created'
+        expect(json_response['message']).to eq 'Successfully created!'
         expect(response.status).to eq 200
         expect(user.booking.length).to eq 2
         expect(ActionMailer::Base.deliveries.count).to eq 2

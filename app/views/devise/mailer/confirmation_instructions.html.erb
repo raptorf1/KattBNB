@@ -89,6 +89,13 @@
         border-color: #c90c61 !important;
       }
     }
+    strong {
+      color: #c90c61 !important;
+    }
+
+    .pink {
+      color: #c90c61 !important;
+    }
     </style>
   </head>
   <body style="background-color: #f6f6f6; font-family: sans-serif; -webkit-font-smoothing: antialiased; color: #666666; font-size: 14px; line-height: 1.4; margin: 0; padding: 0; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;">
@@ -107,10 +114,10 @@
                   <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                     <tr>
                       <td style="font-family: sans-serif; font-size: 14px; vertical-align: top;">
-                        <h1 style="font-family: sans-serif; font-size: 20px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61">Welcome to KattBNB!</h1>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">We are happy to have you onboard!</p>
+                        <h1 style="font-family: sans-serif; font-size: 20px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61"> <%= t 'devise.mailer.confirmation_instructions.welcome' %> </h1>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;"> <%= t 'devise.mailer.confirmation_instructions.onboard' %> </p>
                         <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">
-                          To start using our services, please confirm your account.
+                          <%= t 'devise.mailer.confirmation_instructions.account' %>
                         </p>
 
                         <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; box-sizing: border-box;">
@@ -121,9 +128,9 @@
                                   <tbody>
                                     <tr>
                                       <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; background-color: #c90c61; border-radius: 5px; text-align: center;"> 
-                                        
-                                        <%= link_to "Confirm", confirmation_url(@resource, {confirmation_token: @token, config: message['client-config'].to_s, redirect_url: message['redirect-url']}).html_safe, style: "display: inline-block; color: #ffffff; background-color: #c90c61; border: solid 1px #c90c61; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #c90c61" %>
-                
+
+                                        <%= link_to t('devise.mailer.confirmation_instructions.confirm'), confirmation_url(@resource, {confirmation_token: @token, config: message['client-config'].to_s, redirect_url: message['redirect-url']}).html_safe, style: "display: inline-block; color: #ffffff; background-color: #c90c61; border: solid 1px #c90c61; border-radius: 5px; box-sizing: border-box; cursor: pointer; text-decoration: none; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-transform: capitalize; border-color: #c90c61" %>
+
                                       </td>
                                     </tr>
                                   </tbody>
@@ -133,8 +140,10 @@
                           </tbody>
                         </table>
     
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;">We hope to see you soon <a href="https://www.kattbnb.se" style="text-decoration: underline; color: #c90c61">on KattBNB</a>.</p>
-                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; ">Best regards,</p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;"> 
+                          <%= t 'devise.mailer.confirmation_instructions.see_you_html', link: "https://www.kattbnb.se", class: 'pink' %>
+                        </p>
+                        <p style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; "> <%= t 'mailers.views.reusable.regards' %> </p>
                         <h2 style="font-family: sans-serif; font-size: 16px; font-weight: bold; margin: 0; Margin-bottom: 15px; color: #c90c61">KattBNB</h2>
                       </td>
                     </tr>
@@ -150,17 +159,33 @@
               <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
                 <tr>
                   <td class="content-block" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Please don't reply to this e-mail.</span>
+                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.no_reply' %> </span>
                     <br>
-                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">We are happy to receive your feedback or answer your questions via links below.</span>
+                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.feedback' %> </span>
                   </td>
                 </tr>
                 <tr>
                   <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
-                    <a href="https://www.kattbnb.se/about-us" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">About</a> | <a href="https://www.kattbnb.se/contact-us" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">Contact us</a> | <a href="https://www.kattbnb.se/faq" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;">FAQ</a>
+                    <a href="https://www.kattbnb.se/about-us" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.about' %> </a> | <a href="https://www.kattbnb.se/contact-us" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.contact' %> </a> | <a href="https://www.kattbnb.se/faq" style="text-decoration: underline; color: #999999; font-size: 12px; text-align: center;"> <%= t 'mailers.views.reusable.faq' %> </a>
                   </td>
                 </tr>
-                
+
+                <tr>
+                  <td>
+                    <a href="https://www.facebook.com/kattbnb/" style="text-decoration:none;margin: 0 3px">
+                      <img src="https://kattbnb-mailer-images.s3.eu-north-1.amazonaws.com/FaceBook.png"/>
+                    </a>
+            
+                    <a href="https://www.instagram.com/kattbnb/" style="text-decoration:none;margin: 0 3px">
+                     <img src="https://kattbnb-mailer-images.s3.eu-north-1.amazonaws.com/Instagram.png"/>
+                    </a>
+            
+                    <a href="https://www.linkedin.com/company/kattbnb" style="text-decoration:none; margin: 0 3px">
+                      <img src="https://kattbnb-mailer-images.s3.eu-north-1.amazonaws.com/LinkedIn.png"/>
+                    </a>
+                  </td>
+                </tr>
+
                 <tr>
                   <td class="content-block powered-by" style="font-family: sans-serif; vertical-align: top; padding-bottom: 10px; padding-top: 10px; font-size: 12px; color: #999999; text-align: center;">
                     © KattBNB 2020

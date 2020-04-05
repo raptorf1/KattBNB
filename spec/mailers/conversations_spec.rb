@@ -14,11 +14,11 @@ RSpec.describe ConversationsMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(new_conversation_mail.from).to eql('KattBNB Notification Service')
+      expect(new_conversation_mail.from).to eql('KattBNB meow-reply')
     end
 
     it "contains users' nicknames" do
-      expect(new_conversation_mail.body.encoded).to match("Hey #{user2.nickname}!")
+      expect(new_conversation_mail.body.encoded).to match("Hey, #{user2.nickname}!")
       expect(new_conversation_mail.body.encoded).to match("#{user1.nickname}")
     end
   end

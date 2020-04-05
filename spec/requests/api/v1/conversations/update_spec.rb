@@ -20,7 +20,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       },
       headers: headers_user1
       expect(response.status).to eq 200
-      expect(json_response['message']).to eq 'Success'
+      expect(json_response['message']).to eq 'Success!'
       conversation1.reload
       expect(conversation1.hidden).to eq user1.id
     end

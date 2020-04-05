@@ -1,0 +1,231 @@
+sv-SE:
+  controllers:
+    reusable:
+      create_success: "Skapad!"
+      update_error: "Du kan inte utföra den här åtgärden!"
+    bookings:
+      create_error_1: "Någon annan begärde precis att boka dessa dagar med denna kattvakt!"
+      create_error_2: "Bokningsförfrågan kunde inte skapas eftersom kattvakten begärde att kontot skulle raderas! Vänligen hitta en annan kvattvakt på resultatsidan."
+      update_success: "Du har nu uppdaterat den här bokningen!"
+      update_error: "Vi kunde inte uppdatera denna bokning eftersom användaren begärde att få sitt konto raderat! Vänligen återvänd till din bokningssida."
+    conversations:
+      create_exists: "Konversation finns redan!"
+      update_success: "Uppdatering lyckades!"
+    host_profiles:
+      update_success: "Du har uppdaterat din kattvaktsprofil!"
+  channels:
+    conversations:
+      sub_error: "Ingen konversation specificerad eller konversation finns inte. Anslutningen avvisades!"
+      message_error: "Du kan inte skicka ett meddelande till en konversation som du inte är en del av!"
+  jobs:
+    message_broadcast:
+      error: "Meddelande med id %{message} hittades inte"
+  serializers:
+    conversations:
+      index:
+        image_attachment: "Bildbilaga"
+  mailers:
+    bookings:
+      notify_host_create_booking: "Du har en ny bokningsförfrågan!"
+      notify_user_accepted_booking: "Din bokningsförfrågan blev godkänd!"
+      notify_user_declined_booking: "Din bokningsförfrågan avvisades!"
+      notify_user_cancelled_booking: "Din bokningsförfrågan har avbrutits!"
+      notify_host_cancelled_booking: "Avbruten bokningsförfrågan!"
+      notify_host_on_user_account_deletion: "Viktig information om din kommande bokning!"
+    conversations:
+      notify_user_new_conversation: "%{user} startade en konversation med dig!"
+    messages:
+      notify_user_new_message: "Nytt meddelande från %{user}!"
+    views:
+      reusable:
+        hey: "Hallå, %{user}"
+        nooo: "Åh, nej!"
+        reward: "Din belöning:"
+        regards: "Varma hälsningar,"
+        no_reply: "Vänligen svara inte på det här e-postmeddelandet."
+        feedback: "Vi tar tacksamt emot din feedback eller svarar på dina frågor via länkarna nedan."
+        about: "Om"
+        contact: "Kontakta oss"
+        faq: "Frågor och svar"
+      message:
+        notify_user_new_message:
+          new_html: "<strong>%{user}</strong> har precis skickat dig ett meddelande."
+          view_html: "<a href='%{link}' class='%{class}'>Klicka här</a> för att se det."
+          turn_off_html: "<strong>PS.</strong> För många e-postmeddelanden? Du kan stänga av det här meddelandet i <a href='%{link}' class='%{class}'>din profilsida</a>."
+      conversation:
+        notify_user_new_conversation:
+          started_html: "<strong>%{user}</strong> har precis startat en konversation med dig."
+          view_html: "Du kan se den <a href='%{link}' class='%{class}'>på KattBNB</a>."
+      booking:
+        notify_host_create_booking:
+          great_news: "Vi har spännande nyheter åt dig!"
+          details_html:
+            one: "<strong>%{user}</strong> vill boka en vistelse hos dig för <strong>1 katt</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> vill boka en vistelse hos dig för <strong>%{count} katter</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
+          3_days_html: "Du har tre dagar på dig att godkänna eller avslå den här bokningsförfrågan <a href='%{link}' class='%{class}'>på KattBNB</a>."
+        notify_host_cancelled_booking:
+          cancelled_html: "En bokningsförfrågan från <strong>%{user}</strong> för datumen <strong>%{start_date}</strong> till <strong>%{end_date}</strong> avbröts automatiskt på grund av att du inte svarade inom 3 dagar."
+          see_you_html: "Vi hoppas att vi kommer ses snart <a href='%{link}' class='%{class}'>på KattBNB</a>."
+        notify_host_on_user_account_deletion:
+          important_info: "Vi har viktig information till dig!"
+          details_html:
+            one: "<strong>%{user}</strong> har bokat en vistelse hos dig för <strong>1 katt</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> har bokat en vistelse hos dig för <strong>%{count} katter</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
+          deletion_html: "<strong>%{user}</strong> har begärt att få sitt konto raderat. Ni kommer inte att kunna kommunicera via KattBNB och du kommer inte att kunna se bokningen i dina inkommande bokningar. Du kan kontakta <strong>%{user}</strong> direkt <a href='%{link}' class='%{class}'>här</a>."
+        notify_user_accepted_booking:
+          happy: "Alla tiders!"
+          details_html:
+            one: "<strong>%{user}</strong> har godkänt din bokningsförfrågan för <strong>1 katt</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> har godkänt din bokningsförfrågan för <strong>%{count} katter</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
+          guidelines_html: "Kolla in våra hjälpsamma <a href='%{link}' class='%{class}'>riktlinjer</a> om vad du bör tänka på innan din vistelse!"
+          more_details_html: "Du kan hitta mer information om din bokning <a href='%{link}' class='%{class}'>på KattBNB</a>."
+        notify_user_cancelled_booking:
+          cancelled_html: "Din bokningsförfrågan med <strong>%{user}</strong> för datumen <strong>%{start_date}</strong> till <strong>%{end_date}</strong> avbröts automatiskt på grund av att <strong>%{user}</strong> inte svarade inom 3 dagar."
+          search_again_html: "Försök med att <a href='%{link}' class='%{class}'>söka igen</a>, vi hoppas att du hittar den perfekta kattvakten inom kort!"
+        notify_user_declined_booking:
+          details_html:
+            one: "<strong>%{user}</strong> har avslagit din bokningsförfrågan för <strong>1 katt</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> har avslagit din bokningsförfrågan för <strong>%{count} katter</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
+          search_again_html: "Du kan söka igen och skicka en ny bokningförfrågan <a href='%{link}' class='%{class}'>på KattBNB</a>."
+  activerecord:
+    attributes:
+      user:
+        password: "Lösenord"
+        password_confirmation: "Bekräfta lösenord"
+        current_password: "Nuvarande lösenord"
+        provider: "Leverantör"
+        uid: "uid"
+        encrypted_password: "Krypterat lösenord"
+        reset_password_token: "Återställ token för lösenord"
+        reset_password_sent_at: "Återställ lösenord skickat vid"
+        allow_password_change: "Tillåt lösenordsbyte"
+        remember_created_at: "Kom ihåg skapades vid"
+        confirmation_token: "Bekräftelse-token"
+        confirmed_at: "Bekräftat"
+        confirmation_sent_at: "Bekräftelse skickad"
+        unconfirmed_email: "Obekräftad e-post"
+        name: "Namn"
+        nickname: "Användarnamn"
+        image: "Bild"
+        email: "E-post"
+        tokens: "Tokens"
+        created_at: "Skapad"
+        updated_at: "Uppdaterad"
+        sign_in_count: "Antal inloggningar"
+        current_sign_in_at: "Nuvarande inloggning vid"
+        last_sign_in_at: "Senaste inloggning vid"
+        current_sign_in_ip: "Nuvarande inloggnings-IP"
+        last_sign_in_ip: "Senaste inloggnings-IP"
+        location: "Kommun"
+        avatar: "Avatar"
+        message_notification: "Meddelandenotifieringar"
+      booking:
+        number_of_cats: "Antal katter"
+        message: "Meddelande"
+        dates: "Datum"
+        status: "Status"
+        host_nickname: "Kattvaktsanvändarnamn"
+        created_at: "Skapad"
+        updated_at: "Uppdaterad"
+        price_per_day: "Pris/dag"
+        price_total: "Total"
+        host_message: "Kattvaktsmeddelande"
+        host_description: "Kattvaktsbeskrivning"
+        host_full_address: "Kattvakts fullständiga adress"
+        host_real_lat: "Kattvakts latitud"
+        host_real_long: "Kattvakts longitud"
+      host_profile:
+        description: "Beskrivning"
+        full_address: "Fullständiga adress"
+        price_per_day_1_cat: "Pris/dag för 1 katt"
+        supplement_price_per_cat_per_day: "Tillägg pris/katt/dag"
+        max_cats_accepted: "Max antal katter"
+        lat: "Fejk latitud"
+        long: "Fejk longitud"
+        created_at: "Skapad"
+        updated_at: "Uppdaterad"
+        latitude: "Latitud"
+        longitude: "Longitud"
+        availability: "Tillgänglighet"
+        forbidden_dates: "Förbjudna datum"
+      message:
+        body: "Brödtext"
+        created_at: "Skapad"
+        updated_at: "Uppdaterad"
+  devise:
+    confirmations:
+      confirmed: "Ditt konto har bekräftats. Du är nu inloggad."
+      send_instructions: "Du kommer att få epost med instruktioner om hur du kan bekräfta ditt konto inom några minuter."
+      send_paranoid_instructions: "Om din email är i vår databas, kommer du att få ett mail med instruktioner om hur du ska aktivera ditt konto inom några minuter."
+    failure:
+      already_authenticated: "Du har redan loggat in."
+      inactive: "Ditt konto har inte aktiverats ännu."
+      invalid: "Ogiltig epost eller lösenord."
+      locked: "Ditt konto är låst."
+      last_attempt: "Du har ett till försök innan ditt konto blir låst."
+      not_found_in_database: "Ogiltig epost eller lösenord."
+      timeout: "Din session är inte längre giltig, vänligen logga in igen för att fortsätta."
+      unauthenticated: "Du måste logga in eller skapa ett konto innan du kan fortsätta."
+      unconfirmed: "Du måste bekräfta ditt konto innan du kan fortsätta."
+    mailer:
+      confirmation_instructions:
+        subject: "Instruktioner för att bekräfta konto"
+        welcome: "Välkommen till KattBNB!"
+        onboard: "Vi är glada att ha dig ombord!"
+        account: "För att börja använda våra tjänster, vänligen bekräfta ditt konto."
+        confirm: "Bekräfta"
+        see_you_html: "Vi hoppas att vi ses snart <a href='%{link}' class='%{class}'>på KattBNB</a>."
+      reset_password_instructions:
+        subject: "Instrukionter för att återställa lösenord"
+        no_worries: "Glömt ditt lösenord? Inga bekymmer, du kan ändra det."
+        change: "Ändra lösenord"
+        ignore: "Om du inte begärde detta så kan du ignorera det här e-postmeddelandet. Ditt lösenord kommer inte att ändras förrän du klickar på knappen ovan och skapar ett nytt."
+      unlock_instructions:
+        subject: "Instruktioner för att låsa up konto"
+      email_changed:
+        subject: "E-post ändrad"
+      password_change:
+        subject: "Lösenord ändrat"
+    omniauth_callbacks:
+      failure: "Kunde inte autentisera dig med %{kind} för \"%{reason}\"."
+      success: "Autentiserat med %{kind}-konto."
+    passwords:
+      no_token: "Du har endast tillgång till den här sidan via ett epost för att återställa ditt lösenord. Om detta är fallet, var god kontrollera att du använder den fullständiga adressen i meddelandet."
+      send_instructions: "Du kommer få epost med instruktioner om hur du kan återställa ditt lösenord inom några minuter."
+      send_paranoid_instructions: "Om din email är i vår databas, kommer du att få en lösenordslänk till din mail."
+      updated: "Ditt lösenord har uppdaterats. Du är nu inloggad."
+      updated_not_active: "Ditt lösenord har uppdaterats."
+    registrations:
+      destroyed: "Ditt konto är nu avregistrerat. Vi hoppas få se dig snart igen."
+      signed_up: "Välkommen! Ett nytt konto har skapats."
+      signed_up_but_inactive: "Ett nytt konto har skapats. Men vi kunde tyvärr inte logga in dig eftersom ditt konto inte är aktiverat."
+      signed_up_but_locked: "Ett nytt konto har skapats. Men vi kunde tyvärr inte logga in dig eftersom ditt konto inte är låst."
+      signed_up_but_unconfirmed: "En bekräftelse har skickats till din epost. Klicka på länken i meddelandet för att aktivera ditt konto."
+      update_needs_confirmation: "Ditt konto har uppdaterats, men vi behöver bekräfta din epostadress. En bekräftelse har skickats till din nya epostadress."
+      updated: "Ditt konto har uppdaterats."
+      updated_but_not_signed_in: "Ditt konto har uppdaterats, men eftersom ditt lösenord har ändrats så måste du logga in igen"
+    sessions:
+      signed_in: "Du är inloggad."
+      signed_out: "Du är utloggad."
+      already_signed_out: "Du är utloggad."
+    unlocks:
+      send_instructions: "Du kommer få epost med instruktioner om hur du kan låsa upp ditt konto inom några minuter."
+      send_paranoid_instructions: "Om ditt konto finns, kommer du att få ett email med instruktioner om hur du låser upp det inom några minuter."
+      unlocked: "Ditt konto är upp låsts. Du kan nu logga in."
+  errors:
+    messages:
+      already_confirmed: "är redan bekräftad, vänligen logga in igen"
+      confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
+      expired: "har löpt ut, var god begär en ny"
+      not_found: "hittades inte"
+      not_locked: "var inte låst"
+      not_saved:
+        one: "1 fel hindrade denna %{resource} från att sparas:"
+        other: "%{count} fel hindrade denna %{resource} från att sparas:"
+  devise_token_auth:
+    sessions:
+      bad_credentials: "Ogiltiga inloggningsuppgifter. Vänligen försök igen."
+      not_confirmed: "Ett bekräftelsemail skickades till ditt konto på %{email}. Följ anvisningarna i e-postmeddelandet för att aktivera ditt konto."
+    passwords:
+      sended: "Ett e-postmeddelande har skickats till %{email} med instruktioner för att återställa ditt lösenord."
+      user_not_found: "Det gick inte att hitta användare med e-post %{email}."

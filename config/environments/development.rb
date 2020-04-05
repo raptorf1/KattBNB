@@ -43,8 +43,8 @@ Rails.application.configure do
     user_name: 'kattbnb@gmail.com',
     password: Rails.application.credentials.GMAIL_PASSWORD
   }
-  config.action_mailer.default_options = { from: 'KattBNB Authorization Service' }
-  config.action_mailer.default_url_options = { host: "localhost", port: 3007 }
+  config.action_mailer.default_options = { from: 'KattBNB meow-reply' }
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3007 }
 
   config.action_mailer.perform_caching = false
 

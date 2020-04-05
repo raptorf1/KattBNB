@@ -15,6 +15,8 @@ module KattBNBApi
   class Application < Rails::Application
     config.load_defaults 5.2
     config.api_only = true
+    config.i18n.available_locales = ['en-US', 'sv-SE']
+    config.i18n.default_locale = (Rails.env == 'production') ? ('sv-SE') : ('en-US')
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins Rails.env != 'production' ? 'localhost:3000' : 'kattbnb.netlify.com'

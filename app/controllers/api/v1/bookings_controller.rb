@@ -15,7 +15,7 @@ class Api::V1::BookingsController < ApplicationController
         profile = HostProfile.where(user_id: host[0].id)
         user = User.where(id: booking.user_id)
         if (booking.dates - profile[0].availability).empty? == true
-          render json: { message: 'Successfully created' }, status: 200
+          render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200
           new_availability = profile[0].availability - booking.dates
           profile.update(availability: new_availability)
           booking.update(host_avatar: host[0].avatar)
@@ -23,11 +23,11 @@ class Api::V1::BookingsController < ApplicationController
         else
           booking.update(status: 'canceled')
           booking.destroy
-          render json: { error: ['Someone else just requested to book these days with this host!'] }, status: 422
+          render json: { error: [I18n.t('controllers.bookings.create_error_1')] }, status: 422
         end
       else
         booking.destroy
-        render json: { error: ['Booking cannot be created because the host requested an account deletion! Please find another host in the results page.'] }, status: 422
+        render json: { error: [I18n.t('controllers.bookings.create_error_2')] }, status: 422
       end
     else
       render json: { error: booking.errors.full_messages }, status: 422
@@ -42,23 +42,23 @@ class Api::V1::BookingsController < ApplicationController
       profile = HostProfile.where(user_id: host[0].id)
       booking.update(status: params[:status], host_message: params[:host_message])
       if booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'accepted'
-        render json: { message: 'You have successfully updated this booking' }, status: 200
+        render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
         booking.update(host_description: profile[0].description, host_full_address: profile[0].full_address, host_real_lat: profile[0].latitude, host_real_long: profile[0].longitude)
         BookingsMailer.notify_user_accepted_booking(host[0], booking, user[0]).deliver
       elsif booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'declined'
         new_availability = (profile[0].availability + booking.dates).sort
         profile.update(availability: new_availability)
-        render json: { message: 'You have successfully updated this booking' }, status: 200
+        render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
         BookingsMailer.notify_user_declined_booking(host[0], booking, user[0]).deliver
       else
         render json: { error: booking.errors.full_messages }, status: 422
       end
     else
-      render json: { error: 'You cannot perform this action' }, status: 422
+      render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
     end
 
   rescue ActiveRecord::RecordNotFound
-    render json: { error: ['We cannot update this booking because the user requested an account deletion! Please go back to your bookings page.'] }, status: :not_found
+    render json: { error: [I18n.t('controllers.bookings.update_error')] }, status: :not_found
   end
 
  

@@ -27,7 +27,7 @@ RSpec.describe "Sessions", type: :request do
                                           }, headers: headers
       expect(response.status).to eq 401
       expect(json_response['success']).to eq false
-      expect(json_response['errors']).to eq ["A confirmation email was sent to your account at 'alonso@formula1.com'. You must follow the instructions in the email before your account can be activated"]
+      expect(json_response['errors']).to eq ["A confirmation email was sent to your account at alonso@formula1.com. You must follow the instructions in the email before your account can be activated."]
     end
 
     it "invalid password returns an error message" do

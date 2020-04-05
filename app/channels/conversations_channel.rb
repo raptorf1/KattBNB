@@ -5,7 +5,7 @@ class ConversationsChannel < ApplicationCable::Channel
       stop_all_streams
       stream_from "conversations_#{params['conversations_id']}_channel"
     else
-      connection.transmit error: 'No conversation specified or conversation does not exist. Connection rejected!'
+      connection.transmit error: I18n.t('channels.conversations.sub_error')
       reject
     end
   end
@@ -23,6 +23,7 @@ class ConversationsChannel < ApplicationCable::Channel
       send_actions(data, conversation)
     end
   end
+
 
 
   private 
@@ -43,7 +44,7 @@ class ConversationsChannel < ApplicationCable::Channel
       user_receiving[0].message_notification == true && MessagesMailer.notify_user_new_message(user_sending[0], user_receiving[0], message.body).deliver
     else
       message.destroy
-      transmit({type: 'errors', data: 'You cannot send message to a conversation you are not part of!'})
+      transmit({type: 'errors', data: I18n.t('channels.conversations.message_error')})
     end
   end
 

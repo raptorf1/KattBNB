@@ -1,0 +1,231 @@
+en-US:
+  controllers:
+    reusable:
+      create_success: "Successfully created!"
+      update_error: "You cannot perform this action!"
+    bookings:
+      create_error_1: "Someone else just requested to book these days with this host!"
+      create_error_2: "Booking cannot be created because the host requested an account deletion! Please find another host in the results page."
+      update_success: "You have successfully updated this booking!"
+      update_error: "We cannot update this booking because the user requested an account deletion! Please go back to your bookings page."
+    conversations:
+      create_exists: "Conversation already exists!"
+      update_success: "Success!"
+    host_profiles:
+      update_success: "You have successfully updated your host profile!"
+  channels:
+    conversations:
+      sub_error: "No conversation specified or conversation does not exist. Connection rejected!"
+      message_error: "You cannot send message to a conversation you are not part of!"
+  jobs:
+    message_broadcast:
+      error: "Message with id %{message} not found"
+  serializers:
+    conversations:
+      index:
+        image_attachment: "Image attachment"
+  mailers:
+    bookings:
+      notify_host_create_booking: "You have a new booking request!"
+      notify_user_accepted_booking: "Your booking request got approved!"
+      notify_user_declined_booking: "Your booking request got declined!"
+      notify_user_cancelled_booking: "Your booking request got cancelled!"
+      notify_host_cancelled_booking: "Cancelled booking request!"
+      notify_host_on_user_account_deletion: "Important information about your upcoming booking!"
+    conversations:
+      notify_user_new_conversation: "%{user} started a conversation with you!"
+    messages:
+      notify_user_new_message: "New message from %{user}!"
+    views:
+      reusable:
+        hey: "Hey, %{user}!"
+        nooo: "Oh no!"
+        reward: "Your reward:"
+        regards: "Best regards,"
+        no_reply: "Please don't reply to this e-mail."
+        feedback: "We are happy to receive your feedback or answer your questions via links below."
+        about: "About"
+        contact: "Contact us"
+        faq: "FAQ"
+      message:
+        notify_user_new_message:
+          new_html: "<strong>%{user}</strong> has just sent you a new message."
+          view_html: "<a href='%{link}' class='%{class}'>Click here</a> to check it out."
+          turn_off_html: "<strong>PS.</strong> Too many emails? You can turn off this notification in <a href='%{link}' class='%{class}'>your profile page</a>."
+      conversation:
+        notify_user_new_conversation:
+          started_html: "<strong>%{user}</strong> has just started a conversation with you."
+          view_html: "You can check it out <a href='%{link}' class='%{class}'>on KattBNB</a>."
+      booking:
+        notify_host_create_booking:
+          great_news: "We've got some great news for you!"
+          details_html:
+            one: "<strong>%{user}</strong> would like to book a stay with you for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> would like to book a stay with you for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"          
+          3_days_html: "You have 3 days to approve or decline this booking request <a href='%{link}' class='%{class}'>on KattBNB</a>."
+        notify_host_cancelled_booking:
+          cancelled_html: "A booking request from <strong>%{user}</strong> for the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong> got automatically cancelled due to no answer from you within 3 days time."
+          see_you_html: "We hope to see you soon <a href='%{link}' class='%{class}'>on KattBNB</a>."
+        notify_host_on_user_account_deletion:
+          important_info: "We've got some important information for you!"
+          details_html:
+            one: "<strong>%{user}</strong> has booked a stay with you for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> has booked a stay with you for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"          
+          deletion_html: "<strong>%{user}</strong> has requested an account deletion. You won't be able to communicate through KattBNB and won't be able to see the booking in your incoming bookings. You can contact <strong>%{user}</strong> directly <a href='%{link}' class='%{class}'>here</a>."
+        notify_user_accepted_booking:
+          happy: "Happy days!"
+          details_html:
+            one: "<strong>%{user}</strong> has approved your booking request for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> has approved your booking request for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+          guidelines_html: "Check out our helpful <a href='%{link}' class='%{class}'>guidelines</a> on what to consider before your stay!"
+          more_details_html: "You can find more details about your booking <a href='%{link}' class='%{class}'>on KattBNB</a>."
+        notify_user_cancelled_booking:
+          cancelled_html: "Your booking request with <strong>%{user}</strong> for the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong> got automatically cancelled due to <strong>%{user}</strong> not responding for 3 days."
+          search_again_html: "Try to <a href='%{link}' class='%{class}'>search again</a>, we hope you find a perfect host soon!"
+        notify_user_declined_booking:
+          details_html:
+            one: "<strong>%{user}</strong> has declined your booking request for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+            other: "<strong>%{user}</strong> has declined your booking request for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
+          search_again_html: "You can search again and request a new booking <a href='%{link}' class='%{class}'>on KattBNB</a>."
+  activerecord:
+    attributes:
+      user:
+        password: "Password"
+        password_confirmation: "Password confirmation"
+        current_password: "Current password"
+        provider: "Provider"
+        uid: "uid"
+        encrypted_password: "Encrypted password"
+        reset_password_token: "Reset password token"
+        reset_password_sent_at: "Reset password sent at"
+        allow_password_change: "Allow password change"
+        remember_created_at: "Remember created at"
+        confirmation_token: "Confirmation token"
+        confirmed_at: "Confirmed at"
+        confirmation_sent_at: "Confirmation sent at"
+        unconfirmed_email: "Unconfirmed email"
+        name: "Name"
+        nickname: "Nickname"
+        image: "Image"
+        email: "Email"
+        tokens: "Tokens"
+        created_at: "Created at"
+        updated_at: "Updated at"
+        sign_in_count: "Sign in count"
+        current_sign_in_at: "Current sign in at"
+        last_sign_in_at: "Last sign in at"
+        current_sign_in_ip: "Current sign in IP"
+        last_sign_in_ip: "Last sign in IP"
+        location: "Location"
+        avatar: "Avatar"
+        message_notification: "Message notification"
+      booking:
+        number_of_cats: "Number of cats"
+        message: "Message"
+        dates: "Dates"
+        status: "Status"
+        host_nickname: "Host nickname"
+        created_at: "Created at"
+        updated_at: "Updated at"
+        price_per_day: "Price/day"
+        price_total: "Total"
+        host_message: "Host message"
+        host_description: "Host description"
+        host_full_address: "Host full address"
+        host_real_lat: "Host real latitude"
+        host_real_long: "Host real longitude"
+      host_profile:
+        description: "Description"
+        full_address: "Full address"
+        price_per_day_1_cat: "Price/day for 1 cat"
+        supplement_price_per_cat_per_day: "Supplement price/cat/day"
+        max_cats_accepted: "Maximum cats accepted"
+        lat: "Fake latitude"
+        long: "Fake longitude"
+        created_at: "Created at"
+        updated_at: "Updated at"
+        latitude: "Real latitude"
+        longitude: "Real longitude"
+        availability: "Availability"
+        forbidden_dates: "Forbidden dates"
+      message:
+        body: "Body"
+        created_at: "Created at"
+        updated_at: "Updated at"
+  devise:
+    confirmations:
+      confirmed: "Your email address has been successfully confirmed."
+      send_instructions: "You will receive an email with instructions for how to confirm your email address in a few minutes."
+      send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
+    failure:
+      already_authenticated: "You are already signed in."
+      inactive: "Your account is not activated yet."
+      invalid: "Invalid %{authentication_keys} or password."
+      locked: "Your account is locked."
+      last_attempt: "You have one more attempt before your account is locked."
+      not_found_in_database: "Invalid %{authentication_keys} or password."
+      timeout: "Your session expired. Please sign in again to continue."
+      unauthenticated: "You need to sign in or sign up before continuing."
+      unconfirmed: "You have to confirm your email address before continuing."
+    mailer:
+      confirmation_instructions:
+        subject: "Confirmation instructions"
+        welcome: "Welcome to KattBNB!"
+        onboard: "We are happy to have you onboard!"
+        account: "To start using our services, please confirm your account."
+        confirm: "Confirm"
+        see_you_html: "We hope to see you soon <a href='%{link}' class='%{class}'>on KattBNB</a>."
+      reset_password_instructions:
+        subject: "Reset password instructions"
+        no_worries: "Forgot your password? No worries, you can change it."
+        change: "Change password"
+        ignore: "If you didn't request this, just ignore this email. Your password won't change until you click the button above and create a new one."
+      unlock_instructions:
+        subject: "Unlock instructions"
+      email_changed:
+        subject: "Email Changed"
+      password_change:
+        subject: "Password Changed"
+    omniauth_callbacks:
+      failure: "Could not authenticate you from %{kind} because \"%{reason}\"."
+      success: "Successfully authenticated from %{kind} account."
+    passwords:
+      no_token: "You can't access this page without coming from a password reset email. If you do come from a password reset email, please make sure you used the full URL provided."
+      send_instructions: "You will receive an email with instructions on how to reset your password in a few minutes."
+      send_paranoid_instructions: "If your email address exists in our database, you will receive a password recovery link at your email address in a few minutes."
+      updated: "Your password has been changed successfully. You are now signed in."
+      updated_not_active: "Your password has been changed successfully."
+    registrations:
+      destroyed: "Bye! Your account has been successfully cancelled. We hope to see you again soon."
+      signed_up: "Welcome! You have signed up successfully."
+      signed_up_but_inactive: "You have signed up successfully. However, we could not sign you in because your account is not yet activated."
+      signed_up_but_locked: "You have signed up successfully. However, we could not sign you in because your account is locked."
+      signed_up_but_unconfirmed: "A message with a confirmation link has been sent to your email address. Please follow the link to activate your account."
+      update_needs_confirmation: "You updated your account successfully, but we need to verify your new email address. Please check your email and follow the confirmation link to confirm your new email address."
+      updated: "Your account has been updated successfully."
+      updated_but_not_signed_in: "Your account has been updated successfully, but since your password was changed, you need to sign in again"
+    sessions:
+      signed_in: "Signed in successfully."
+      signed_out: "Signed out successfully."
+      already_signed_out: "Signed out successfully."
+    unlocks:
+      send_instructions: "You will receive an email with instructions for how to unlock your account in a few minutes."
+      send_paranoid_instructions: "If your account exists, you will receive an email with instructions for how to unlock it in a few minutes."
+      unlocked: "Your account has been unlocked successfully. Please sign in to continue."
+  errors:
+    messages:
+      already_confirmed: "was already confirmed, please try signing in"
+      confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
+      expired: "has expired, please request a new one"
+      not_found: "not found"
+      not_locked: "was not locked"
+      not_saved:
+        one: "1 error prohibited this %{resource} from being saved:"
+        other: "%{count} errors prohibited this %{resource} from being saved:"
+  devise_token_auth:
+    sessions:
+      bad_credentials: "Invalid login credentials. Please try again."
+      not_confirmed: "A confirmation email was sent to your account at %{email}. You must follow the instructions in the email before your account can be activated."
+    passwords:
+      sended: "An email has been sent to %{email} containing instructions for resetting your password."
+      user_not_found: "Unable to find user with email %{email}."

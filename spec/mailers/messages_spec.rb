@@ -17,11 +17,11 @@ RSpec.describe MessagesMailer, type: :mailer do
     end
 
     it 'renders the sender email' do
-      expect(new_message_mail.from).to eql('KattBNB Notification Service')
+      expect(new_message_mail.from).to eql('KattBNB meow-reply')
     end
 
     it "contains users' nicknames" do
-      expect(new_message_mail.body.encoded).to match("Hey #{user2.nickname}!")
+      expect(new_message_mail.body.encoded).to match("Hey, #{user2.nickname}!")
       expect(new_message_mail.body.encoded).to match("#{user1.nickname}")
       expect(new_message_mail.body.encoded).to match("#{message.body}")
       expect(new_message_mail2.body.encoded).to match('SomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingS...')

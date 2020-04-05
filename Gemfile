@@ -16,6 +16,8 @@ gem 'rack-cors', require: 'rack/cors'
 gem 'devise_token_auth', '~> 1.1', '>= 1.1.2'
 gem 'active_model_serializers', '~> 0.10.10'
 gem 'aws-sdk-s3'
+gem 'rails-i18n', '~> 5.1'
+gem 'devise-i18n', '~> 0.12.1'
 
 
 group :development, :test do

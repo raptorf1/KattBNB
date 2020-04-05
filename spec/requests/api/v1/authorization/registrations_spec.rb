@@ -38,7 +38,7 @@ RSpec.describe 'User Registration', type: :request do
                                      confirm_success_url: 'confirmed'
                                   }, headers: headers
 
-      expect(json_response['errors']['email']).to eq ['is not an email']
+      expect(json_response['errors']['email']).to eq ['is invalid']
       expect(response.status).to eq 422
     end
 
