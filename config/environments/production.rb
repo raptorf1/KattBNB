@@ -35,7 +35,7 @@ Rails.application.configure do
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
   # config.action_cable.url = 'wss://example.com/cable'
-  config.action_cable.allowed_request_origins = [ 'https://kattbnb.netlify.com' ]
+  config.action_cable.allowed_request_origins = [ ENV['ACTION_CABLE_ORIGIN'] ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -66,7 +66,7 @@ Rails.application.configure do
     password: Rails.application.credentials.GMAIL_PASSWORD
   }
   config.action_mailer.default_options = { from: 'KattBNB meow-reply' }
-  config.action_mailer.default_url_options = { :host => Rails.application.credentials.API_ENDPOINT }
+  config.action_mailer.default_url_options = { :host => ENV['API_ENDPOINT'] }
 
   config.action_mailer.perform_caching = false
 
