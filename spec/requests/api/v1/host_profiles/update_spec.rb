@@ -67,7 +67,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       },
       headers: headers_user
       expect(response.status).to eq 422
-      expect(json_response['error']).to eq ['Cannot update availability. You have incoming bookings to some of those dates!']
+      expect(json_response['error']).to eq ['Cannot update availability. You have incoming bookings to some of those dates! Refresh the page or visit you bookings dashboard.']
     end
 
     it 'does not raise error if pending booking does not exist' do
