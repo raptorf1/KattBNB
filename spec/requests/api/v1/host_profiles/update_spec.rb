@@ -5,7 +5,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
   let(:host_profile_user2) { FactoryBot.create(:host_profile, user_id: user2.id) }
   let!(:booking1) { FactoryBot.create(:booking, host_nickname: user.nickname, status: 'pending', user_id: user2.id, dates: [125, 1562889600000, 1562976000000]) }
   let!(:booking2) { FactoryBot.create(:booking, host_nickname: user2.nickname, status: 'canceled', user_id: user.id, dates: [125, 1562889600000, 1562976000000]) }
-  let!(:booking2) { FactoryBot.create(:booking, host_nickname: user2.nickname, status: 'pending', user_id: user.id, dates: [1562889600000, 1562976000000]) }
+  let!(:booking3) { FactoryBot.create(:booking, host_nickname: user2.nickname, status: 'pending', user_id: user.id, dates: [1562889600000, 1562976000000]) }
   let(:credentials_user) { user.create_new_auth_token }
   let(:credentials_user2) { user2.create_new_auth_token }
   let(:headers_user) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials_user) }
