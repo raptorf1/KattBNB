@@ -20,4 +20,9 @@ class User < ActiveRecord::Base
   validates :nickname, uniqueness: { case_sensitive: false }, presence: true
   validates :location, presence: true
 
+
+  def send_devise_notification(notification, *args)
+    I18n.with_locale(self.lang_pref) { super(notification, *args) }
+  end
+
 end
