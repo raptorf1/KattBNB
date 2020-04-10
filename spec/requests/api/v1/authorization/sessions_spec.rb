@@ -13,7 +13,7 @@ RSpec.describe "Sessions", type: :request do
           "id" => user.id, "uid" => user.email, "email" => user.email,
           "provider" => "email", "name" => nil, "nickname" => user.nickname,
           "location" => user.location, "image" => nil, "avatar" => nil, "allow_password_change" => false,
-          "message_notification" => true
+          "message_notification" => true, "lang_pref" => nil
         }
       }
 

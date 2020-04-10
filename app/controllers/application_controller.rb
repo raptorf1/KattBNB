@@ -9,8 +9,8 @@ class ApplicationController < ActionController::API
   protected
 
   def configure_permitted_parameters 
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:location, :nickname])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:location, :avatar, :message_notification])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:location, :nickname, :lang_pref])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:location, :avatar, :message_notification, :lang_pref])
   end
 
 
