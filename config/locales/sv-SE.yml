@@ -39,7 +39,7 @@ sv-SE:
       notify_user_new_message: "Nytt meddelande från %{user}!"
     views:
       reusable:
-        hey: "Hallå, %{user}"
+        hey: "Hallå, %{user}!"
         nooo: "Åh, nej!"
         reward: "Din belöning:"
         regards: "Varma hälsningar,"
