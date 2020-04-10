@@ -13,6 +13,7 @@ sv-SE:
       update_success: "Uppdatering lyckades!"
     host_profiles:
       update_success: "Du har uppdaterat din kattvaktsprofil!"
+      update_error: ""
   channels:
     conversations:
       sub_error: "Ingen konversation specificerad eller konversation finns inte. Anslutningen avvisades!"

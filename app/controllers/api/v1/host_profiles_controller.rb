@@ -26,16 +26,16 @@ class Api::V1::HostProfilesController < ApplicationController
 
     if current_api_v1_user.id == profile.user_id && params[:availability]
       host = User.where(id: profile.user_id)
-      bookings = Booking.where(host_nickname: host[0].nickname)
+      bookings = Booking.where(host_nickname: host[0].nickname, status: 'pending')
       if bookings.length > 0
         dates = []
         bookings.each do |booking|
           dates.push(booking.dates)
         end
         one_array_dates = dates.flatten
-        comparison = params[:availability]&one_array_dates
+        comparison = params[:availability].map(&:to_i)&one_array_dates
         if comparison.length > 0
-          render json: { error: 'Cannot update availability. You have incoming bookings to some of those dates!' }, status: 422
+          render json: { error: [I18n.t('controllers.host_profiles.update_error')] }, status: 422
         else
           profile.update(host_profile_params)
           profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
