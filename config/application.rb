@@ -19,7 +19,7 @@ module KattBNBApi
     config.i18n.default_locale = (Rails.env == 'production') ? ('sv-SE') : ('en-US')
     config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins Rails.env != 'production' ? 'localhost:3000' : 'kattbnb.netlify.com'
+        origins Rails.env == 'production' ? ENV['CORS_ORIGIN'] : 'localhost:3000'
         resource '/api/v1/*', 
           headers: :any, 
           methods: %i[get post put patch delete],

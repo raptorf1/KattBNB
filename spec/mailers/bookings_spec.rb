@@ -1,9 +1,13 @@
 RSpec.describe BookingsMailer, type: :mailer do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
+  let(:user2) { FactoryBot.create(:user, email: 'chaos2@thestreets.com', nickname: 'SV Joker', lang_pref: 'sv-SE') }
+  let(:host2) { FactoryBot.create(:user, email: 'order2@thestreets.com', nickname: 'SV Batman', lang_pref: 'sv-SE') }
   let(:booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname) }
   let(:booking2) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, price_total: '1550') }
+  let(:booking3) { FactoryBot.create(:booking, user_id: user2.id, host_nickname: host2.nickname) }
   let(:new_request_mail) { BookingsMailer.notify_host_create_booking(host, booking, user) }
+  let(:new_request_mail2) { BookingsMailer.notify_host_create_booking(host2, booking3, user2) }
   let(:accepted_request_mail) { BookingsMailer.notify_user_accepted_booking(host, booking, user) }
   let(:declined_request_mail) { BookingsMailer.notify_user_declined_booking(host, booking, user) }
   let(:cancelled_request_user_mail) { BookingsMailer.notify_user_cancelled_booking(host, booking, user) }
@@ -24,11 +28,15 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(new_request_mail.from).to eql('KattBNB meow-reply')
     end
 
-    it "contains basic booking information and host's & user's nicknames" do
+    it "contains basic booking information and host's & user's nicknames in ENG" do
       expect(new_request_mail.body.encoded).to match("Hey, #{host.nickname}!")
       expect(new_request_mail.body.encoded).to match("#{booking.message}")
       expect(new_request_mail.body.encoded).to match("#{user.nickname}")
       expect(new_request_mail.body.encoded).to match("#{booking.number_of_cats}")
+    end
+
+    it "contains basic booking information and host's nickname in SV" do
+      expect(new_request_mail2.body.encoded).to match("Hallå, #{host2.nickname}!")
     end
   end
 
