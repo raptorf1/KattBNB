@@ -106,6 +106,9 @@ GEM
       activesupport (>= 4.2.0)
     i18n (1.6.0)
       concurrent-ruby (~> 1.0)
+    icalendar (2.6.1)
+      ice_cube (~> 0.16)
+    ice_cube (0.16.3)
     jbuilder (2.9.1)
       activesupport (>= 4.2.0)
     jmespath (1.4.0)
@@ -243,6 +246,7 @@ DEPENDENCIES
   devise-i18n (~> 0.12.1)
   devise_token_auth (~> 1.1, >= 1.1.2)
   factory_bot_rails
+  icalendar
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   newrelic_rpm
