@@ -33,6 +33,8 @@ sv-SE:
       notify_user_cancelled_booking: "Din bokningsförfrågan har avbrutits!"
       notify_host_cancelled_booking: "Avbruten bokningsförfrågan!"
       notify_host_on_user_account_deletion: "Viktig information om din kommande bokning!"
+      notify_user_accepted_booking_sum_drop: "KattBNB - %{total}kr - Bokningsförfrågan %{id} s..."
+      notify_user_accepted_booking_sum_collect: "KattBNB - %{total}kr - Bokningsförfrågan %{id} e..."
     conversations:
       notify_user_new_conversation: "%{user} startade en konversation med dig!"
     messages:
