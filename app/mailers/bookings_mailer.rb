@@ -28,8 +28,8 @@ class BookingsMailer < ApplicationMailer
     (string_with_2_decimals[string_with_2_decimals.length - 1] == '0' && string_with_2_decimals[string_with_2_decimals.length - 2] == '0') ? @total = string_with_2_decimals.to_i : @total = sprintf('%.2f', string_with_2_decimals)
 
     I18n.with_locale(@user.lang_pref) do
-      @summary_drop = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_drop', total: @total, id: @booking.id)
-      @summary_collect = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_collect', total: @total, id: @booking.id)
+      @summary_drop = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_drop', total: @total, host: @booking.host_nickname)
+      @summary_collect = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_collect', total: @total, host: @booking.host_nickname)
     end
     event_drop = create_calendar_event(@start_date, @booking.host_full_address, @summary_drop)
     event_collect = create_calendar_event(@end_date, @booking.host_full_address, @summary_collect)
