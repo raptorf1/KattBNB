@@ -58,6 +58,11 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(accepted_request_mail.body.encoded).to match("#{host.nickname}")
       expect(accepted_request_mail.body.encoded).to match("#{booking.number_of_cats}")
     end
+
+    it 'contains 2 calendar events as attachments' do
+      expect(accepted_request_mail.body.parts[1].content_disposition).to eql('attachment; filename=booking_drop_off.ics')
+      expect(accepted_request_mail.body.parts[2].content_disposition).to eql('attachment; filename=booking_collect.ics')
+    end
   end
 
   describe 'notify_user_declined_booking' do
