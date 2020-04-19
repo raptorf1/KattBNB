@@ -19,6 +19,7 @@ gem 'aws-sdk-s3'
 gem 'rails-i18n', '~> 5.1'
 gem 'devise-i18n', '~> 0.12.1'
 gem 'newrelic_rpm'
+gem 'icalendar'
 
 group :development, :test do
   gem 'pry-rails'
