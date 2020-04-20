@@ -1,3 +1,7 @@
+RSpec::Benchmark.configure do |config|
+  config.run_in_subprocess = true
+end
+
 RSpec.describe Api::V1::BookingsController, type: :request do
   let(:user) { FactoryBot.create(:user) }
   let!(:user2) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens', avatar: 'This is my avatar!!!') }
@@ -22,7 +26,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           price_per_day: '258.36',
           price_total: '1856',
           user_id: user.id
-        }, 
+        },
         headers: headers
       end
 
@@ -53,13 +57,28 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           price_per_day: '125.96',
           price_total: '1452.36',
           user_id: user.id
-        }, 
+        },
         headers: headers
 
         expect(json_response['message']).to eq 'Successfully created!'
         expect(response.status).to eq 200
         expect(user.booking.length).to eq 2
         expect(ActionMailer::Base.deliveries.count).to eq 2
+      end
+
+      it 'creates booking in under 1 ms and with iteration rate of 5000000 per second' do
+        post_request = post '/api/v1/bookings', params: {
+          number_of_cats: '23',
+          message: 'I want my cats to have a good time, pls!',
+          host_nickname: 'JJoker',
+          dates: [1562803200000, 1562889600000],
+          price_per_day: '125.96',
+          price_total: '1452.36',
+          user_id: user.id
+        },
+        headers: headers
+        expect { post_request }.to perform_under(1).ms.sample(20).times
+        expect { post_request }.to perform_at_least(5000000).ips
       end
     end
 
@@ -72,7 +91,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           price_per_day: '105.96',
           price_total: '1400.36',
           user_id: user.id
-        }, 
+        },
         headers: headers
 
         expect(json_response['error']).to eq ["Message can't be blank"]
@@ -88,7 +107,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           price_total: '1400.36',
           user_id: user.id,
           message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
-        }, 
+        },
         headers: headers
 
         expect(json_response['error']).to eq ['Message is too long (maximum is 400 characters)']
@@ -104,7 +123,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           price_total: '1400.36',
           user_id: user.id,
           message: 'Lorem Ipsum is simply dummy text.'
-        }, 
+        },
         headers: headers
 
         expect(json_response['error']).to eq ['Someone else just requested to book these days with this host!']
@@ -121,7 +140,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           price_total: '1400.36',
           user_id: user.id,
           message: 'Lorem Ipsum is simply dummy text.'
-        }, 
+        },
         headers: headers
 
         expect(json_response['error']).to eq ['Booking cannot be created because the host requested an account deletion! Please find another host in the results page.']
