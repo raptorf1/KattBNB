@@ -1,3 +1,7 @@
+RSpec::Benchmark.configure do |config|
+  config.run_in_subprocess = true
+end
+
 RSpec.describe Api::V1::BookingsController, type: :request do
   let(:host1) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
   let(:host2) { FactoryBot.create(:user, email: 'noel@craft.com', nickname: 'MacOS') }
@@ -33,6 +37,16 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(ActionMailer::Base.deliveries.count).to eq 1
     end
 
+    it 'updates status of certain booking to accepted in under 1 ms and with iteration rate of 5000000 per second' do
+      patch_request = patch "/api/v1/bookings/#{booking.id}", params: {
+        status: 'accepted',
+        host_message: 'accepted by host'
+      },
+      headers: headers_host1
+      expect { patch_request }.to perform_under(1).ms.sample(20).times
+      expect { patch_request }.to perform_at_least(5000000).ips
+    end
+
     it 'adds back availability dates if associated host declines the booking' do
       patch "/api/v1/bookings/#{booking.id}", params: {
         status: 'declined',
@@ -43,6 +57,16 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(response.status).to eq 200
       expect(profile1.availability).to eq [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000]
       expect(ActionMailer::Base.deliveries.count).to eq 1
+    end
+
+    it 'updates status of certain booking to declined in under 1 ms and with iteration rate of 5000000 per second' do
+      patch_request = patch "/api/v1/bookings/#{booking.id}", params: {
+        status: 'declined',
+        host_message: 'iDecline!!!'
+      },
+      headers: headers_host1
+      expect { patch_request }.to perform_under(1).ms.sample(20).times
+      expect { patch_request }.to perform_at_least(5000000).ips
     end
 
     it 'does not update status of certain booking even if action comes from associated host cause host_message is more than 200 characters' do

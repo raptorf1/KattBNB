@@ -1,3 +1,7 @@
+RSpec::Benchmark.configure do |config|
+  config.run_in_subprocess = true
+end
+
 RSpec.describe 'User Changes Password and API', type: :request do
   let(:headers) { { HTTP_ACCEPT: 'application/json' } }
 
@@ -38,6 +42,18 @@ RSpec.describe 'User Changes Password and API', type: :request do
                                        }, headers: headers
  
     expect(response.status).to eq 200
+  end
+
+  it 'successfully changes the user password in under 1 ms and with iteration rate of 5000000 per second' do
+    put_request = put '/api/v1/auth/password', params: { current_password: 'password',
+                                                         password: '123456',
+                                                         password_confirmation: '123456',
+                                                        uid: @new_user_uid,
+                                                       'access-token': @new_user_token,
+                                                        client: @new_user_client
+                                                      }, headers: headers
+    expect { put_request }.to perform_under(1).ms.sample(20).times
+    expect { put_request }.to perform_at_least(5000000).ips
   end
 
   it 'successfully changes the user password and does not let user log in with the old password' do

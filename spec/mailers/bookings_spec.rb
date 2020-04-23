@@ -1,3 +1,7 @@
+RSpec::Benchmark.configure do |config|
+  config.run_in_subprocess = true
+end
+
 RSpec.describe BookingsMailer, type: :mailer do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
@@ -38,6 +42,16 @@ RSpec.describe BookingsMailer, type: :mailer do
     it "contains basic booking information and host's nickname in SV" do
       expect(new_request_mail2.body.encoded).to match("Hallå, #{host2.nickname}!")
     end
+
+    it 'is performed under 500ms' do
+      expect { new_request_mail }.to perform_under(500).ms.sample(20).times
+      expect { new_request_mail2 }.to perform_under(500).ms.sample(20).times
+    end
+
+    it 'performs at least 800K iterations per second' do
+      expect { new_request_mail }.to perform_at_least(800000).ips
+      expect { new_request_mail2 }.to perform_at_least(800000).ips
+    end
   end
 
   describe 'notify_user_accepted_booking' do
@@ -60,8 +74,16 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'contains 2 calendar events as attachments' do
-      expect(accepted_request_mail.body.parts[1].content_disposition).to eql('attachment; filename=booking_drop_off.ics')
-      expect(accepted_request_mail.body.parts[2].content_disposition).to eql('attachment; filename=booking_collect.ics')
+      expect(accepted_request_mail.body.parts[1].content_disposition).to eql('attachment; filename=AddToMyCalendarDropOff.ics')
+      expect(accepted_request_mail.body.parts[2].content_disposition).to eql('attachment; filename=AddToMyCalendarPickUp.ics')
+    end
+
+    it 'is performed under 500ms' do
+      expect { accepted_request_mail }.to perform_under(500).ms.sample(20).times
+    end
+
+    it 'performs at least 800K iterations per second' do
+      expect { accepted_request_mail }.to perform_at_least(800000).ips
     end
   end
 
@@ -84,6 +106,14 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(declined_request_mail.body.encoded).to match("#{booking.number_of_cats}")
       expect(declined_request_mail.body.encoded).to match("#{booking.host_message}")
     end
+
+    it 'is performed under 500ms' do
+      expect { declined_request_mail }.to perform_under(500).ms.sample(20).times
+    end
+
+    it 'performs at least 800K iterations per second' do
+      expect { declined_request_mail }.to perform_at_least(800000).ips
+    end
   end
 
   describe 'notify_user_cancelled_booking' do
@@ -104,6 +134,14 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(cancelled_request_user_mail.encoded).to match("#{host.nickname}")
       expect(cancelled_request_user_mail.encoded).to match("#{booking.number_of_cats}")
     end
+
+    it 'is performed under 500ms' do
+      expect { cancelled_request_user_mail }.to perform_under(500).ms.sample(20).times
+    end
+
+    it 'performs at least 800K iterations per second' do
+      expect { cancelled_request_user_mail }.to perform_at_least(800000).ips
+    end
   end
 
   describe 'notify_host_cancelled_booking' do
@@ -123,6 +161,14 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(cancelled_request_host_mail.body.encoded).to match("Hey, #{host.nickname}!")
       expect(cancelled_request_host_mail.encoded).to match("#{user.nickname}")
       expect(cancelled_request_host_mail.encoded).to match("#{booking.number_of_cats}")
+    end
+
+    it 'is performed under 500ms' do
+      expect { cancelled_request_host_mail }.to perform_under(500).ms.sample(20).times
+    end
+
+    it 'performs at least 800K iterations per second' do
+      expect { cancelled_request_host_mail }.to perform_at_least(800000).ips
     end
   end
 
@@ -149,5 +195,16 @@ RSpec.describe BookingsMailer, type: :mailer do
     it 'the 100% spec!' do
       expect(on_delete_account_host_mail2.encoded).to match('1550 kr')
     end
+
+    it 'is performed under 500ms' do
+      expect { on_delete_account_host_mail }.to perform_under(500).ms.sample(20).times
+      expect { on_delete_account_host_mail2 }.to perform_under(500).ms.sample(20).times
+    end
+
+    it 'performs at least 800K iterations per second' do
+      expect { on_delete_account_host_mail }.to perform_at_least(800000).ips
+      expect { on_delete_account_host_mail2 }.to perform_at_least(800000).ips
+    end
   end
+
 end

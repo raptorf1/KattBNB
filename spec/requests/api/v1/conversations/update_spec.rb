@@ -1,3 +1,7 @@
+RSpec::Benchmark.configure do |config|
+  config.run_in_subprocess = true
+end
+
 RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
   let(:user2) { FactoryBot.create(:user, email: 'noel@craft.com', nickname: 'MacOS') }
@@ -25,6 +29,15 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       expect(conversation1.hidden).to eq user1.id
     end
 
+    it 'updates hidden field of certain conversation in under 1 ms and with iteration rate of 5000000 per second' do
+      patch_request = patch "/api/v1/conversations/#{conversation1.id}", params: {
+        hidden: user1.id
+      },
+      headers: headers_user1
+      expect { patch_request }.to perform_under(1).ms.sample(20).times
+      expect { patch_request }.to perform_at_least(5000000).ips
+    end
+
     it 'does not update hidden field of certain conversation if action comes from an unassociated host' do
       patch "/api/v1/conversations/#{conversation1.id}", params: {
         hidden: user3.id
@@ -49,6 +62,15 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       expect(response.status).to eq 204
       expect(Conversation.all.length).to eq 1
       expect(Conversation.first.id).to eq conversation1.id
+    end
+
+    it 'deletes coversation if hidden field is not nil in under 1 ms and with iteration rate of 5000000 per second' do
+      patch_request = patch "/api/v1/conversations/#{conversation2.id}", params: {
+        hidden: user2.id
+      },
+      headers: headers_user3
+      expect { patch_request }.to perform_under(1).ms.sample(20).times
+      expect { patch_request }.to perform_at_least(5000000).ips
     end
   end
 end

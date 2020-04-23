@@ -1,3 +1,7 @@
+RSpec::Benchmark.configure do |config|
+  config.run_in_subprocess = true
+end
+
 RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:credentials1) { user1.create_new_auth_token }
@@ -32,6 +36,12 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
     it 'returns 200 response' do
       get '/api/v1/conversations', headers: headers1
       expect(response.status).to eq 200
+    end
+
+    it 'returns a list of conversations in under 1 ms and with iteration rate of 5000000 per second' do
+      get_request = get '/api/v1/conversations', headers: headers1
+      expect { get_request }.to perform_under(1).ms.sample(20).times
+      expect { get_request }.to perform_at_least(5000000).ips
     end
       
     it 'returns a list of conversations to the involved user' do

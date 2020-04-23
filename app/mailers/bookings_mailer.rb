@@ -25,16 +25,16 @@ class BookingsMailer < ApplicationMailer
     @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
 
     string_with_2_decimals = sprintf('%.2f', @booking.price_total.to_s)
-    (string_with_2_decimals[string_with_2_decimals.length - 1] == '0' && string_with_2_decimals[string_with_2_decimals.length - 2] == '0') ? @total = string_with_2_decimals.to_i : @total = sprintf('%.2f', string_with_2_decimals)
+    (string_with_2_decimals[string_with_2_decimals.length - 1] == '0' && string_with_2_decimals[string_with_2_decimals.length - 2] == '0') ? total = string_with_2_decimals.to_i : total = sprintf('%.2f', string_with_2_decimals)
 
     I18n.with_locale(@user.lang_pref) do
-      @summary_drop = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_drop', total: @total, host: @booking.host_nickname)
-      @summary_collect = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_collect', total: @total, host: @booking.host_nickname)
+      @summary_drop = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_drop', total: total, host: @booking.host_nickname)
+      @summary_collect = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_collect', total: total, host: @booking.host_nickname)
     end
     event_drop = create_calendar_event(@start_date, @booking.host_full_address, @summary_drop)
     event_collect = create_calendar_event(@end_date, @booking.host_full_address, @summary_collect)
-    attachments['booking_drop_off.ics'] = { :mime_type => 'text/calendar', :content => event_drop.to_ical }
-    attachments['booking_collect.ics'] = { :mime_type => 'text/calendar', :content => event_collect.to_ical }
+    attachments['AddToMyCalendarDropOff.ics'] = { :mime_type => 'text/calendar', :content => event_drop.to_ical }
+    attachments['AddToMyCalendarPickUp.ics'] = { :mime_type => 'text/calendar', :content => event_collect.to_ical }
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.bookings.notify_user_accepted_booking'))

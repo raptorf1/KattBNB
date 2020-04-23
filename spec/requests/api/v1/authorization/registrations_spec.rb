@@ -1,3 +1,7 @@
+RSpec::Benchmark.configure do |config|
+  config.run_in_subprocess = true
+end
+
 RSpec.describe 'User Registration', type: :request do
   let(:headers) { { HTTP_ACCEPT: 'application/json' } }
 
@@ -13,6 +17,19 @@ RSpec.describe 'User Registration', type: :request do
                                   }, headers: headers
       expect(json_response['status']).to eq 'success'
       expect(response.status).to eq 200
+    end
+
+    it 'returns a user and a token in under 1 ms and with iteration rate of 5000000 per second' do
+      post_request = post '/api/v1/auth', params: { email: 'zane@craft.se',
+                                         password: 'password',
+                                         password_confirmation: 'password',
+                                         nickname: 'KittenPrincess',
+                                         location: 'Gothenburg',
+                                         confirm_success_url: 'confirmed',
+                                         lang_pref: 'sv-SE'
+                                      }, headers: headers
+      expect { post_request }.to perform_under(1).ms.sample(20).times
+      expect { post_request }.to perform_at_least(5000000).ips
     end
   end
 

@@ -1,3 +1,7 @@
+RSpec::Benchmark.configure do |config|
+  config.run_in_subprocess = true
+end
+
 describe 'rake conversations:delete_unassociated_conversations', type: :task do
   let!(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
@@ -48,6 +52,14 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
     conversation2.reload
     conversation3.reload
     expect { task.execute }.to output("2 unassociated conversation(s) succesfully deleted!\n").to_stdout
+  end
+
+  it 'performs under 30 ms' do
+    expect { task.execute }.to perform_under(30).ms.sample(20).times
+  end
+
+  it 'performs at least 500 iterations per second' do
+    expect { task.execute }.to perform_at_least(500).ips
   end
 
 end
