@@ -40,7 +40,7 @@ class ConversationsChannel < ApplicationCable::Channel
     elsif conversation.user1_id == data['user_id'] || conversation.user2_id == data['user_id']
       user_sending = User.where(id: message.user_id)
       conversation.user1_id == message.user_id ? user_receiving = User.where(id: conversation.user2_id) : user_receiving = User.where(id: conversation.user1_id)
-      MessageBroadcastJob.perform_later(message.id)
+      MessageBroadcastJob.perform_now(message.id)
       user_receiving[0].message_notification == true && MessagesMailer.notify_user_new_message(user_sending[0], user_receiving[0], message.body).deliver
     else
       message.destroy
