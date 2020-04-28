@@ -85,6 +85,11 @@ GEM
       thor (>= 0.19.4, < 2.0)
       tins (~> 1.6)
     crass (1.0.5)
+    delayed_job (4.1.8)
+      activesupport (>= 3.0, < 6.1)
+    delayed_job_active_record (4.1.4)
+      activerecord (>= 3.0, < 6.1)
+      delayed_job (>= 3.0, < 5)
     devise (4.7.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -255,6 +260,7 @@ DEPENDENCIES
   aws-sdk-s3
   bootsnap (>= 1.1.0)
   coveralls
+  delayed_job_active_record
   devise-i18n (~> 0.12.1)
   devise_token_auth (~> 1.1, >= 1.1.2)
   factory_bot_rails
