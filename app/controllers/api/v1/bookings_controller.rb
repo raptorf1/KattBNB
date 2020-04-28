@@ -19,7 +19,7 @@ class Api::V1::BookingsController < ApplicationController
           new_availability = profile[0].availability - booking.dates
           profile.update(availability: new_availability)
           booking.update(host_avatar: host[0].avatar)
-          BookingsMailer.notify_host_create_booking(host[0], booking, user[0]).deliver
+          BookingsMailer.delay.notify_host_create_booking(host[0], booking, user[0])
         else
           booking.update(status: 'canceled')
           booking.destroy
@@ -44,12 +44,12 @@ class Api::V1::BookingsController < ApplicationController
       if booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'accepted'
         render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
         booking.update(host_description: profile[0].description, host_full_address: profile[0].full_address, host_real_lat: profile[0].latitude, host_real_long: profile[0].longitude)
-        BookingsMailer.notify_user_accepted_booking(host[0], booking, user[0]).deliver
+        BookingsMailer.delay.notify_user_accepted_booking(host[0], booking, user[0])
       elsif booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'declined'
         new_availability = (profile[0].availability + booking.dates).sort
         profile.update(availability: new_availability)
         render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
-        BookingsMailer.notify_user_declined_booking(host[0], booking, user[0]).deliver
+        BookingsMailer.delay.notify_user_declined_booking(host[0], booking, user[0])
       else
         render json: { error: booking.errors.full_messages }, status: 422
       end

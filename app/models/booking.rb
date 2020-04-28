@@ -25,7 +25,7 @@ class Booking < ApplicationRecord
       profile = HostProfile.where(user_id: host[0].id)
       new_forbidden_dates = (profile[0].forbidden_dates + self.dates).sort
       profile.update(forbidden_dates: new_forbidden_dates)
-      BookingsMailer.notify_host_on_user_account_deletion(host[0], self, user[0]).deliver
+      BookingsMailer.delay.notify_host_on_user_account_deletion(host[0], self, user[0])
       self.destroy
     else
       self.destroy
