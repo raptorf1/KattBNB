@@ -17,6 +17,7 @@ module KattBNBApi
     config.api_only = true
     config.i18n.available_locales = ['en-US', 'sv-SE']
     config.i18n.default_locale = (Rails.env == 'production') ? ('sv-SE') : ('en-US')
+    config.active_job.queue_adapter = :delayed_job
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins Rails.env == 'production' ? ENV['CORS_ORIGIN'] : 'localhost:3000'
