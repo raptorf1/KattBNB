@@ -9,12 +9,12 @@ RSpec.describe MessagesMailer, type: :mailer do
   let(:user3) { FactoryBot.create(:user, email: 'chaoss@thestreets.com', nickname: 'Joker SV') }
   let(:user4) { FactoryBot.create(:user, email: 'orderr@thestreets.com', nickname: 'Batman SV', lang_pref: 'sv-SE') }
   let(:conversation2) { FactoryBot.create(:conversation, user1_id: user3.id, user2_id: user4.id) }
-  let(:message) { FactoryBot.create(:message, user_id: user1.id, conversation_id: conversation.id, body: 'Something') }
-  let(:message2) { FactoryBot.create(:message, user_id: user1.id, conversation_id: conversation.id, body: 'SomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomething') }
-  let(:message3) { FactoryBot.create(:message, user_id: user3.id, conversation_id: conversation2.id, body: 'Something') }
-  let(:new_message_mail) { MessagesMailer.notify_user_new_message(user1, user2, message.body) }
-  let(:new_message_mail2) { MessagesMailer.notify_user_new_message(user1, user2, message2.body) }
-  let(:new_message_mail3) { MessagesMailer.notify_user_new_message(user3, user4, message3.body) }
+  let(:message) { FactoryBot.create(:message, user_id: user1.id, conversation_id: conversation.id, body: 'Something', created_at: 'Wed, 29 Apr 2020 20:27:22 UTC +00:00') }
+  let(:message2) { FactoryBot.create(:message, user_id: user1.id, conversation_id: conversation.id, body: 'SomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomething', created_at: 'Wed, 29 Apr 2020 20:27:22 UTC +00:00') }
+  let(:message3) { FactoryBot.create(:message, user_id: user3.id, conversation_id: conversation2.id, body: 'Something', created_at: 'Wed, 29 Apr 2020 20:27:22 UTC +00:00') }
+  let(:new_message_mail) { MessagesMailer.notify_user_new_message(user1, user2, message.body, message.created_at) }
+  let(:new_message_mail2) { MessagesMailer.notify_user_new_message(user1, user2, message2.body, message2.created_at) }
+  let(:new_message_mail3) { MessagesMailer.notify_user_new_message(user3, user4, message3.body, message3.created_at) }
 
   describe 'notify_user_new_message' do
     it 'renders the subject' do

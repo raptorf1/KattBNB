@@ -1,8 +1,12 @@
 class MessagesMailer < ApplicationMailer
 
-  def notify_user_new_message(user1, user2, message)
+  def notify_user_new_message(user1, user2, message, message_date)
     @user1 = user1
     @user2 = user2
+
+    I18n.with_locale(@user2.lang_pref) do
+      @message_date = I18n.l(message_date.in_time_zone('Stockholm'), format: :meow_format)
+    end
 
     message == '' ?
     I18n.with_locale(@user2.lang_pref) do
