@@ -32,8 +32,8 @@ describe 'rake profiles:delete_forbidden_dates', type: :task do
     expect { task.execute }.to output("Forbidden dates of 1 host profile(s) succesfully updated!\n").to_stdout
   end
 
-  it 'performs under 30 ms' do
-    expect { task.execute }.to perform_under(30).ms.sample(20).times
+  it 'performs under 50 ms' do
+    expect { task.execute }.to perform_under(50).ms.sample(20).times
   end
 
   it 'performs at least 500 iterations per second' do

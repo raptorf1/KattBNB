@@ -1,4 +1,7 @@
 sv-SE:
+  time:
+    formats:
+      meow_format: "%Y-%m-%d %H:%M:%S"
   controllers:
     reusable:
       create_success: "Skapad!"

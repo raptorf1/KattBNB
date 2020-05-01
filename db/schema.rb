@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_10_164932) do
+ActiveRecord::Schema.define(version: 2020_04_28_171020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,21 @@ ActiveRecord::Schema.define(version: 2020_04_10_164932) do
     t.integer "hidden"
     t.index ["user1_id"], name: "index_conversations_on_user1_id"
     t.index ["user2_id"], name: "index_conversations_on_user2_id"
+  end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string "locked_by"
+    t.string "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "host_profiles", force: :cascade do |t|

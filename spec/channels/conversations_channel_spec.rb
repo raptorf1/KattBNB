@@ -65,7 +65,7 @@ RSpec.describe ConversationsChannel, type: :channel do
     subscribe(conversations_id: conversation2.id)
     subscription.send_message({'conversation_id' => conversation2.id, 'user_id' => user1.id, 'body' => 'Batman, I hate you!'})
     expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
-    expect(ActionMailer::Base.deliveries.count).to eq 0
+    expect(Delayed::Job.all.count).to eq 0
   end
 
   it 'broadcasts message and sends an email to receiver when message arguments are within permitted params' do
@@ -73,7 +73,7 @@ RSpec.describe ConversationsChannel, type: :channel do
     subscribe(conversations_id: conversation.id)
     subscription.send_message({'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => 'Batman, I love you!'})
     expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
-    expect(ActionMailer::Base.deliveries.count).to eq 1
+    expect(Delayed::Job.all.count).to eq 1
   end
 
   it 'updates conversation hidden field to nil and broadcasts message when message arguments are within permitted params' do

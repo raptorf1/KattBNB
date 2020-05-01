@@ -106,7 +106,7 @@ RSpec.describe Booking, type: :model do
       booking = FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user1.id, status: 'accepted', dates: [2562889600000, 2562976000000])
       user1.destroy
       host_profile_user2.reload
-      expect(ActionMailer::Base.deliveries.count).to eq 1
+      expect(Delayed::Job.all.count).to eq 1
       expect(host_profile_user2.forbidden_dates).to eq [7, 8, 9, 2562889600000, 2562976000000]
     end
 

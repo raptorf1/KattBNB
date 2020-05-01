@@ -29,7 +29,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       end
 
       it 'sends an email upon creation' do
-        expect(ActionMailer::Base.deliveries.count).to eq 1
+        expect(Delayed::Job.all.count).to eq 1
       end
 
       it 'returns the id of an existing conversation' do

@@ -1,4 +1,7 @@
 en-US:
+  time:
+    formats:
+      meow_format: "%d-%m-%Y %H:%M:%S"
   controllers:
     reusable:
       create_success: "Successfully created!"

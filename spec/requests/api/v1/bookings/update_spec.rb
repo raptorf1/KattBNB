@@ -34,7 +34,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(booking.host_description).to eq profile1.description
       expect(booking.host_real_lat).to eq profile1.latitude
       expect(booking.host_real_long).to eq profile1.longitude
-      expect(ActionMailer::Base.deliveries.count).to eq 1
+      expect(Delayed::Job.all.count).to eq 1
     end
 
     it 'updates status of certain booking to accepted in under 1 ms and with iteration rate of 5000000 per second' do
@@ -56,7 +56,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       profile1.reload
       expect(response.status).to eq 200
       expect(profile1.availability).to eq [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000]
-      expect(ActionMailer::Base.deliveries.count).to eq 1
+      expect(Delayed::Job.all.count).to eq 1
     end
 
     it 'updates status of certain booking to declined in under 1 ms and with iteration rate of 5000000 per second' do

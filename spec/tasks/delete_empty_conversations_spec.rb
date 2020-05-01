@@ -29,8 +29,8 @@ describe 'rake conversations:delete_empty_conversations', type: :task do
     expect { task.execute }.to output("1 empty conversation(s) succesfully deleted!\n").to_stdout
   end
 
-  it 'performs under 30 ms' do
-    expect { task.execute }.to perform_under(30).ms.sample(20).times
+  it 'performs under 50 ms' do
+    expect { task.execute }.to perform_under(50).ms.sample(20).times
   end
 
   it 'performs at least 350 iterations per second' do

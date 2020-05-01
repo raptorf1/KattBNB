@@ -36,7 +36,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       end
 
       it 'sends an email upon booking creation' do
-        expect(ActionMailer::Base.deliveries.count).to eq 1
+        expect(Delayed::Job.all.count).to eq 1
       end
 
       it 'alters hosts availability' do
@@ -63,7 +63,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['message']).to eq 'Successfully created!'
         expect(response.status).to eq 200
         expect(user.booking.length).to eq 2
-        expect(ActionMailer::Base.deliveries.count).to eq 2
+        expect(Delayed::Job.all.count).to eq 2
       end
 
       it 'creates booking in under 1 ms and with iteration rate of 5000000 per second' do
