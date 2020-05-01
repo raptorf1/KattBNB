@@ -41,7 +41,7 @@ class ConversationsChannel < ApplicationCable::Channel
       user_sending = User.where(id: message.user_id)
       conversation.user1_id == message.user_id ? user_receiving = User.where(id: conversation.user2_id) : user_receiving = User.where(id: conversation.user1_id)
       MessageBroadcastJob.perform_now(message.id)
-      user_receiving[0].message_notification == true && MessagesMailer.delay.notify_user_new_message(user_sending[0], user_receiving[0], message.body, message.created_at)
+      user_receiving[0].message_notification == true && MessagesMailer.delay(:queue => 'messenger_email_notifications').notify_user_new_message(user_sending[0], user_receiving[0], message.body, message.created_at)
     else
       message.destroy
       transmit({type: 'errors', data: I18n.t('channels.conversations.message_error')})
