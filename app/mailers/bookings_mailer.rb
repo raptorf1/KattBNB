@@ -30,11 +30,13 @@ class BookingsMailer < ApplicationMailer
     I18n.with_locale(@user.lang_pref) do
       @summary_drop = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_drop', total: total, host: @booking.host_nickname)
       @summary_collect = I18n.t('mailers.bookings.notify_user_accepted_booking_sum_collect', total: total, host: @booking.host_nickname)
+      @attachment_drop = I18n.t('mailers.bookings.notify_user_accepted_booking_attachment_drop')
+      @attachment_pick = I18n.t('mailers.bookings.notify_user_accepted_booking_attachment_pick')
     end
     event_drop = create_calendar_event(@start_date, @booking.host_full_address, @summary_drop)
     event_collect = create_calendar_event(@end_date, @booking.host_full_address, @summary_collect)
-    attachments['AddToMyCalendarDropOff.ics'] = { :mime_type => 'text/calendar', :content => event_drop.to_ical }
-    attachments['AddToMyCalendarPickUp.ics'] = { :mime_type => 'text/calendar', :content => event_collect.to_ical }
+    attachments[@attachment_drop] = { :mime_type => 'text/calendar', :content => event_drop.to_ical }
+    attachments[@attachment_pick] = { :mime_type => 'text/calendar', :content => event_collect.to_ical }
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.bookings.notify_user_accepted_booking'))
