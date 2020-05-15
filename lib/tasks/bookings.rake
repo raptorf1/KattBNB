@@ -13,8 +13,8 @@ namespace :bookings do
         cancelled_bookings.push(booking)
         new_availability = (profile[0].availability + booking.dates).sort
         profile.update(availability: new_availability)
-        BookingsMailer.notify_user_cancelled_booking(host[0], booking, user[0]).deliver
-        BookingsMailer.notify_host_cancelled_booking(host[0], booking, user[0]).deliver
+        BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_cancelled_booking(host[0], booking, user[0])
+        BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_cancelled_booking(host[0], booking, user[0])
       end
     end
     puts "#{cancelled_bookings.length} pending booking(s) succesfully cancelled!"
