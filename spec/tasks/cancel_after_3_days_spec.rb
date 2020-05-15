@@ -11,7 +11,7 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
 
   it 'emails the user and the host' do
     task.execute
-    expect(ActionMailer::Base.deliveries.count).to eq 2
+    expect(Delayed::Job.all.count).to eq 2
   end
 
   it 'preloads the Rails environment' do

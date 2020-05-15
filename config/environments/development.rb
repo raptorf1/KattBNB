@@ -41,7 +41,7 @@ Rails.application.configure do
     authentication: :plain,
     enable_starttls_auto: true,
     user_name: 'kattbnb@gmail.com',
-    password: Rails.application.credentials.GMAIL_PASSWORD
+    password: Rails.application.credentials.GMAIL_PASSWORD_DEV
   }
   config.action_mailer.default_options = { from: 'KattBNB meow-reply' }
   config.action_mailer.default_url_options = { host: 'localhost', port: 3007 }

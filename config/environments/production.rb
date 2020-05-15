@@ -62,8 +62,8 @@ Rails.application.configure do
     domain: 'gmail.com',
     authentication: :plain,
     enable_starttls_auto: true,
-    user_name: 'kattbnb@gmail.com',
-    password: Rails.application.credentials.GMAIL_PASSWORD
+    user_name: ENV['OFFICIAL'] == 'yes' ? 'meow-reply@kattbnb.se' : 'kattbnb@gmail.com',
+    password: ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.GMAIL_PASSWORD_PROD : Rails.application.credentials.GMAIL_PASSWORD_DEV
   }
   config.action_mailer.default_options = { from: 'KattBNB meow-reply' }
   config.action_mailer.default_url_options = { :host => ENV['API_ENDPOINT'] }
