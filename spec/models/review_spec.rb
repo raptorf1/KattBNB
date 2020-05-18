@@ -1,5 +1,29 @@
-require 'rails_helper'
-
 RSpec.describe Review, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  it 'should have valid Factory' do
+    expect(create(:review)).to be_valid
+  end
+
+  describe 'Database table' do
+    it { is_expected.to have_db_column :score }
+    it { is_expected.to have_db_column :body }
+    it { is_expected.to have_db_column :host_reply }
+    it { is_expected.to have_db_column :host_nickname }
+  end
+
+  describe 'Validations' do
+    it { is_expected.to validate_presence_of :score }
+    it { is_expected.to validate_presence_of :body }
+    it { is_expected.to validate_presence_of :host_nickname }
+    it { is_expected.to validate_numericality_of(:score).only_integer }
+    it { is_expected.to validate_numericality_of(:score).is_greater_than(0) }
+    it { is_expected.to validate_numericality_of(:score).is_less_than_or_equal_to(5) }
+  end
+
+  describe 'Associations' do
+    it { is_expected.to belong_to(:user) }
+    it { is_expected.to belong_to(:host_profile) }
+    it { is_expected.to belong_to(:booking) }
+  end
+
 end
