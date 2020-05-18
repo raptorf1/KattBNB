@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   has_one :host_profile, dependent: :destroy
   has_many :message, dependent: :nullify
   has_many :booking, dependent: :destroy
+  has_many :review
   has_many :conversation1, :class_name => 'Conversation', :foreign_key => 'user1_id', dependent: :nullify
   has_many :conversation2, :class_name => 'Conversation', :foreign_key => 'user2_id', dependent: :nullify
   

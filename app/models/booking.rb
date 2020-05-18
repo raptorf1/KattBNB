@@ -4,6 +4,8 @@ class Booking < ApplicationRecord
   
   belongs_to :user
 
+  has_one :review
+
   enum status: [:accepted, :pending, :declined, :canceled]
 
   validates_presence_of :number_of_cats, :message, :dates, :host_nickname, :status, :price_per_day, :price_total, :user_id

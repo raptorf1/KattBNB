@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_28_171020) do
+ActiveRecord::Schema.define(version: 2020_05_18_171253) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,21 @@ ActiveRecord::Schema.define(version: 2020_04_28_171020) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.integer "score"
+    t.text "body"
+    t.text "host_reply"
+    t.string "host_nickname"
+    t.bigint "user_id"
+    t.bigint "host_profile_id"
+    t.bigint "booking_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["booking_id"], name: "index_reviews_on_booking_id"
+    t.index ["host_profile_id"], name: "index_reviews_on_host_profile_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "provider", default: "email", null: false
     t.string "uid", default: "", null: false
@@ -150,4 +165,7 @@ ActiveRecord::Schema.define(version: 2020_04_28_171020) do
   add_foreign_key "host_profiles", "users"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "users"
+  add_foreign_key "reviews", "bookings"
+  add_foreign_key "reviews", "host_profiles"
+  add_foreign_key "reviews", "users"
 end
