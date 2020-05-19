@@ -73,5 +73,6 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:conversation1) }
     it { is_expected.to have_many(:conversation2) }
     it { is_expected.to have_many(:message) }
+    it { is_expected.to have_many(:review) }
   end
 end

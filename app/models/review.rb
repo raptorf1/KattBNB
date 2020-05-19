@@ -8,4 +8,4 @@ class Review < ApplicationRecord
 end
 
 
-## body + host_reply 1000 chars
+# body + host_reply 1000 chars
