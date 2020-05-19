@@ -18,6 +18,8 @@ RSpec.describe Review, type: :model do
     it { is_expected.to validate_numericality_of(:score).only_integer }
     it { is_expected.to validate_numericality_of(:score).is_greater_than(0) }
     it { is_expected.to validate_numericality_of(:score).is_less_than_or_equal_to(5) }
+    it { is_expected.to validate_length_of(:body).is_at_most(1000) }
+    it { is_expected.to validate_length_of(:host_reply).is_at_most(1000) }
   end
 
   describe 'Associations' do
