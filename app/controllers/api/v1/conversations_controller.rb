@@ -23,6 +23,8 @@ class Api::V1::ConversationsController < ApplicationController
         user2 = User.where(id: conversation.user2_id)
         render json: { message: I18n.t('controllers.reusable.create_success'), id: conversation.id }, status: 200
         ConversationsMailer.delay(:queue => 'conversations_email_notifications').notify_user_new_conversation(user1, user2[0])
+      else
+        conversation.destroy
       end
     end
   end
