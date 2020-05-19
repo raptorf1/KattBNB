@@ -16,8 +16,8 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
 
     describe 'successfully' do
       before do
-        post_request = post '/api/v1/reviews', params: {
-          score: '2',
+        post '/api/v1/reviews', params: {
+          score: 2,
           body: 'Fantastic host! Fully recommended!',
           host_nickname: 'Joker',
           user_id: user.id,
@@ -33,6 +33,16 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
       end
 
       it 'creates review in under 1 ms and with iteration rate of 5000000 per second' do
+        post_request = post '/api/v1/reviews', params: {
+          score: 2,
+          body: 'Fantastic host! Fully recommended!',
+          host_nickname: 'Joker',
+          user_id: user.id,
+          booking_id: booking.id,
+          host_profile_id: profile2.id
+        },
+        headers: headers
+
         expect { post_request }.to perform_under(1).ms.sample(20).times
         expect { post_request }.to perform_at_least(5000000).ips
       end
@@ -48,13 +58,13 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         },
         headers: headers
 
-        expect(json_response['error']).to eq ["Score can't be blank"]
+        expect(json_response['error']).to eq ["Score can't be blank", "Score is not a number", "Body can't be blank"]
         expect(response.status).to eq 422
       end
 
       it 'Review can not be created if body is more than 1000 characters in length' do
         post '/api/v1/reviews', params: {
-          score: '2',
+          score: 2,
           body: 'Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! Fantastic host! Fully recommended! ',
           host_nickname: 'Joker',
           user_id: user.id,
@@ -69,7 +79,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
 
       it 'Review can not be created if user is not associated with the booking' do
         post '/api/v1/reviews', params: {
-          score: '2',
+          score: 2,
           body: 'Fantastic host! Fully recommended!',
           host_nickname: 'Joker',
           user_id: user.id,
