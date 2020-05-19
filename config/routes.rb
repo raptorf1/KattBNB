@@ -12,6 +12,7 @@ Rails.application.routes.draw do
         resources :host_profiles, only: [:index, :show, :create, :update]
         resources :bookings, only: [:index, :create, :update]
         resources :conversations, only: [:create, :index, :show, :update]
+        resources :reviews, only: [:create]
       end
     end
   end
