@@ -41,6 +41,10 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to belong_to(:user) }
   end
 
+  describe 'Relations' do
+    it { is_expected.to have_one(:review) }
+  end
+
   describe 'Default values' do
     it 'returns Array as class for dates field' do
       FactoryBot.create(:booking)

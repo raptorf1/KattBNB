@@ -33,6 +33,10 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to belong_to(:user) }
   end
 
+  describe 'Relations' do
+    it { is_expected.to have_many(:review) }
+  end
+
   describe 'Default values' do
     it 'returns Array as class for availability field' do
       FactoryBot.create(:host_profile)
