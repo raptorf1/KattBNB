@@ -6,8 +6,9 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
   let!(:user) { FactoryBot.create(:user) }
   let!(:user2) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:profile2) { FactoryBot.create(:host_profile, user_id: user2.id) }
-  let!(:booking) { FactoryBot.create(:booking, user_id: user.id) }
+  let!(:booking) { FactoryBot.create(:booking, user_id: user.id, dates: [1590017200000, 1590019100000]) }
   let!(:booking2) { FactoryBot.create(:booking, user_id: user2.id) }
+  let!(:booking3) { FactoryBot.create(:booking, user_id: user.id, dates: [2590000013752, 2590020013752, 2590040013752, 2590060013752]) }
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
   let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
@@ -84,6 +85,21 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
           host_nickname: 'Joker',
           user_id: user.id,
           booking_id: booking2.id,
+          host_profile_id: profile2.id
+        },
+        headers: headers
+
+        expect(json_response['error']).to eq ['You cannot perform this action!']
+        expect(response.status).to eq 422
+      end
+
+      it 'Review can not be created if associated user tries to review an unresolved booking' do
+        post '/api/v1/reviews', params: {
+          score: 2,
+          body: 'Fantastic host! Fully recommended!',
+          host_nickname: 'Joker',
+          user_id: user.id,
+          booking_id: booking3.id,
           host_profile_id: profile2.id
         },
         headers: headers
