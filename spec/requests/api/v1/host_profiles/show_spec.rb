@@ -96,7 +96,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
         headers: headers
         get "/api/v1/host_profiles/#{HostProfile.last.id}", headers: headers2
         expect(response.status).to eq 200
-        expect(json_response.count).to eq 7
+        expect(json_response.count).to eq 8
         expect(json_response).not_to include('full_address')
       end
     end

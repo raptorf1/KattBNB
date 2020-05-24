@@ -5,12 +5,14 @@ end
 RSpec.describe Api::V1::HostProfilesController, type: :request do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens') }
   let(:another_user) { FactoryBot.create(:user, email: 'felix@craft.com', nickname: 'Planner', location: 'Crete') }
+  let(:booking) { FactoryBot.create(:booking, user_id: user.id) }
   let(:headers) { { HTTP_ACCEPT: 'application/json' } }
 
   describe 'GET /api/v1/host_profiles' do
 
     before do
       profile_user = FactoryBot.create(:host_profile, user_id: user.id)
+      review = FactoryBot.create(:review, user_id: user.id, booking_id: booking.id, host_profile_id: profile_user.id)
       profile_another_user = FactoryBot.create(:host_profile, user_id: another_user.id)
     end
 
@@ -23,6 +25,11 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
     it 'returns 200 response' do
       get '/api/v1/host_profiles', headers: headers
       expect(response.status).to eq 200
+    end
+
+    it 'has review key in the response' do
+      get '/api/v1/host_profiles', headers: headers
+      expect(json_response[0]).to include('review')
     end
 
     it 'fetches collection of host profiles in under 1 ms and with iteration rate of at least 5000000 per second' do
