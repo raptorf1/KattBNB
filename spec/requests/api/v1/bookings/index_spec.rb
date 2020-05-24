@@ -7,6 +7,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
   let(:credentials1) { user1.create_new_auth_token }
   let(:headers1) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials1) }
   let(:user2) { FactoryBot.create(:user, email: 'felix@craft.com', nickname: 'Planner', location: 'Crete') }
+  let(:profile2) { FactoryBot.create(:host_profile, user_id: user2.id) }
   let(:credentials2) { user2.create_new_auth_token }
   let(:headers2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials2) }
   let(:user3) { FactoryBot.create(:user, email: 'carla@craft.com', nickname: 'Carla', location: 'Stockholm') }
@@ -18,6 +19,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
     before do
       booking = FactoryBot.create(:booking, user_id: user1.id, host_nickname: user2.nickname)
+      review = FactoryBot.create(:review, user_id: user1.id, host_profile_id: profile2.id, booking_id: booking.id)
     end
 
     it 'returns 401 response if user not logged in' do
@@ -82,7 +84,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(json_response[0]).to include('host_real_lat')
       expect(json_response[0]).to include('host_real_long')
       expect(json_response[0]).to include('host_avatar')
-      expect(json_response[0].count).to eq 19
+      expect(json_response[0]).to include('review')
+      expect(json_response[0].count).to eq 20
     end
 
     it 'does not return a booking to an uninvolved user with host_nickname param' do
