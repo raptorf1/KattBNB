@@ -54,6 +54,16 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
         headers: not_headers
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
       end
+
+      it 'Conversation cannot be created if user does not exist' do
+        post '/api/v1/conversations', params: {
+          user1_id: user1.id,
+          user2_id: 10000
+        },
+        headers: headers
+        expect(json_response['error']).to eq ['User2 must exist']
+        expect(response.status).to eq 422
+      end
     end
 
     describe 'performance wise' do

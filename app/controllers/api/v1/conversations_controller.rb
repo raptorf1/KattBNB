@@ -24,7 +24,7 @@ class Api::V1::ConversationsController < ApplicationController
         render json: { message: I18n.t('controllers.reusable.create_success'), id: conversation.id }, status: 200
         ConversationsMailer.delay(:queue => 'conversations_email_notifications').notify_user_new_conversation(user1, user2[0])
       else
-        conversation.destroy
+        render json: { error: conversation.errors.full_messages }, status: 422
       end
     end
   end
