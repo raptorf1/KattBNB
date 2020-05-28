@@ -43,7 +43,7 @@ RSpec.describe 'User Saves / Changes Avatar and API', type: :request do
     expect(User.last.profile_avatar.attached?).to eq true
   end
 
-  it 'returns a user and a token but if token/client expires or is invalid does save the avatar' do
+  it 'returns a user and a token but if token/client expires or is invalid does not save the avatar' do
 
     post '/api/v1/auth', params: { email: 'felix@craft.se',
                                    password: 'password',
