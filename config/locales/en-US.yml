@@ -5,6 +5,7 @@ en-US:
   controllers:
     reusable:
       create_success: "Successfully created!"
+      update_success: "Successfully updated!"
       update_error: "You cannot perform this action!"
     bookings:
       create_error_1: "Someone else just requested to book these days with this host!"

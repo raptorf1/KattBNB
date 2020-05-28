@@ -1,7 +1,26 @@
 class Api::V1::UsersController < ApplicationController
 
-  def create
-    
+  def update
+    user = User.find(params[:id])
+    if params[:client] != nil && params['access-token'] != nil
+      client = params[:client]
+      token = params['access-token']
+      if user.valid_token?(token, client)
+        attach_image(params[:profile_avatar], user)
+        render json: { message: I18n.t('controllers.reusable.update_success') }, status: 200
+      else
+        render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422
+      end
+    else
+      render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422
+    end
+  end
+
+
+  private 
+
+  def attach_image(avatar, user)
+    (avatar && avatar.present?) && DecodeImageService.attach_image(avatar, user.profile_avatar)
   end
 
 end
