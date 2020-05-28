@@ -44,10 +44,6 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(profile2.availability).to eq [1562803200000, 1562889600000, 1563148800000]
       end
 
-      it "updates booking with host's avatar" do
-        expect(Booking.last.host_avatar).to eq user2.avatar
-      end
-
       it 'creates another booking and sends a second email' do
         post '/api/v1/bookings', params: {
           number_of_cats: '23',
