@@ -118,4 +118,7 @@ RSpec.describe 'User Saves / Changes Avatar and API', type: :request do
     expect(response.status).to eq 422
   end
 
+  # If we remove the ternanry at line 4 of the DecodeImageService file,
+  # we can also successfully test line 13 of update action in Users controller.
+
 end
