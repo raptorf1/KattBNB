@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
+
   extend Devise::Models
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable and :omniauthable
@@ -12,6 +13,7 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_one :host_profile, dependent: :destroy
+  has_one_attached :profile_avatar
   has_many :message, dependent: :nullify
   has_many :booking, dependent: :destroy
   has_many :review

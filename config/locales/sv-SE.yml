@@ -5,6 +5,7 @@ sv-SE:
   controllers:
     reusable:
       create_success: "Skapad!"
+      update_success: "Uppdaterad!"
       update_error: "Du kan inte utföra den här åtgärden!"
     bookings:
       create_error_1: "Någon annan begärde precis att boka dessa dagar med denna kattvakt!"

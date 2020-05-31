@@ -74,5 +74,13 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:conversation2) }
     it { is_expected.to have_many(:message) }
     it { is_expected.to have_many(:review) }
+    it { is_expected.to have_one(:profile_avatar_attachment) }
+  end
+
+  describe 'Attached image' do
+    it 'is valid' do
+      subject.profile_avatar.attach(io: File.open('spec/fixtures/greece.jpg'), filename: 'attachment.jpg', content_type: 'image/jpg')
+      expect(subject.profile_avatar).to be_attached
+    end
   end
 end
