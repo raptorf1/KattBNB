@@ -47,6 +47,7 @@ RSpec.describe 'User Saves / Changes Avatar and API', type: :request do
                                }, headers: headers
     expect(json_response['error']).to eq ['You cannot perform this action!']
     expect(response.status).to eq 422
+    user.reload
     expect(user.profile_avatar.attached?).to eq false
   end
 
@@ -64,6 +65,7 @@ RSpec.describe 'User Saves / Changes Avatar and API', type: :request do
                                }, headers: headers
     expect(json_response['error']).to eq ['You cannot perform this action!']
     expect(response.status).to eq 422
+    user.reload
     expect(user.profile_avatar.attached?).to eq false
   end  
 
@@ -84,8 +86,6 @@ RSpec.describe 'User Saves / Changes Avatar and API', type: :request do
   end
 
   it 'raises an error if user is not signed in' do
-
-    expect(user.profile_avatar.attached?).to eq false
 
     put "/api/v1/users/#{user.id}", params: {
                                   profile_avatar: {
@@ -116,6 +116,8 @@ RSpec.describe 'User Saves / Changes Avatar and API', type: :request do
                                }, headers: headers2
     expect(json_response['error']).to eq ['You cannot perform this action!']
     expect(response.status).to eq 422
+    user.reload
+    expect(user.profile_avatar.attached?).to eq false
   end
 
   # If we remove the ternanry at line 4 of the DecodeImageService file,
