@@ -85,7 +85,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(json_response[0]).to include('host_real_lat')
       expect(json_response[0]).to include('host_real_long')
       expect(json_response[0]).to include('host_avatar')
-      expect(json_response[0]).to include('review')
+      expect(json_response[0]).to include('review_id')
       expect(json_response[0].count).to eq 21
     end
 
