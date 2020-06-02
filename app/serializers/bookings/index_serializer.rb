@@ -17,7 +17,9 @@ class Bookings::IndexSerializer < ActiveModel::Serializer
     host = User.where(nickname: object.host_nickname)
     unless host.length == 0
       host_profile = HostProfile.where(user_id: host[0].id)
-      return host_profile[0].id
+      unless host_profile.length == 0
+        return host_profile[0].id
+      end
     end
   end
 
