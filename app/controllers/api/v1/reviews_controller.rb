@@ -1,6 +1,11 @@
 class Api::V1::ReviewsController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:create]
+  before_action :authenticate_api_v1_user!, only: [:show, :create]
+
+  def show
+    review = Review.find(params[:id])
+    current_api_v1_user.id == review.user_id || current_api_v1_user.nickname == review.host_nickname ? (render json: review, serializer: Reviews::Serializer) : (render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422)
+  end
 
   def create
     now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
