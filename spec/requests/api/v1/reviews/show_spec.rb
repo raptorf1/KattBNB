@@ -36,10 +36,11 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         expect(json_response).to include('body')
         expect(json_response).to include('host_reply')
         expect(json_response).to include('host_nickname')
+        expect(json_response).to include('host_avatar')
         expect(json_response).to include('created_at')
         expect(json_response).to include('updated_at')
         expect(json_response).to include('user')
-        expect(json_response.count).to eq 8
+        expect(json_response.count).to eq 9
       end
     end
 
