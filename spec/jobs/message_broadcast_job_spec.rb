@@ -49,14 +49,14 @@ RSpec.describe MessageBroadcastJob, :type => :job do
       expect(MessageBroadcastJob.perform_now(message.id).result_status).to eq 1
     end
 
-    it 'performs under 30ms' do
+    it 'performs under 50ms' do
       ActiveJob::Base.queue_adapter = :test
-      expect { MessageBroadcastJob.perform_now(message.id) }.to perform_under(30).ms.sample(20).times
+      expect { MessageBroadcastJob.perform_now(message.id) }.to perform_under(50).ms.sample(20).times
     end
 
-    it 'performs at least 120 iterations per second' do
+    it 'performs at least 100 iterations per second' do
       ActiveJob::Base.queue_adapter = :test
-      expect { MessageBroadcastJob.perform_now(message.id) }.to perform_at_least(120).ips
+      expect { MessageBroadcastJob.perform_now(message.id) }.to perform_at_least(100).ips
     end
   end
   
