@@ -31,6 +31,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
       end
 
       it 'has correct keys in the response' do
+        expect(json_response).to include('id')
         expect(json_response).to include('score')
         expect(json_response).to include('body')
         expect(json_response).to include('host_reply')
@@ -38,7 +39,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         expect(json_response).to include('created_at')
         expect(json_response).to include('updated_at')
         expect(json_response).to include('user')
-        expect(json_response.count).to eq 7
+        expect(json_response.count).to eq 8
       end
     end
 
@@ -52,7 +53,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
       it 'cannot see review that she is not a part of' do
         get "/api/v1/reviews/#{review1.id}", headers: headers2
         expect(response.status).to eq 422
-        expect(json_response['error']).to eq 'You cannot perform this action!'
+        expect(json_response['error']).to eq ['You cannot perform this action!']
       end
     end
 
