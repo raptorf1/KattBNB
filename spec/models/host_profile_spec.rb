@@ -19,6 +19,7 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to have_db_column :long }
     it { is_expected.to have_db_column :latitude }
     it { is_expected.to have_db_column :longitude }
+    it { is_expected.to have_db_column :score }
   end
 
   describe 'Validations' do
@@ -59,7 +60,7 @@ RSpec.describe HostProfile, type: :model do
       FactoryBot.create(:host_profile)
       user = HostProfile.last.user
       expect { user.destroy }.to perform_under(50).ms.sample(20).times
-      expect { user.destroy }.to perform_at_least(200).ips
+      expect { user.destroy }.to perform_at_least(100).ips
     end
 
     it 'user is not deleted when associated profile is deleted from the database' do
@@ -73,7 +74,7 @@ RSpec.describe HostProfile, type: :model do
 
     it 'performance stats of host profile deletion' do
       profile = FactoryBot.create(:host_profile)
-      expect { profile.destroy }.to perform_under(25).ms.sample(20).times
+      expect { profile.destroy }.to perform_under(50).ms.sample(20).times
       expect { profile.destroy }.to perform_at_least(1200).ips
     end
 
