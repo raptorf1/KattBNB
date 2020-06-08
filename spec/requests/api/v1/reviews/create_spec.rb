@@ -9,6 +9,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
   let!(:booking) { FactoryBot.create(:booking, user_id: user.id, dates: [1590017200000, 1590019100000]) }
   let!(:booking2) { FactoryBot.create(:booking, user_id: user2.id) }
   let!(:booking3) { FactoryBot.create(:booking, user_id: user.id, dates: [2590000013752, 2590020013752, 2590040013752, 2590060013752]) }
+  let!(:booking4) { FactoryBot.create(:booking, user_id: user.id, dates: [1590017200000, 1590019100000]) }
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
   let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
@@ -17,6 +18,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
 
     describe 'successfully' do
       before do
+        expect(profile2.score).to eq nil
         post '/api/v1/reviews', params: {
           score: 2,
           body: 'Fantastic host! Fully recommended!',
@@ -28,9 +30,26 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         headers: headers
       end
 
-      it 'creates a review' do
+      it 'creates a review and updates host profile score' do
         expect(json_response['message']).to eq 'Successfully created!'
         expect(response.status).to eq 200
+        profile2.reload
+        expect(profile2.score).to eq 2.0
+      end
+
+      it 'updates host profile score when there are more than 1 reviews' do
+        post '/api/v1/reviews', params: {
+          score: 5,
+          body: 'Fantastic host! Fully recommended!',
+          host_nickname: 'Joker',
+          user_id: user.id,
+          booking_id: booking4.id,
+          host_profile_id: profile2.id
+        },
+        headers: headers
+        expect(response.status).to eq 200
+        profile2.reload
+        expect(profile2.score).to eq 3.5
       end
 
       it 'creates review in under 1 ms and with iteration rate of 5000000 per second' do
