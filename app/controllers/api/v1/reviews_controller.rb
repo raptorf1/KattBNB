@@ -1,6 +1,9 @@
 class Api::V1::ReviewsController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:create]
+  before_action :authenticate_api_v1_user!, only: [:show, :create]
+
+  def show
+  end
 
   def create
     now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
