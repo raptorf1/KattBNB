@@ -48,8 +48,10 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
         expect(json_response).to include('availability')
         expect(json_response).to include('forbidden_dates')
         expect(json_response).to include('full_address')
+        expect(json_response).to include('score')
+        expect(json_response).to include('review')
         expect(json_response).to include('user')
-        expect(json_response.count).to eq 9
+        expect(json_response.count).to eq 11
         end
       end
 
@@ -96,7 +98,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
         headers: headers
         get "/api/v1/host_profiles/#{HostProfile.last.id}", headers: headers2
         expect(response.status).to eq 200
-        expect(json_response.count).to eq 8
+        expect(json_response.count).to eq 9
         expect(json_response).not_to include('full_address')
       end
     end

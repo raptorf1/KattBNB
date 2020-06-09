@@ -2,6 +2,11 @@ class Api::V1::ReviewsController < ApplicationController
   
   before_action :authenticate_api_v1_user!, only: [:show, :create]
 
+  def index
+    params[:host_profile_id] ? reviews = Review.where(host_profile_id: params[:host_profile_id]) : reviews = []
+    render json: reviews, each_serializer: Reviews::Serializer
+  end
+
   def show
     review = Review.find(params[:id])
     current_api_v1_user.id == review.user_id || current_api_v1_user.nickname == review.host_nickname ? (render json: review, serializer: Reviews::Serializer) : (render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422)

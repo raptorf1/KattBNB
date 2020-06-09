@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_28_162036) do
+ActiveRecord::Schema.define(version: 2020_06_08_163241) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(version: 2020_05_28_162036) do
     t.decimal "longitude"
     t.bigint "availability", default: [], array: true
     t.bigint "forbidden_dates", default: [], array: true
+    t.float "score"
     t.index ["user_id"], name: "index_host_profiles_on_user_id"
   end
 

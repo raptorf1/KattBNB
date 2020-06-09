@@ -2,28 +2,23 @@ class Api::V1::HostProfilesController < ApplicationController
   
   before_action :authenticate_api_v1_user!, only: [:show, :create, :update]
 
-
   def index
     params[:user_id] ? profiles = HostProfile.where(user_id: params[:user_id]) : params[:location] ? profiles = HostProfile.joins(:user).where(users: {location: params[:location]}) : profiles = HostProfile.all
     render json: profiles, each_serializer: HostProfiles::IndexSerializer
   end
-  
 
   def show
     profile = HostProfile.find(params[:id])
     current_api_v1_user.id == profile.user_id ? (render json: profile, serializer: HostProfiles::ShowSerializer) : (render json: profile, serializer: HostProfiles::ShowSerializerNoAddress)
   end
 
-
   def create
     profile = HostProfile.create(host_profile_params)
     profile.persisted? ? (render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200) : (render json: { error: profile.errors.full_messages }, status: 422)
   end
 
-
   def update
     profile = HostProfile.find(params[:id])
-
     if current_api_v1_user.id == profile.user_id && params[:availability]
       host = User.where(id: profile.user_id)
       bookings = Booking.where(host_nickname: host[0].nickname, status: 'pending')

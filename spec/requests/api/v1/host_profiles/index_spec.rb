@@ -27,11 +27,6 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       expect(response.status).to eq 200
     end
 
-    it 'has review key in the response' do
-      get '/api/v1/host_profiles', headers: headers
-      expect(json_response[0]).to include('review')
-    end
-
     it 'fetches collection of host profiles in under 1 ms and with iteration rate of at least 5000000 per second' do
       get_request = get '/api/v1/host_profiles', headers: headers
       expect { get_request }.to perform_under(1).ms.sample(20).times

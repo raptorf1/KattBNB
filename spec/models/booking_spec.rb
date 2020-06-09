@@ -79,7 +79,7 @@ RSpec.describe Booking, type: :model do
 
     it 'performance stats for declined booking deletion' do
       booking = FactoryBot.create(:booking, status: 'declined')
-      expect { booking.destroy }.to perform_under(30).ms.sample(20).times
+      expect { booking.destroy }.to perform_under(50).ms.sample(20).times
       expect { booking.destroy }.to perform_at_least(700).ips
     end
 
