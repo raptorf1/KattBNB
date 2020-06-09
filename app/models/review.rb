@@ -1,6 +1,6 @@
 class Review < ApplicationRecord
 
-  after_commit :update_host_score
+  after_create_commit :update_host_score
 
   belongs_to :user
   belongs_to :host_profile
