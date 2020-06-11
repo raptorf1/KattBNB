@@ -1,6 +1,6 @@
 class Api::V1::ReviewsController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:show, :create]
+  before_action :authenticate_api_v1_user!, only: [:show, :create, :update]
 
   def index
     params[:host_profile_id] ? reviews = Review.where(host_profile_id: params[:host_profile_id]) : reviews = []
@@ -27,6 +27,10 @@ class Api::V1::ReviewsController < ApplicationController
     else      
       render json: { error: review.errors.full_messages }, status: 422
     end
+  end
+
+  def update
+    
   end
 
  
