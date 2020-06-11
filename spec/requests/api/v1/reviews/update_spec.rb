@@ -10,8 +10,8 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
   let!(:profile2) { FactoryBot.create(:host_profile, user_id: user3.id) }
   let!(:booking1) { FactoryBot.create(:booking, user_id: user1.id) }
   let!(:booking2) { FactoryBot.create(:booking, user_id: user2.id) }
-  let(:review1) { FactoryBot.create(:review, host_nickname: 'Harley Quinn', user_id: user1.id, host_profile_id: profile1.id, booking_id: booking1.id) }
-  let(:review2) { FactoryBot.create(:review, host_nickname: 'Batman', user_id: user2.id, host_profile_id: profile2.id, booking_id: booking2.id) }
+  let(:review1) { FactoryBot.create(:review, host_nickname: 'Harley Quinn', host_reply: nil, user_id: user1.id, host_profile_id: profile1.id, booking_id: booking1.id) }
+  let(:review2) { FactoryBot.create(:review, host_nickname: 'Batman', host_reply: nil, user_id: user2.id, host_profile_id: profile2.id, booking_id: booking2.id) }
   let(:credentials1) { user1.create_new_auth_token }
   let(:credentials2) { user2.create_new_auth_token }
   let(:headers1) { { HTTP_ACCEPT: "application/json" }.merge!(credentials1) }
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
       end
 
       it 'updates a specific review' do
-        expect(json_response).to eq 'Succesfully updated!'
+        expect(json_response['message']).to eq 'Successfully updated!'
       end
 
       it 'has correct response status' do
@@ -67,7 +67,8 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
       end
 
       it 'cannot update a review if user has deleted her account' do
-        review1.update(user_id: nil, booking_id: nil)
+        review1.update_attribute(:user_id, nil)
+        review1.update_attribute(:booking_id, nil)
         patch "/api/v1/reviews/#{review1.id}", params: {
           host_reply: 'Thanks a lot!'
         },
