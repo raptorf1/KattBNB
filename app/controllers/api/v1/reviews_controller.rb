@@ -1,6 +1,6 @@
 class Api::V1::ReviewsController < ApplicationController
   
-  before_action :authenticate_api_v1_user!, only: [:show, :create]
+  before_action :authenticate_api_v1_user!, only: [:show, :create, :update]
 
   def index
     params[:host_profile_id] ? reviews = Review.where(host_profile_id: params[:host_profile_id]) : reviews = []
@@ -26,6 +26,16 @@ class Api::V1::ReviewsController < ApplicationController
       end
     else      
       render json: { error: review.errors.full_messages }, status: 422
+    end
+  end
+
+  def update
+    review = Review.find(params[:id])
+    if current_api_v1_user.nickname == review.host_nickname && review.host_reply == nil && review.user_id != nil && review.booking_id != nil
+      review.update(host_reply: params[:host_reply])
+      render json: { message: I18n.t('controllers.reusable.update_success') }, status: 200
+    else
+      render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422
     end
   end
 
