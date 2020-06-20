@@ -37,6 +37,20 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
       end
     end
 
+    describe 'successfully' do
+      it 'can update a review even if user has deleted her account' do
+        review1.update_attribute(:user_id, nil)
+        review1.update_attribute(:booking_id, nil)
+        patch "/api/v1/reviews/#{review1.id}", params: {
+          host_reply: 'Thanks a lot!'
+        },
+        headers: headers2
+        expect(response.status).to eq 200
+        review1.reload
+        expect(review1.host_reply).to eq 'Thanks a lot!'
+      end
+    end
+
     describe 'unsuccessfully' do
       it 'cannot update a review if not logged in' do
         patch "/api/v1/reviews/#{review1.id}", params: {
@@ -58,17 +72,6 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
 
       it 'cannot update a review that already contains a host_reply' do
         review1.update(host_reply: 'Already updated!')
-        patch "/api/v1/reviews/#{review1.id}", params: {
-          host_reply: 'Thanks a lot!'
-        },
-        headers: headers2
-        expect(response.status).to eq 422
-        expect(json_response['error']).to eq ['You cannot perform this action!']
-      end
-
-      it 'cannot update a review if user has deleted her account' do
-        review1.update_attribute(:user_id, nil)
-        review1.update_attribute(:booking_id, nil)
         patch "/api/v1/reviews/#{review1.id}", params: {
           host_reply: 'Thanks a lot!'
         },

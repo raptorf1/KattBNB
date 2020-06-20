@@ -31,8 +31,8 @@ class Api::V1::ReviewsController < ApplicationController
 
   def update
     review = Review.find(params[:id])
-    if current_api_v1_user.nickname == review.host_nickname && review.host_reply == nil && review.user_id != nil && review.booking_id != nil
-      review.update(host_reply: params[:host_reply])
+    if current_api_v1_user.nickname == review.host_nickname && review.host_reply == nil
+      review.update_attribute('host_reply', params[:host_reply])
       render json: { message: I18n.t('controllers.reusable.update_success') }, status: 200
     else
       render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422
