@@ -39,6 +39,8 @@ sv-SE:
       notify_host_on_user_account_deletion: "Viktig information om din kommande bokning!"
       notify_user_accepted_booking_sum_drop: "KattBNB bokning med %{host} börjar - %{total} kr"
       notify_user_accepted_booking_sum_collect: "KattBNB bokning med %{host} slutar - %{total} kr"
+    reviews:
+      notify_host_create_review: ""
     conversations:
       notify_user_new_conversation: "%{user} startade en konversation med dig!"
     messages:
@@ -94,6 +96,10 @@ sv-SE:
             one: "<strong>%{user}</strong> har avslagit din bokningsförfrågan för <strong>1 katt</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
             other: "<strong>%{user}</strong> har avslagit din bokningsförfrågan för <strong>%{count} katter</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
           search_again_html: "Du kan söka igen och skicka en ny bokningförfrågan <a href='%{link}' class='%{class}'>på KattBNB</a>."
+      review:
+        notify_host_create_review:
+          details_html: ""
+          view_review_html: ""
   activerecord:
     attributes:
       user:
