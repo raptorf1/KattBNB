@@ -1,7 +1,6 @@
 class ReviewsMailer < ApplicationMailer
 
   def notify_host_create_review(host, booking, user, review)
-    @booking = booking
     @review = review
     @host = host
     @user = user
