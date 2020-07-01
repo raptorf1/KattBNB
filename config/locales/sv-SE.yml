@@ -99,7 +99,7 @@ sv-SE:
       review:
         notify_host_create_review:
           details_html: "<strong>%{user}</strong> recenserade dig precis för bokningen mellan <strong>%{start_date}</strong> och <strong>%{end_date}</strong>. <strong>%{user}</strong> betygsatte bokningen med poängen <strong>%{score} av 5</strong>."
-          view_review_html: "Du kan se recensionen och svara på den <a href=‘%{link}’ class=‘%{class}’>på KattBNB</a>."
+          view_review_html: "Du kan se recensionen och svara på den <a href='%{link}' class='%{class}'>på KattBNB</a>."
   activerecord:
     attributes:
       user:
