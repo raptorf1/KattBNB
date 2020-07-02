@@ -19,7 +19,10 @@ class Api::V1::ReviewsController < ApplicationController
     if review.persisted?
       booking = Booking.find(params[:booking_id])
       if current_api_v1_user.id == booking.user_id && booking.dates.last < now_epoch_javascript
+        host = User.where(nickname: booking.host_nickname)
+        user = User.where(id: booking.user_id)
         render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200
+        ReviewsMailer.delay(:queue => 'reviews_email_notifications').notify_host_create_review(host[0], booking, user[0], review)
       else
         review.destroy
         render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422

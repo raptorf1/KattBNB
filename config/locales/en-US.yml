@@ -39,6 +39,8 @@ en-US:
       notify_host_on_user_account_deletion: "Important information about your upcoming booking!"
       notify_user_accepted_booking_sum_drop: "KattBNB booking with %{host} starts - %{total} kr"
       notify_user_accepted_booking_sum_collect: "KattBNB booking with %{host} ends - %{total} kr"
+    reviews:
+      notify_host_create_review: "You got a new review!"
     conversations:
       notify_user_new_conversation: "%{user} started a conversation with you!"
     messages:
@@ -94,6 +96,10 @@ en-US:
             one: "<strong>%{user}</strong> has declined your booking request for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
             other: "<strong>%{user}</strong> has declined your booking request for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
           search_again_html: "You can search again and request a new booking <a href='%{link}' class='%{class}'>on KattBNB</a>."
+      review:
+        notify_host_create_review:
+          details_html: "<strong>%{user}</strong> just left you a review for the booking between <strong>%{start_date}</strong> and <strong>%{end_date}</strong>. <strong>%{user}</strong> rated the booking with a score <strong>%{score} out of 5</strong>."
+          view_review_html: "You can view the review and answer it <a href='%{link}' class='%{class}'>on KattBNB</a>."
   activerecord:
     attributes:
       user:

@@ -37,6 +37,11 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         expect(profile2.score).to eq 2.0
       end
 
+      it 'sends a notification email to the host' do
+        expect(Delayed::Job.all.count).to eq 1
+        expect(Delayed::Job.first.queue).to eq 'reviews_email_notifications'
+      end
+
       it 'updates host profile score when there are more than 1 reviews' do
         post '/api/v1/reviews', params: {
           score: 5,
