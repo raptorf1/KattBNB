@@ -41,6 +41,7 @@ en-US:
       notify_user_accepted_booking_sum_collect: "KattBNB booking with %{host} ends - %{total} kr"
     reviews:
       notify_host_create_review: "You got a new review!"
+      notify_user_pending_review: "Leave a review for %{host}"
     conversations:
       notify_user_new_conversation: "%{user} started a conversation with you!"
     messages:

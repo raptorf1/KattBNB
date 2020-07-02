@@ -41,6 +41,7 @@ sv-SE:
       notify_user_accepted_booking_sum_collect: "KattBNB bokning med %{host} slutar - %{total} kr"
     reviews:
       notify_host_create_review: "Du har en ny recension!"
+      notify_user_pending_review: ""
     conversations:
       notify_user_new_conversation: "%{user} startade en konversation med dig!"
     messages:

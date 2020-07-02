@@ -13,4 +13,31 @@ class ReviewsMailer < ApplicationMailer
     end
   end
 
+  def notify_user_pending_review_1_day(host, user)
+    @host = host
+    @user = user
+
+    I18n.with_locale(@user.lang_pref) do
+      mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
+    end
+  end
+
+  def notify_user_pending_review_3_days(host, user)
+    @host = host
+    @user = user
+
+    I18n.with_locale(@user.lang_pref) do
+      mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
+    end
+  end
+
+  def notify_user_pending_review_10_days(host, user)
+    @host = host
+    @user = user
+
+    I18n.with_locale(@user.lang_pref) do
+      mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
+    end
+  end
+
 end
