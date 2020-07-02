@@ -57,6 +57,7 @@ en-US:
         about: "About"
         contact: "Contact us"
         faq: "FAQ"
+        review_cta: "Review your booking"
       message:
         notify_user_new_message:
           new_html: "<strong>%{user}</strong> has just sent you a new message."
@@ -101,6 +102,8 @@ en-US:
         notify_host_create_review:
           details_html: "<strong>%{user}</strong> just left you a review for the booking between <strong>%{start_date}</strong> and <strong>%{end_date}</strong>. <strong>%{user}</strong> rated the booking with a score <strong>%{score} out of 5</strong>."
           view_review_html: "You can view the review and answer it <a href='%{link}' class='%{class}'>on KattBNB</a>."
+        notify_user_pending_review_1_day:
+          details_html: "We hope your recent booking with <strong>%{host}</strong> went well!<br></br>We would like to encourage you to leave a review and rate your experience. Reviews are something truly valuable at KattBNB and they help us grow as a community. We want to know how it went so we can make KattBNB even better."
   activerecord:
     attributes:
       user:

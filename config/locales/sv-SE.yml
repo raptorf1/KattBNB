@@ -57,6 +57,7 @@ sv-SE:
         about: "Om"
         contact: "Kontakta oss"
         faq: "Frågor och svar"
+        review_cta: ""
       message:
         notify_user_new_message:
           new_html: "<strong>%{user}</strong> har precis skickat dig ett meddelande."
@@ -101,6 +102,8 @@ sv-SE:
         notify_host_create_review:
           details_html: "<strong>%{user}</strong> recenserade dig precis för bokningen mellan <strong>%{start_date}</strong> och <strong>%{end_date}</strong>. <strong>%{user}</strong> betygsatte bokningen med poängen <strong>%{score} av 5</strong>."
           view_review_html: "Du kan se recensionen och svara på den <a href='%{link}' class='%{class}'>på KattBNB</a>."
+        notify_user_pending_review_1_day:
+          details_html: ""
   activerecord:
     attributes:
       user:
