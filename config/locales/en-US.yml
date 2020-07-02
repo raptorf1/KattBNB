@@ -62,7 +62,7 @@ en-US:
         notify_user_new_message:
           new_html: "<strong>%{user}</strong> has just sent you a new message."
           view_html: "<a href='%{link}' class='%{class}'>Click here</a> to check it out."
-          turn_off_html: "<strong>PS.</strong> Too many emails? You can turn off this notification in <a href='%{link}' class='%{class}'>your profile page</a>."
+          turn_off_html: "<strong>P.S.</strong> Too many emails? You can turn off this notification in <a href='%{link}' class='%{class}'>your profile page</a>."
       conversation:
         notify_user_new_conversation:
           started_html: "<strong>%{user}</strong> has just started a conversation with you."
@@ -106,6 +106,10 @@ en-US:
           details_html: "We hope your recent booking with <strong>%{host}</strong> went well!<br></br>We would like to encourage you to leave a review and rate your experience. Reviews are something truly valuable at KattBNB and they help us grow as a community. We want to know how it went so we can make KattBNB even better."
         notify_user_pending_review_3_days:
           details_html: "We don't mean to spam you but we really would like to know what you think about your recent booking with <strong>%{host}</strong>!<br></br>Reviews help the host to improve their services as well as make it easier for other users to find the best cat host. Reviews also mean a lot to us at KattBNB as we are a feedback driven company. We hope you find a moment to review your booking."
+        notify_user_pending_review_10_days:
+          details_html: "Did something go wrong during your recent booking with <strong>%{host}</strong>? Positive or negative feedback - we want to hear it!<br></br>We really hope you would consider reviewing your booking."
+          hear_soon: "Hope to hear from you soon!"
+          ps: "<strong>P.S.</strong> If you have feedback you are not comfortable sharing on kattbnb.se you are always welcome to reach out to us via <a href='%{link}' class='%{class}'>hej@kattbnb.se</a>."
   activerecord:
     attributes:
       user:

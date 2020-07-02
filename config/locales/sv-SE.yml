@@ -62,7 +62,7 @@ sv-SE:
         notify_user_new_message:
           new_html: "<strong>%{user}</strong> har precis skickat dig ett meddelande."
           view_html: "<a href='%{link}' class='%{class}'>Klicka här</a> för att se det."
-          turn_off_html: "<strong>PS.</strong> För många e-postmeddelanden? Du kan stänga av det här meddelandet i <a href='%{link}' class='%{class}'>din profilsida</a>."
+          turn_off_html: "<strong>P.S.</strong> För många e-postmeddelanden? Du kan stänga av det här meddelandet i <a href='%{link}' class='%{class}'>din profilsida</a>."
       conversation:
         notify_user_new_conversation:
           started_html: "<strong>%{user}</strong> har precis startat en konversation med dig."
@@ -106,6 +106,10 @@ sv-SE:
           details_html: ""
         notify_user_pending_review_3_days:
           details_html: ""
+        notify_user_pending_review_10_days:
+          details_html: ""
+          hear_soon: ""
+          ps: ""
   activerecord:
     attributes:
       user:
