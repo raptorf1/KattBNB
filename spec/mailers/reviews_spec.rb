@@ -10,6 +10,7 @@ RSpec.describe ReviewsMailer, type: :mailer do
   let!(:review) { FactoryBot.create(:review, user_id: user.id, host_profile_id: profile_host.id, booking_id: booking.id, score: 2) }
   let(:new_review_mail) { ReviewsMailer.notify_host_create_review(host, booking, user, review) }
   let(:pending_review_1_day) { ReviewsMailer.notify_user_pending_review_1_day(host, user, booking) }
+  let(:pending_review_3_days) { ReviewsMailer.notify_user_pending_review_3_days(host, user, booking) }
 
   describe 'notify_host_create_review' do
     it 'renders the subject' do
@@ -52,9 +53,10 @@ RSpec.describe ReviewsMailer, type: :mailer do
       expect(pending_review_1_day.from).to eql('KattBNB meow-reply')
     end
 
-    it 'contains basic user information' do
+    it 'contains basic information' do
       expect(pending_review_1_day.body.encoded).to match("Hey, #{user.nickname}!")
       expect(pending_review_1_day.body.encoded).to match("#{host.nickname}")
+      expect(pending_review_1_day.body.encoded).to match('We would like to encourage you to leave a review')
     end
 
     it 'is performed under 600ms' do
@@ -63,6 +65,34 @@ RSpec.describe ReviewsMailer, type: :mailer do
 
     it 'performs at least 800K iterations per second' do
       expect { pending_review_1_day }.to perform_at_least(800000).ips
+    end
+  end
+
+  describe 'notify_user_pending_review_3_days' do
+    it 'renders the subject' do
+      expect(pending_review_3_days.subject).to eql("Leave a review for #{host.nickname}")
+    end
+
+    it 'renders the receiver email' do
+      expect(pending_review_3_days.to).to eql([user.email])
+    end
+
+    it 'renders the sender email' do
+      expect(pending_review_3_days.from).to eql('KattBNB meow-reply')
+    end
+
+    it 'contains basic information' do
+      expect(pending_review_3_days.body.encoded).to match("Hey, #{user.nickname}!")
+      expect(pending_review_3_days.body.encoded).to match("#{host.nickname}")
+      expect(pending_review_3_days.body.encoded).to match("We don't mean to spam you but we really would like to know what you think about your recent booking")
+    end
+
+    it 'is performed under 600ms' do
+      expect { pending_review_3_days }.to perform_under(600).ms.sample(20).times
+    end
+
+    it 'performs at least 800K iterations per second' do
+      expect { pending_review_3_days }.to perform_at_least(800000).ips
     end
   end
 

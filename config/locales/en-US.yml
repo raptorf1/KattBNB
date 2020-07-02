@@ -104,6 +104,8 @@ en-US:
           view_review_html: "You can view the review and answer it <a href='%{link}' class='%{class}'>on KattBNB</a>."
         notify_user_pending_review_1_day:
           details_html: "We hope your recent booking with <strong>%{host}</strong> went well!<br></br>We would like to encourage you to leave a review and rate your experience. Reviews are something truly valuable at KattBNB and they help us grow as a community. We want to know how it went so we can make KattBNB even better."
+        notify_user_pending_review_3_days:
+          details_html: "We don't mean to spam you but we really would like to know what you think about your recent booking with <strong>%{host}</strong>!<br></br>Reviews help the host to improve their services as well as make it easier for other users to find the best cat host. Reviews also mean a lot to us at KattBNB as we are a feedback driven company. We hope you find a moment to review your booking."
   activerecord:
     attributes:
       user:
