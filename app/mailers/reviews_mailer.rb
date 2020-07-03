@@ -19,6 +19,9 @@ class ReviewsMailer < ApplicationMailer
     @booking = booking
     @profile = HostProfile.where(user_id: host.id)[0]
 
+    @start_date = Time.at(booking.dates[0] / 1000)
+    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
     end
@@ -30,6 +33,9 @@ class ReviewsMailer < ApplicationMailer
     @booking = booking
     @profile = HostProfile.where(user_id: host.id)[0]
 
+    @start_date = Time.at(booking.dates[0] / 1000)
+    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
     end
@@ -40,6 +46,9 @@ class ReviewsMailer < ApplicationMailer
     @user = user
     @booking = booking
     @profile = HostProfile.where(user_id: host.id)[0]
+
+    @start_date = Time.at(booking.dates[0] / 1000)
+    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
