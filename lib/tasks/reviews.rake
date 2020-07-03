@@ -9,20 +9,16 @@ namespace :reviews do
     notify_10 = []
     accepted_bookings.each do |booking|
       next unless booking.dates.last < now_epoch_javascript && booking.review == nil
+        host = User.where(nickname: booking.host_nickname)
+        user = User.where(id: booking.user_id)
         case (now_epoch_javascript - booking.dates.last)/86400000
           when 10
-            host = User.where(nickname: booking.host_nickname)
-            user = User.where(id: booking.user_id)
             ReviewsMailer.delay(:queue => 'reviews_email_notifications').notify_user_pending_review_10_days(host[0], user[0], booking)
             notify_10.push(booking)
           when 3
-            host = User.where(nickname: booking.host_nickname)
-            user = User.where(id: booking.user_id)
             ReviewsMailer.delay(:queue => 'reviews_email_notifications').notify_user_pending_review_3_days(host[0], user[0], booking)
             notify_3.push(booking)
           when 1
-            host = User.where(nickname: booking.host_nickname)
-            user = User.where(id: booking.user_id)
             ReviewsMailer.delay(:queue => 'reviews_email_notifications').notify_user_pending_review_1_day(host[0], user[0], booking)
             notify_1.push(booking)
         end
