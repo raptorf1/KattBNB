@@ -18,7 +18,7 @@ class Api::V1::ReviewsController < ApplicationController
     review = Review.create(review_params)
     if review.persisted?
       booking = Booking.find(params[:booking_id])
-      if current_api_v1_user.id == booking.user_id && booking.dates.last < now_epoch_javascript
+      if current_api_v1_user.id == booking.user_id && booking.status == 'accepted' && booking.dates.last < now_epoch_javascript
         host = User.where(nickname: booking.host_nickname)
         user = User.where(id: booking.user_id)
         render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200

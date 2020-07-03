@@ -6,10 +6,10 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
   let!(:user) { FactoryBot.create(:user) }
   let!(:user2) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:profile2) { FactoryBot.create(:host_profile, user_id: user2.id) }
-  let!(:booking) { FactoryBot.create(:booking, user_id: user.id, dates: [1590017200000, 1590019100000]) }
-  let!(:booking2) { FactoryBot.create(:booking, user_id: user2.id) }
-  let!(:booking3) { FactoryBot.create(:booking, user_id: user.id, dates: [2590000013752, 2590020013752, 2590040013752, 2590060013752]) }
-  let!(:booking4) { FactoryBot.create(:booking, user_id: user.id, dates: [1590017200000, 1590019100000]) }
+  let!(:booking) { FactoryBot.create(:booking, user_id: user.id, status: 'accepted', dates: [1590017200000, 1590019100000]) }
+  let!(:booking2) { FactoryBot.create(:booking, user_id: user2.id, status: 'accepted') }
+  let!(:booking3) { FactoryBot.create(:booking, user_id: user.id, status: 'accepted', dates: [2590000013752, 2590020013752, 2590040013752, 2590060013752]) }
+  let!(:booking4) { FactoryBot.create(:booking, user_id: user.id, status: 'accepted', dates: [1590017200000, 1590019100000]) }
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
   let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
