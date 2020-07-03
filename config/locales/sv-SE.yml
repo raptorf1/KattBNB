@@ -41,6 +41,7 @@ sv-SE:
       notify_user_accepted_booking_sum_collect: "KattBNB bokning med %{host} slutar - %{total} kr"
     reviews:
       notify_host_create_review: "Du har en ny recension!"
+      notify_user_pending_review: "Lämna en recension för %{host}"
     conversations:
       notify_user_new_conversation: "%{user} startade en konversation med dig!"
     messages:
@@ -56,11 +57,12 @@ sv-SE:
         about: "Om"
         contact: "Kontakta oss"
         faq: "Frågor och svar"
+        review_cta: "Recensera din bokning"
       message:
         notify_user_new_message:
           new_html: "<strong>%{user}</strong> har precis skickat dig ett meddelande."
           view_html: "<a href='%{link}' class='%{class}'>Klicka här</a> för att se det."
-          turn_off_html: "<strong>PS.</strong> För många e-postmeddelanden? Du kan stänga av det här meddelandet i <a href='%{link}' class='%{class}'>din profilsida</a>."
+          turn_off_html: "<strong>P.S.</strong> För många e-postmeddelanden? Du kan stänga av det här meddelandet i <a href='%{link}' class='%{class}'>din profilsida</a>."
       conversation:
         notify_user_new_conversation:
           started_html: "<strong>%{user}</strong> har precis startat en konversation med dig."
@@ -100,6 +102,14 @@ sv-SE:
         notify_host_create_review:
           details_html: "<strong>%{user}</strong> recenserade dig precis för bokningen mellan <strong>%{start_date}</strong> och <strong>%{end_date}</strong>. <strong>%{user}</strong> betygsatte bokningen med poängen <strong>%{score} av 5</strong>."
           view_review_html: "Du kan se recensionen och svara på den <a href='%{link}' class='%{class}'>på KattBNB</a>."
+        notify_user_pending_review_1_day:
+          details_html: "Vi hoppas att din senaste bokning med <strong>%{host}</strong> gick bra!<br></br>Vi uppmuntrar dig att lämna en recension och betygsätta din upplevelse. Recensioner är något verkligen värdefullt hos KattBNB och de hjälper oss att växa som community. Vi vill gärna veta hur det gick så att vi kan göra KattBNB ännu bättre."
+        notify_user_pending_review_3_days:
+          details_html: "Vi vill ogärna spamma dig men vi vill verkligen veta vad du tycker om din senaste bokning med <strong>%{host}</strong>!<br></br>Recensioner hjälper kattvakten att förbättra sina tjänster samt gör det lättare för andra användare att hitta den bästa kattvakten. Recensioner betyder också mycket för oss på KattBNB eftersom vi är ett feedback-drivet företag. Vi hoppas att du har en stund över att recensera din bokning."
+        notify_user_pending_review_10_days:
+          details_html: "Gick något på tok under din senaste bokning med <strong>%{host}</strong>? Positiv eller negativ feedback - vi vill höra den!<br></br>Vi hoppas verkligen att du överväger att recensera din bokning."
+          hear_soon: "Hoppas vi hörs snart!"
+          ps: "<strong>P.S.</strong> Om du har feedback som du inte är bekväm att dela med dig av på kattbnb.se så ser vi gärna att du kontaktar oss på <a href='%{link}' class='%{class}'>hej@kattbnb.se</a>."
   activerecord:
     attributes:
       user:
