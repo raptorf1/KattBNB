@@ -1,3 +1,7 @@
+RSpec::Benchmark.configure do |config|
+  config.run_in_subprocess = true
+end
+
 RSpec.describe User, type: :model do
   it 'should have valid Factory' do
     expect(create(:user)).to be_valid
@@ -82,5 +86,30 @@ RSpec.describe User, type: :model do
       subject.profile_avatar.attach(io: File.open('spec/fixtures/greece.jpg'), filename: 'attachment.jpg', content_type: 'image/jpg')
       expect(subject.profile_avatar).to be_attached
     end
+  end
+
+  describe 'Delete dependent setting' do
+    it 'review is nullified when associated user is deleted' do
+      user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
+      host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
+      profile = FactoryBot.create(:host_profile, user_id: host.id)
+      booking = FactoryBot.create(:booking, host_nickname: host.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000])
+      review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
+      user.destroy
+      review.reload
+      expect(review.user_id).to eq nil
+      expect(review.booking_id).to eq nil
+    end
+
+    it 'performance stats for review is nullified when associated user is deleted' do
+      user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
+      host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
+      profile = FactoryBot.create(:host_profile, user_id: host.id)
+      booking = FactoryBot.create(:booking, host_nickname: host.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000])
+      review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
+      expect { user.destroy }.to perform_under(50).ms.sample(20).times
+      expect { user.destroy }.to perform_at_least(100).ips
+    end
+
   end
 end
