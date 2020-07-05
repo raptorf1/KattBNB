@@ -27,4 +27,14 @@ namespace :reviews do
     puts "#{notify_3.length} user(s) notified to leave review after 3 days!"
     puts "#{notify_10.length} user(s) notified to leave review after 10 days!"
   end
+
+  desc 'Delete unassociated reviews'
+  task delete_unassociated_reviews: :environment do
+    reviews = Review.where(user_id: nil, booking_id: nil, host_profile_id: nil)
+    reviews.each do |review|
+      review.destroy
+    end
+    puts "#{reviews.length} unassociated review(s) successfully deleted!"
+  end
+
 end

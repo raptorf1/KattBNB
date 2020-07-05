@@ -198,6 +198,7 @@ en-US:
         account: "To start using our services, please confirm your account."
         confirm: "Confirm"
         see_you_html: "We hope to see you soon <a href='%{link}' class='%{class}'>on KattBNB</a>."
+        ps: "<strong>P.S.</strong> Please consider <a href='%{link}' class='%{class}'>whitelisting this address</a> (meow-reply@kattbnb.se) via your email client settings so you don't accidentally miss something important."
       reset_password_instructions:
         subject: "Reset password instructions"
         no_worries: "Forgot your password? No worries, you can change it."

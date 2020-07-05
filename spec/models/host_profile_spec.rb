@@ -75,9 +75,29 @@ RSpec.describe HostProfile, type: :model do
     it 'performance stats of host profile deletion' do
       profile = FactoryBot.create(:host_profile)
       expect { profile.destroy }.to perform_under(50).ms.sample(20).times
-      expect { profile.destroy }.to perform_at_least(1200).ips
+      expect { profile.destroy }.to perform_at_least(300).ips
+    end
+
+    it 'review is nullified when associated host profile is deleted' do
+      user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
+      host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
+      profile = FactoryBot.create(:host_profile, user_id: host.id)
+      booking = FactoryBot.create(:booking, host_nickname: host.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000])
+      review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
+      profile.destroy
+      review.reload
+      expect(review.host_profile_id).to eq nil
+    end
+
+    it 'performance stats for review is nullified when associated host profile is deleted' do
+      user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
+      host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
+      profile = FactoryBot.create(:host_profile, user_id: host.id)
+      booking = FactoryBot.create(:booking, host_nickname: host.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000])
+      review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
+      expect { profile.destroy }.to perform_under(50).ms.sample(20).times
+      expect { profile.destroy }.to perform_at_least(300).ips
     end
 
   end
-
 end
