@@ -40,31 +40,31 @@ RSpec.describe Api::V1::BookingsController, type: :request do
     end
       
     it 'returns a booking by host nickname to the involved host' do
-      get '/api/v1/bookings', params: {host_nickname: user2.nickname}, headers: headers2
+      get "/api/v1/bookings?stats=no&host_nickname=#{user2.nickname}", headers: headers2
       expect(json_response[0]['host_nickname']).to eq user2.nickname
       expect(json_response.count).to eq 1
     end
 
     it 'returns a booking by host nickname in under 1 ms and with iteration rate of 5000000 per second' do
-      get_request = get '/api/v1/bookings', params: {host_nickname: user2.nickname}, headers: headers2
+      get_request = get '/api/v1/bookings', params: {stats: 'no', host_nickname: user2.nickname}, headers: headers2
       expect { get_request }.to perform_under(1).ms.sample(20).times
       expect { get_request }.to perform_at_least(5000000).ips
     end
 
     it 'returns a booking by user id to the involved user' do
-      get '/api/v1/bookings', params: {user_id: user1.id}, headers: headers1
+      get '/api/v1/bookings', params: {stats: 'no', user_id: user1.id}, headers: headers1
       expect(json_response[0]['user_id']).to eq user1.id
       expect(json_response.count).to eq 1
     end
 
     it 'returns a booking by user id in under 1 ms and with iteration rate of 5000000 per second' do
-      get_request = get '/api/v1/bookings', params: {user_id: user1.id}, headers: headers1
+      get_request = get '/api/v1/bookings', params: {stats: 'no', user_id: user1.id}, headers: headers1
       expect { get_request }.to perform_under(1).ms.sample(20).times
       expect { get_request }.to perform_at_least(5000000).ips
     end
 
     it 'has correct keys in the response' do
-      get '/api/v1/bookings', params: {user_id: user1.id}, headers: headers1
+      get '/api/v1/bookings', params: {stats: 'no', user_id: user1.id}, headers: headers1
       expect(json_response[0]).to include('id')
       expect(json_response[0]).to include('number_of_cats')
       expect(json_response[0]).to include('dates')
@@ -91,12 +91,12 @@ RSpec.describe Api::V1::BookingsController, type: :request do
     end
 
     it 'does not return a booking to an uninvolved user with host_nickname param' do
-      get '/api/v1/bookings', params: {host_nickname: user2.nickname}, headers: headers3
+      get '/api/v1/bookings', params: {stats: 'no', host_nickname: user2.nickname}, headers: headers3
       expect(json_response.count).to eq 0
     end
 
     it 'does not return a booking to an uninvolved user with user_id param' do
-      get '/api/v1/bookings', params: {user_id: user1.id}, headers: headers3
+      get '/api/v1/bookings', params: {stats: 'no', user_id: user1.id}, headers: headers3
       expect(json_response.count).to eq 0
     end
   end

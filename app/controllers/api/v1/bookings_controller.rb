@@ -3,7 +3,7 @@ class Api::V1::BookingsController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:index, :create, :update]
 
   def index
-    if params[:stats] && params[:host_nickname] == current_api_v1_user.nickname && params[:user_id].to_i == current_api_v1_user.id
+    if params[:stats] == 'yes' && params[:host_nickname] == current_api_v1_user.nickname && params[:user_id].to_i == current_api_v1_user.id
       now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
       now_epoch_javascript = (now.to_f * 1000).to_i
       incoming_bookings = Booking.where(host_nickname: params[:host_nickname])
@@ -33,10 +33,10 @@ class Api::V1::BookingsController < ApplicationController
         end
       end
       render json: { message: "in_requests: #{incoming_requests.length}, in_upcoming: #{incoming_upcoming.length}, in_history: #{incoming_history.length}, out_requests: #{outgoing_requests.length}, out_upcoming: #{outgoing_upcoming.length}, out_history: #{outgoing_history.length}" }, status: 200
-    elsif params[:stats] == false && params[:host_nickname] == current_api_v1_user.nickname
+    elsif params[:stats] == 'no' && params[:host_nickname] == current_api_v1_user.nickname
       bookings = Booking.where(host_nickname: params[:host_nickname])
       render json: bookings, each_serializer: Bookings::IndexSerializer
-    elsif params[:stats] == false && params[:user_id].to_i == current_api_v1_user.id
+    elsif params[:stats] == 'no' && params[:user_id].to_i == current_api_v1_user.id
       bookings = Booking.where(user_id: params[:user_id])
       render json: bookings, each_serializer: Bookings::IndexSerializer
     else
