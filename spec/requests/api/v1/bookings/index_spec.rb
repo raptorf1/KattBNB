@@ -38,6 +38,22 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       get '/api/v1/bookings', headers: headers1
       expect(response.status).to eq 200
     end
+
+    it 'returns relevant stats for host if appropriate params are passed' do
+      get "/api/v1/bookings?stats=yes&host_nickname=#{user2.nickname}&user_id=#{user2.id}", headers: headers2
+      expect(json_response['message']).to eq 'in_requests: 1, in_upcoming: 0, in_history: 0, out_requests: 0, out_upcoming: 0, out_history: 0'
+    end
+
+    it 'returns relevant stats for user if appropriate params are passed' do
+      get "/api/v1/bookings?stats=yes&host_nickname=#{user1.nickname}&user_id=#{user1.id}", headers: headers1
+      expect(json_response['message']).to eq 'in_requests: 0, in_upcoming: 0, in_history: 0, out_requests: 1, out_upcoming: 0, out_history: 0'
+    end
+
+    it 'performance stats for stat returning' do
+      get_request = get "/api/v1/bookings?stats=yes&host_nickname=#{user1.nickname}&user_id=#{user1.id}", headers: headers1
+      expect { get_request }.to perform_under(1).ms.sample(20).times
+      expect { get_request }.to perform_at_least(5000000).ips
+    end
       
     it 'returns a booking by host nickname to the involved host' do
       get "/api/v1/bookings?stats=no&host_nickname=#{user2.nickname}", headers: headers2
