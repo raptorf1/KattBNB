@@ -8,10 +8,38 @@ class Api::V1::HostProfilesController < ApplicationController
       render json: profiles, each_serializer: HostProfiles::IndexSerializer
     elsif params[:location]
       profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
-      render json: profiles, each_serializer: HostProfiles::IndexSerializer
+      profiles_to_send = []
+      booking_dates = []
+      start_date = params[:startDate].to_i
+      stop_date = params[:endDate].to_i
+      current_date = start_date
+      while (current_date <= stop_date) do
+        booking_dates.push(current_date)
+        current_date = current_date + 86400000
+      end
+      profiles.each do |profile|
+        if profile.max_cats_accepted >= params[:cats].to_i && booking_dates - profile.availability == []
+          profiles_to_send.push(profile)
+        end
+      end
+      render json: profiles_to_send, each_serializer: HostProfiles::IndexSerializer
     else
       profiles = HostProfile.all
-      render json: profiles, each_serializer: HostProfiles::IndexSerializer
+      profiles_to_send = []
+      booking_dates = []
+      start_date = params[:startDate].to_i
+      stop_date = params[:endDate].to_i
+      current_date = start_date
+      while (current_date <= stop_date) do
+        booking_dates.push(current_date)
+        current_date = current_date + 86400000
+      end
+      profiles.each do |profile|
+        if profile.max_cats_accepted >= params[:cats].to_i && booking_dates - profile.availability == []
+          profiles_to_send.push(profile)
+        end
+      end
+      render json: profiles_to_send, each_serializer: HostProfiles::IndexSerializer
     end
   end
 
