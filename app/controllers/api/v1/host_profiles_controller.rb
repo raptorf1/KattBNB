@@ -3,8 +3,16 @@ class Api::V1::HostProfilesController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:show, :create, :update]
 
   def index
-    params[:user_id] ? profiles = HostProfile.where(user_id: params[:user_id]) : params[:location] ? profiles = HostProfile.joins(:user).where(users: {location: params[:location]}) : profiles = HostProfile.all
-    render json: profiles, each_serializer: HostProfiles::IndexSerializer
+    if params[:user_id]
+      profiles = HostProfile.where(user_id: params[:user_id])
+      render json: profiles, each_serializer: HostProfiles::IndexSerializer
+    elsif params[:location]
+      profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
+      render json: profiles, each_serializer: HostProfiles::IndexSerializer
+    else
+      profiles = HostProfile.all
+      render json: profiles, each_serializer: HostProfiles::IndexSerializer
+    end
   end
 
   def show
