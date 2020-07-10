@@ -11,30 +11,30 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
   describe 'GET /api/v1/host_profiles' do
 
     before do
-      profile_user = FactoryBot.create(:host_profile, user_id: user.id)
+      profile_user = FactoryBot.create(:host_profile, user_id: user.id, max_cats_accepted: 5, availability: [1, 2, 3, 4, 5, 6, 7])
       review = FactoryBot.create(:review, user_id: user.id, booking_id: booking.id, host_profile_id: profile_user.id)
-      profile_another_user = FactoryBot.create(:host_profile, user_id: another_user.id)
+      profile_another_user = FactoryBot.create(:host_profile, user_id: another_user.id, max_cats_accepted: 5, availability: [1, 2, 3, 4, 5, 6, 7])
     end
 
     it 'returns a collection of host profiles' do
-      get '/api/v1/host_profiles', headers: headers
+      get '/api/v1/host_profiles?cats=2&startDate=3&endDate=5', headers: headers
       expect(json_response.count).to eq 2
       expect(HostProfile.all.length).to eq 2
     end
 
     it 'returns 200 response' do
-      get '/api/v1/host_profiles', headers: headers
+      get '/api/v1/host_profiles?cats=2&startDate=3&endDate=5', headers: headers
       expect(response.status).to eq 200
     end
 
     it 'returns the correct number of reviews if there are any' do
-      get '/api/v1/host_profiles', headers: headers
+      get '/api/v1/host_profiles?cats=2&startDate=3&endDate=5', headers: headers
       expect(json_response[0]['reviews_count']).to eq 1
       expect(json_response[1]['reviews_count']).to eq nil
     end
 
     it 'fetches collection of host profiles in under 1 ms and with iteration rate of at least 5000000 per second' do
-      get_request = get '/api/v1/host_profiles', headers: headers
+      get_request = get '/api/v1/host_profiles?cats=2&startDate=3&endDate=5', headers: headers
       expect { get_request }.to perform_under(1).ms.sample(20).times
       expect { get_request }.to perform_at_least(5000000).ips
     end
@@ -51,7 +51,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
     describe 'for a specific location' do
       
       it "responds with specific host profiles according to user's location" do
-        get '/api/v1/host_profiles', params: {location: another_user.location}
+        get '/api/v1/host_profiles', params: {location: another_user.location, cats: 2, startDate: 3, endDate: 5}
         expect(json_response[0]['user']['location']).to eq another_user.location
         expect(json_response.count).to eq 1
       end
