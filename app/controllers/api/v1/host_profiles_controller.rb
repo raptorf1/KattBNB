@@ -8,38 +8,10 @@ class Api::V1::HostProfilesController < ApplicationController
       render json: profiles, each_serializer: HostProfiles::IndexSerializer
     elsif params[:location]
       profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
-      profiles_to_send = []
-      booking_dates = []
-      start_date = params[:startDate].to_i
-      stop_date = params[:endDate].to_i
-      current_date = start_date
-      while (current_date <= stop_date) do
-        booking_dates.push(current_date)
-        current_date = current_date + 86400000
-      end
-      profiles.each do |profile|
-        if profile.max_cats_accepted >= params[:cats].to_i && booking_dates - profile.availability == []
-          profiles_to_send.push(profile)
-        end
-      end
-      render json: profiles_to_send, each_serializer: HostProfiles::IndexSerializer
+      render json: profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate]), each_serializer: HostProfiles::IndexSerializer
     else
       profiles = HostProfile.all
-      profiles_to_send = []
-      booking_dates = []
-      start_date = params[:startDate].to_i
-      stop_date = params[:endDate].to_i
-      current_date = start_date
-      while (current_date <= stop_date) do
-        booking_dates.push(current_date)
-        current_date = current_date + 86400000
-      end
-      profiles.each do |profile|
-        if profile.max_cats_accepted >= params[:cats].to_i && booking_dates - profile.availability == []
-          profiles_to_send.push(profile)
-        end
-      end
-      render json: profiles_to_send, each_serializer: HostProfiles::IndexSerializer
+      render json: profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate]), each_serializer: HostProfiles::IndexSerializer
     end
   end
 
@@ -88,6 +60,24 @@ class Api::V1::HostProfilesController < ApplicationController
 
   def host_profile_params
     params.permit(:description, :full_address, :price_per_day_1_cat, :supplement_price_per_cat_per_day, :max_cats_accepted, :lat, :long, :latitude, :longitude, :user_id, :availability => [])
+  end
+
+  def profiles_to_send (profiles, cats, startDate, endDate)
+    profiles_to_send = []
+      booking_dates = []
+      start_date = startDate.to_i
+      stop_date = endDate.to_i
+      current_date = start_date
+      while (current_date <= stop_date) do
+        booking_dates.push(current_date)
+        current_date = current_date + 86400000
+      end
+      profiles.each do |profile|
+        if profile.max_cats_accepted >= cats.to_i && booking_dates - profile.availability == []
+          profiles_to_send.push(profile)
+        end
+      end
+      profiles_to_send
   end
 
 end
