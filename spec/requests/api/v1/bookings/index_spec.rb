@@ -41,12 +41,12 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
     it 'returns relevant stats for host if appropriate params are passed' do
       get "/api/v1/bookings?stats=yes&host_nickname=#{user2.nickname}&user_id=#{user2.id}", headers: headers2
-      expect(json_response['message']).to eq 'in_requests: 1, in_upcoming: 0, in_history: 0, out_requests: 0, out_upcoming: 0, out_history: 0'
+      expect(json_response['stats'].to_json).to eq "{\"in_requests\":\"1\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"out_requests\":\"0\",\"out_upcoming\":\"0\",\"out_history\":\"0\"}"
     end
 
     it 'returns relevant stats for user if appropriate params are passed' do
       get "/api/v1/bookings?stats=yes&host_nickname=#{user1.nickname}&user_id=#{user1.id}", headers: headers1
-      expect(json_response['message']).to eq 'in_requests: 0, in_upcoming: 0, in_history: 0, out_requests: 1, out_upcoming: 0, out_history: 0'
+      expect(json_response['stats'].to_json).to eq "{\"in_requests\":\"0\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"out_requests\":\"1\",\"out_upcoming\":\"0\",\"out_history\":\"0\"}"
     end
 
     it 'performance stats for stat returning' do

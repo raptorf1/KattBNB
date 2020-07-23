@@ -32,7 +32,7 @@ class Api::V1::BookingsController < ApplicationController
           outgoing_history.push(booking)
         end
       end
-      render json: { message: "in_requests: #{incoming_requests.length}, in_upcoming: #{incoming_upcoming.length}, in_history: #{incoming_history.length}, out_requests: #{outgoing_requests.length}, out_upcoming: #{outgoing_upcoming.length}, out_history: #{outgoing_history.length}" }, status: 200
+      render json: { stats: {"in_requests": "#{incoming_requests.length}", "in_upcoming": "#{incoming_upcoming.length}", "in_history": "#{incoming_history.length}", "out_requests": "#{outgoing_requests.length}", "out_upcoming": "#{outgoing_upcoming.length}", "out_history": "#{outgoing_history.length}"}}, status: 200
     elsif params[:stats] == 'no' && params[:host_nickname] == current_api_v1_user.nickname
       bookings = Booking.where(host_nickname: params[:host_nickname])
       render json: bookings, each_serializer: Bookings::IndexSerializer
