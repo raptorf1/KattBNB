@@ -3,8 +3,16 @@ class Api::V1::HostProfilesController < ApplicationController
   before_action :authenticate_api_v1_user!, only: [:show, :create, :update]
 
   def index
-    params[:user_id] ? profiles = HostProfile.where(user_id: params[:user_id]) : params[:location] ? profiles = HostProfile.joins(:user).where(users: {location: params[:location]}) : profiles = HostProfile.all
-    render json: profiles, each_serializer: HostProfiles::IndexSerializer
+    if params[:user_id]
+      profiles = HostProfile.where(user_id: params[:user_id])
+      render json: profiles, each_serializer: HostProfiles::IndexSerializer
+    elsif params[:location]
+      profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
+      render json: profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate]), each_serializer: HostProfiles::IndexSerializer
+    else
+      profiles = HostProfile.all
+      render json: profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate]), each_serializer: HostProfiles::IndexSerializer
+    end
   end
 
   def show
@@ -52,6 +60,24 @@ class Api::V1::HostProfilesController < ApplicationController
 
   def host_profile_params
     params.permit(:description, :full_address, :price_per_day_1_cat, :supplement_price_per_cat_per_day, :max_cats_accepted, :lat, :long, :latitude, :longitude, :user_id, :availability => [])
+  end
+
+  def profiles_to_send (profiles, cats, startDate, endDate)
+    profiles_to_send = []
+      booking_dates = []
+      start_date = startDate.to_i
+      stop_date = endDate.to_i
+      current_date = start_date
+      while (current_date <= stop_date) do
+        booking_dates.push(current_date)
+        current_date = current_date + 86400000
+      end
+      profiles.each do |profile|
+        if profile.max_cats_accepted >= cats.to_i && booking_dates - profile.availability == []
+          profiles_to_send.push(profile)
+        end
+      end
+      profiles_to_send
   end
 
 end
