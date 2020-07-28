@@ -63,6 +63,11 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(json_response.count).to eq 2
     end
 
+    it 'returns only dates sorted to 1 array of all booking dates to the involved host' do
+      get "/api/v1/bookings?dates=only&stats=no&host_nickname=#{user2.nickname}", headers: headers2
+      expect(json_response).to eq [1,2,3,4,5,6]
+    end
+
     it 'returns a booking by host nickname in under 1 ms and with iteration rate of 5000000 per second' do
       get_request = get '/api/v1/bookings', params: {stats: 'no', host_nickname: user2.nickname}, headers: headers2
       expect { get_request }.to perform_under(1).ms.sample(20).times
