@@ -18,7 +18,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
   describe 'GET /api/v1/bookings' do
 
     before do
-      booking = FactoryBot.create(:booking, user_id: user1.id, host_nickname: user2.nickname)
+      booking = FactoryBot.create(:booking, user_id: user1.id, host_nickname: user2.nickname, dates: [1,2,3])
+      booking2 = FactoryBot.create(:booking, user_id: user3.id, host_nickname: user2.nickname, dates: [4,5,6])
       review = FactoryBot.create(:review, user_id: user1.id, host_profile_id: profile2.id, booking_id: booking.id)
     end
 
@@ -31,7 +32,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
     it 'returns an empty collection of bookings if no params are passed' do
       get '/api/v1/bookings', headers: headers1
       expect(json_response.count).to eq 0
-      expect(Booking.all.length).to eq 1
+      expect(Booking.all.length).to eq 2
     end
 
     it 'returns 200 response' do
@@ -41,7 +42,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
     it 'returns relevant stats for host if appropriate params are passed' do
       get "/api/v1/bookings?stats=yes&host_nickname=#{user2.nickname}&user_id=#{user2.id}", headers: headers2
-      expect(json_response['stats'].to_json).to eq "{\"in_requests\":\"1\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"out_requests\":\"0\",\"out_upcoming\":\"0\",\"out_history\":\"0\"}"
+      expect(json_response['stats'].to_json).to eq "{\"in_requests\":\"2\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"out_requests\":\"0\",\"out_upcoming\":\"0\",\"out_history\":\"0\"}"
     end
 
     it 'returns relevant stats for user if appropriate params are passed' do
@@ -58,7 +59,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
     it 'returns a booking by host nickname to the involved host' do
       get "/api/v1/bookings?stats=no&host_nickname=#{user2.nickname}", headers: headers2
       expect(json_response[0]['host_nickname']).to eq user2.nickname
-      expect(json_response.count).to eq 1
+      expect(json_response[1]['host_nickname']).to eq user2.nickname
+      expect(json_response.count).to eq 2
     end
 
     it 'returns a booking by host nickname in under 1 ms and with iteration rate of 5000000 per second' do

@@ -38,7 +38,12 @@ class Api::V1::BookingsController < ApplicationController
         render json: { stats: {"in_requests": "#{incoming_requests.length}", "in_upcoming": "#{incoming_upcoming.length}", "in_history": "#{incoming_history.length}", "out_requests": "#{outgoing_requests.length}", "out_upcoming": "#{outgoing_upcoming.length}", "out_history": "#{outgoing_history.length}"} }, status: 200
       when params[:stats] == 'no' && params[:host_nickname] == current_api_v1_user.nickname
         if params.has_key?('dates')
-        #  something
+          dates = []
+          bookings = Booking.where(host_nickname: params[:host_nickname])
+          bookings.each do |booking|
+            dates.push(booking.dates)
+          end
+          render json: dates.flatten.sort
         else
           bookings = Booking.where(host_nickname: params[:host_nickname])
           render json: bookings, each_serializer: Bookings::IndexSerializer
