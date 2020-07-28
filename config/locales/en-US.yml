@@ -109,7 +109,7 @@ en-US:
         notify_user_pending_review_10_days:
           details_html: "Did something go wrong during your recent booking with <strong>%{host}</strong>? Positive or negative feedback - we want to hear it!<br></br>We really hope you would consider reviewing your booking."
           hear_soon: "Hope to hear from you soon!"
-          ps: "<strong>P.S.</strong> If you have feedback you are not comfortable sharing on kattbnb.se you are always welcome to reach out to us via <a href='%{link}' class='%{class}'>hej@kattbnb.se</a>."
+          ps_html: "<strong>P.S.</strong> If you have feedback you are not comfortable sharing on kattbnb.se you are always welcome to reach out to us via <a href='%{link}' class='%{class}'>hej@kattbnb.se</a>."
   activerecord:
     attributes:
       user:
