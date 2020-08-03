@@ -109,7 +109,7 @@ sv-SE:
         notify_user_pending_review_10_days:
           details_html: "Gick något på tok under din senaste bokning med <strong>%{host}</strong>? Positiv eller negativ feedback - vi vill höra den!<br></br>Vi hoppas verkligen att du överväger att recensera din bokning."
           hear_soon: "Hoppas vi hörs snart!"
-          ps: "<strong>P.S.</strong> Om du har feedback som du inte är bekväm att dela med dig av på kattbnb.se så ser vi gärna att du kontaktar oss på <a href='%{link}' class='%{class}'>hej@kattbnb.se</a>."
+          ps_html: "<strong>P.S.</strong> Om du har feedback som du inte är bekväm att dela med dig av på kattbnb.se så ser vi gärna att du kontaktar oss på <a href='%{link}' class='%{class}'>hej@kattbnb.se</a>."
   activerecord:
     attributes:
       user:
@@ -198,7 +198,7 @@ sv-SE:
         account: "För att börja använda våra tjänster, vänligen bekräfta ditt konto."
         confirm: "Bekräfta"
         see_you_html: "Vi hoppas att vi ses snart <a href='%{link}' class='%{class}'>på KattBNB</a>."
-        ps: "<strong>P.S.</strong> Vänligen <a href='%{link}' class='%{class}'>vitlista detta adress</a> (meow-reply@kattbnb.se) via inställningarna för din e-postklient så du inte missar något viktigt."
+        ps_html: "<strong>P.S.</strong> Vänligen <a href='%{link}' class='%{class}'>vitlista detta adress</a> (meow-reply@kattbnb.se) via inställningarna för din e-postklient så du inte missar något viktigt."
       reset_password_instructions:
         subject: "Instrukionter för att återställa lösenord"
         no_worries: "Glömt ditt lösenord? Inga bekymmer, du kan ändra det."
