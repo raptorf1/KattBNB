@@ -20,6 +20,8 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to have_db_column :latitude }
     it { is_expected.to have_db_column :longitude }
     it { is_expected.to have_db_column :score }
+    it { is_expected.to have_db_column :stripe_state }
+    it { is_expected.to have_db_column :stripe_account_id }
   end
 
   describe 'Validations' do
