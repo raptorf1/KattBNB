@@ -47,6 +47,14 @@ class Api::V1::HostProfilesController < ApplicationController
         profile.update(host_profile_params)
         profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
       end
+    elsif current_api_v1_user.id == profile.user_id && params[:code]
+      Stripe.api_key = 'sk_test_51HChrlC7F7FPrB6NTdOo0MBnGrvB7aam87vQYvhJgwmzdOchmxkkA27feZRcuKLd5hi8RfAMIcJ6J8TOMzdSyWfX00gMwn5Juj'
+      response = Stripe::OAuth.token({
+        grant_type: 'authorization_code',
+        code: params[:code]
+      })
+      connected_account_id = response.stripe_user_id
+      profile.update(stripe_account_id: connected_account_id)
     elsif current_api_v1_user.id == profile.user_id
       profile.update(host_profile_params)
       profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
