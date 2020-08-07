@@ -48,13 +48,20 @@ class Api::V1::HostProfilesController < ApplicationController
         profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
       end
     elsif current_api_v1_user.id == profile.user_id && params[:code]
-      Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
-      response = Stripe::OAuth.token({
-        grant_type: 'authorization_code',
-        code: params[:code]
-      })
-      connected_account_id = response.stripe_user_id
-      profile.update(stripe_account_id: connected_account_id)
+      begin
+        Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
+        response = Stripe::OAuth.token({
+          grant_type: 'authorization_code',
+          code: params[:code]
+        })
+        connected_account_id = response.stripe_user_id
+        profile.update(stripe_account_id: connected_account_id)
+        render json: {success: true}, status: 200
+      rescue Stripe::OAuth::InvalidGrantError
+        render json: {error: 'Invalid authorization code: ' + params[:code]}, status: 400
+      rescue Stripe::StripeError
+        render json: {error: 'An unknown error occurred.'}, status: 500
+      end
     elsif current_api_v1_user.id == profile.user_id
       profile.update(host_profile_params)
       profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
