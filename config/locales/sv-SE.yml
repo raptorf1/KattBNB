@@ -18,6 +18,7 @@ sv-SE:
     host_profiles:
       update_success: "Du har uppdaterat din kattvaktsprofil!"
       update_error: "Det går inte att uppdatera tillgängligheten. Du har inkommande bokningar på några av dessa datum! Uppdatera sidan eller besök din bokningsdashboard."
+      stripe_create_error: ""
   channels:
     conversations:
       sub_error: "Ingen konversation specificerad eller konversation finns inte. Anslutningen avvisades!"

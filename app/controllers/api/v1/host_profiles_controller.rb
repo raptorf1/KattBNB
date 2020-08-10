@@ -55,11 +55,11 @@ class Api::V1::HostProfilesController < ApplicationController
           code: params[:code]
         })
         profile.update(stripe_account_id: response.stripe_user_id)
-        profile.persisted? == true && (render json: {success: true}, status: 200)
+        profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
       rescue Stripe::OAuth::InvalidGrantError
-        render json: {error: 'Invalid authorization code: ' + params[:code]}, status: 400
+        render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }, status: 400
       rescue Stripe::StripeError
-        render json: {error: 'An unknown error occurred.'}, status: 500
+        render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }, status: 500
       end
     elsif current_api_v1_user.id == profile.user_id
       profile.update(host_profile_params)
