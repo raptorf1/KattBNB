@@ -54,9 +54,8 @@ class Api::V1::HostProfilesController < ApplicationController
           grant_type: 'authorization_code',
           code: params[:code]
         })
-        connected_account_id = response.stripe_user_id
-        profile.update(stripe_account_id: connected_account_id)
-        render json: {success: true}, status: 200
+        profile.update(stripe_account_id: response.stripe_user_id)
+        profile.persisted? == true && (render json: {success: true}, status: 200)
       rescue Stripe::OAuth::InvalidGrantError
         render json: {error: 'Invalid authorization code: ' + params[:code]}, status: 400
       rescue Stripe::StripeError
@@ -79,20 +78,20 @@ class Api::V1::HostProfilesController < ApplicationController
 
   def profiles_to_send (profiles, cats, startDate, endDate)
     profiles_to_send = []
-      booking_dates = []
-      start_date = startDate.to_i
-      stop_date = endDate.to_i
-      current_date = start_date
-      while (current_date <= stop_date) do
-        booking_dates.push(current_date)
-        current_date = current_date + 86400000
+    booking_dates = []
+    start_date = startDate.to_i
+    stop_date = endDate.to_i
+    current_date = start_date
+    while (current_date <= stop_date) do
+      booking_dates.push(current_date)
+      current_date = current_date + 86400000
+    end
+    profiles.each do |profile|
+      if profile.max_cats_accepted >= cats.to_i && booking_dates - profile.availability == []
+        profiles_to_send.push(profile)
       end
-      profiles.each do |profile|
-        if profile.max_cats_accepted >= cats.to_i && booking_dates - profile.availability == []
-          profiles_to_send.push(profile)
-        end
-      end
-      profiles_to_send
+    end
+    profiles_to_send
   end
 
 end
