@@ -55,7 +55,7 @@ class Api::V1::HostProfilesController < ApplicationController
           code: params[:code]
         })
         profile.update(stripe_account_id: response.stripe_user_id)
-        profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
+        profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success'), id: response.stripe_user_id }, status: 200)
       rescue Stripe::OAuth::InvalidGrantError
         render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }, status: 400
       rescue Stripe::StripeError
