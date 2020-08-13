@@ -11,7 +11,7 @@ class Api::V1::StripeController < ApplicationController
         response = Stripe::Account.retrieve(stripe_account)
         render json: { requirements: response.requirements }, status: 200
       rescue Stripe::StripeError
-        render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }
+        render json: { error: I18n.t('controllers.reusable.stripe_error') }
       end
     else
       render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
