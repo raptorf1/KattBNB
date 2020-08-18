@@ -7,7 +7,7 @@ sv-SE:
       create_success: "Skapad!"
       update_success: "Uppdaterad!"
       update_error: "Du kan inte utföra den här åtgärden!"
-      stripe_error: ""
+      stripe_error: "Ett problem uppstod vid anslutningen till vår betalväxel. Vänligen försök igen senare."
     bookings:
       create_error_1: "Någon annan begärde precis att boka dessa dagar med denna kattvakt!"
       create_error_2: "Bokningsförfrågan kunde inte skapas eftersom kattvakten begärde att kontot skulle raderas! Vänligen hitta en annan kvattvakt på resultatsidan."
