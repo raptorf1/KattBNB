@@ -9,7 +9,8 @@ class Api::V1::StripeController < ApplicationController
       begin
         Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
         response = Stripe::Account.retrieve(stripe_account)
-        render json: { requirements: response.requirements }, status: 200
+        render json: { payouts_enabled: response.payouts_enabled, requirements: response.requirements }, status: 200
+
       rescue Stripe::StripeError
         render json: { error: I18n.t('controllers.reusable.stripe_error') }
       end
