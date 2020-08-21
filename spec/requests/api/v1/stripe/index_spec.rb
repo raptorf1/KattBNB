@@ -20,6 +20,12 @@ RSpec.describe Api::V1::StripeController, type: :request do
         expect(response.status).to eq 401
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
       end
+
+      it 'returns a relevant message if no Stripe account is found' do
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}", headers: headers
+        expect(response.status).to eq 200
+        expect(json_response['message']).to eq 'No account'
+      end
     end
 
   end

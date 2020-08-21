@@ -12,7 +12,7 @@ class Api::V1::StripeController < ApplicationController
           response = Stripe::Account.retrieve(stripe_account)
           render json: { payouts_enabled: response.payouts_enabled, requirements: response.requirements }, status: 200
         rescue Stripe::StripeError
-          render json: { error: I18n.t('controllers.reusable.stripe_error') }
+          render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 500
         end
       else
         render json: { message: 'No account' }, status: 200
