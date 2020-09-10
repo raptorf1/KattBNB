@@ -47,6 +47,20 @@ class Api::V1::HostProfilesController < ApplicationController
         profile.update(host_profile_params)
         profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
       end
+    elsif current_api_v1_user.id == profile.user_id && params[:code]
+      begin
+        Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
+        response = Stripe::OAuth.token({
+          grant_type: 'authorization_code',
+          code: params[:code]
+        })
+        profile.update(stripe_account_id: response.stripe_user_id)
+        profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success'), id: response.stripe_user_id }, status: 200)
+      rescue Stripe::OAuth::InvalidGrantError
+        render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }, status: 400
+      rescue Stripe::StripeError
+        render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }, status: 500
+      end
     elsif current_api_v1_user.id == profile.user_id
       profile.update(host_profile_params)
       profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
@@ -64,20 +78,20 @@ class Api::V1::HostProfilesController < ApplicationController
 
   def profiles_to_send (profiles, cats, startDate, endDate)
     profiles_to_send = []
-      booking_dates = []
-      start_date = startDate.to_i
-      stop_date = endDate.to_i
-      current_date = start_date
-      while (current_date <= stop_date) do
-        booking_dates.push(current_date)
-        current_date = current_date + 86400000
+    booking_dates = []
+    start_date = startDate.to_i
+    stop_date = endDate.to_i
+    current_date = start_date
+    while (current_date <= stop_date) do
+      booking_dates.push(current_date)
+      current_date = current_date + 86400000
+    end
+    profiles.each do |profile|
+      if profile.max_cats_accepted >= cats.to_i && booking_dates - profile.availability == []
+        profiles_to_send.push(profile)
       end
-      profiles.each do |profile|
-        if profile.max_cats_accepted >= cats.to_i && booking_dates - profile.availability == []
-          profiles_to_send.push(profile)
-        end
-      end
-      profiles_to_send
+    end
+    profiles_to_send
   end
 
 end

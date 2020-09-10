@@ -32,6 +32,11 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
         expect(json_response['message']).to eq 'Successfully created!'
         expect(response.status).to eq 200
       end
+
+      it 'assigns a value to stripe_state field' do
+        expect(HostProfile.last.stripe_state).not_to eq nil
+        expect(HostProfile.last.stripe_state.include?(user.nickname)).to eq true
+      end
     end
 
     describe 'unsuccessfully' do

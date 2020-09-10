@@ -21,6 +21,7 @@ gem 'devise-i18n', '~> 0.12.1'
 gem 'newrelic_rpm'
 gem 'icalendar'
 gem 'delayed_job_active_record'
+gem 'stripe', '~> 5.23', '>= 5.23.1'
 
 group :development, :test do
   gem 'pry-rails'

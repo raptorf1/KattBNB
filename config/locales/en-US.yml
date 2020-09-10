@@ -7,6 +7,7 @@ en-US:
       create_success: "Successfully created!"
       update_success: "Successfully updated!"
       update_error: "You cannot perform this action!"
+      stripe_error: "There was a problem connecting to our payments infrastructure provider. Please try again later."
     bookings:
       create_error_1: "Someone else just requested to book these days with this host!"
       create_error_2: "Booking cannot be created because the host requested an account deletion! Please find another host in the results page."
@@ -18,6 +19,7 @@ en-US:
     host_profiles:
       update_success: "You have successfully updated your host profile!"
       update_error: "Cannot update availability. You have incoming bookings to some of those dates! Refresh the page or visit your bookings dashboard."
+      stripe_create_error: "There was a problem creating your account with our payments infrastructure provider. Please try again later."
   channels:
     conversations:
       sub_error: "No conversation specified or conversation does not exist. Connection rejected!"
