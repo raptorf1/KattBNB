@@ -10,19 +10,19 @@ RSpec.describe Api::V1::StripeController, type: :request do
 
     describe 'GET /api/v1/stripe' do
       it 'returns error if user tries to request stripe profile details of another user' do
-        get "/api/v1/stripe?host_profile_id=#{profile_user.id}", headers: headers2
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: headers2
         expect(response.status).to eq 422
         expect(json_response['error']).to eq 'You cannot perform this action!'
       end
 
       it 'requires user to be authenticated to request stripe profile details' do
-        get "/api/v1/stripe?host_profile_id=#{profile_user.id}", headers: not_headers
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: not_headers
         expect(response.status).to eq 401
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
       end
 
       it 'returns a relevant message if no Stripe account is found' do
-        get "/api/v1/stripe?host_profile_id=#{profile_user.id}", headers: headers
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: headers
         expect(response.status).to eq 200
         expect(json_response['message']).to eq 'No account'
       end
