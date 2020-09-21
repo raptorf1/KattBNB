@@ -4,9 +4,9 @@ class Api::V1::StripeController < ApplicationController
 
   def index
     profile = HostProfile.where(id: params[:host_profile_id])
-    stripe_account = profile[0].stripe_account_id
     Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
     if current_api_v1_user.id == profile[0].user_id && params[:occasion] == 'retrieve'
+      stripe_account = profile[0].stripe_account_id
       if stripe_account
         begin
           response = Stripe::Account.retrieve(stripe_account)
@@ -18,6 +18,7 @@ class Api::V1::StripeController < ApplicationController
         render json: { message: 'No account' }, status: 200
       end
     elsif current_api_v1_user.id == profile[0].user_id && params[:occasion] == 'login_link'
+      stripe_account = profile[0].stripe_account_id
       if stripe_account
         begin
           response = Stripe::Account.create_login_link(stripe_account)
