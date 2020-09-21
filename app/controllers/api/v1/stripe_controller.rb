@@ -26,6 +26,18 @@ class Api::V1::StripeController < ApplicationController
           render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 500
         end
       end
+    elsif params[:occasion] == 'create_payment_intent'
+      begin
+        intent = Stripe::PaymentIntent.create({
+          amount: params[:amount],
+          currency: params[:currency],
+          receipt_email: current_api_v1_user.email,
+          capture_method: 'manual'
+        })
+        render json: { intent_id: intent.client_secret }, status: 200
+      rescue Stripe::StripeError
+        render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 500
+      end
     else
       render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
     end

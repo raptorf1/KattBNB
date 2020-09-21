@@ -38,6 +38,12 @@ RSpec.describe Api::V1::StripeController, type: :request do
         expect(response.status).to eq 401
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
       end
+
+      it 'requires user to be authenticated to create a stripe payment intent' do
+        get '/api/v1/stripe?occasion=create_payment_intent', headers: not_headers
+        expect(response.status).to eq 401
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
     end
 
   end
