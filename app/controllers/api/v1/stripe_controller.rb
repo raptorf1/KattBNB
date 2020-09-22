@@ -28,9 +28,15 @@ class Api::V1::StripeController < ApplicationController
         end
       end
     elsif params[:occasion] == 'create_payment_intent'
+      stripe_amount = params[:amount]
+      if stripe_amount.include? '.'
+        stripe_amount = stripe_amount.delete '.'
+      else
+        stripe_amount = params[:amount] + '00'
+      end
       begin
         intent = Stripe::PaymentIntent.create({
-          amount: params[:amount],
+          amount: stripe_amount,
           currency: params[:currency],
           receipt_email: current_api_v1_user.email,
           capture_method: 'manual'
