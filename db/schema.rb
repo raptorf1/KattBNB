@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_06_160620) do
+ActiveRecord::Schema.define(version: 2020_10_01_150003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 2020_08_06_160620) do
     t.string "host_full_address"
     t.decimal "host_real_lat"
     t.decimal "host_real_long"
+    t.string "payment_intent_id"
     t.index ["user_id"], name: "index_bookings_on_user_id"
   end
 
