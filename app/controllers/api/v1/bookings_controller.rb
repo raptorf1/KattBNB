@@ -61,6 +61,7 @@ class Api::V1::BookingsController < ApplicationController
   end
 
   def create
+    Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
     booking = Booking.create(booking_params)
     if booking.persisted?
       host = User.where(nickname: booking.host_nickname)
@@ -73,15 +74,27 @@ class Api::V1::BookingsController < ApplicationController
           profile.update(availability: new_availability)
           BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_create_booking(host[0], booking, user[0])
         else
+          begin
+            Stripe::PaymentIntent.cancel(booking.payment_intent_id)
+          rescue Stripe::StripeError
+          end
           booking.update(status: 'canceled')
           booking.destroy
           render json: { error: [I18n.t('controllers.bookings.create_error_1')] }, status: 422
         end
       else
+        begin
+          Stripe::PaymentIntent.cancel(booking.payment_intent_id)
+        rescue Stripe::StripeError
+        end
         booking.destroy
         render json: { error: [I18n.t('controllers.bookings.create_error_2')] }, status: 422
       end
     else
+      begin
+        Stripe::PaymentIntent.cancel(booking.payment_intent_id)
+      rescue Stripe::StripeError
+      end
       render json: { error: booking.errors.full_messages }, status: 422
     end
   end
