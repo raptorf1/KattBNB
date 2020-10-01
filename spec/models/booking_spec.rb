@@ -21,6 +21,7 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to have_db_column :host_full_address }
     it { is_expected.to have_db_column :host_real_lat }
     it { is_expected.to have_db_column :host_real_long }
+    it { is_expected.to have_db_column :payment_intent_id }
   end
 
   describe 'Validations' do

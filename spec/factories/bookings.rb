@@ -8,5 +8,6 @@ FactoryBot.define do
     price_per_day { '156.36' }
     price_total { '1550.2' }
     host_nickname { 'Boa' }
+    payment_intent_id { 'pi_df4fg245fgf24g212fgd2dffehf' }
   end
 end

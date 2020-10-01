@@ -25,7 +25,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           dates: [1562976000000, 1563062400000],
           price_per_day: '258.36',
           price_total: '1856',
-          user_id: user.id
+          user_id: user.id,
+          payment_intent_id: 'pi_32154dfdjfhjh'
         },
         headers: headers
       end
@@ -52,7 +53,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           dates: [1562803200000, 1562889600000],
           price_per_day: '125.96',
           price_total: '1452.36',
-          user_id: user.id
+          user_id: user.id,
+          payment_intent_id: 'pi_32154dfdjfhjh'
         },
         headers: headers
 
@@ -86,7 +88,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           dates: [1562803200000, 1562889600000, 1562976000000, 1563062400000, 1563148800000],
           price_per_day: '105.96',
           price_total: '1400.36',
-          user_id: user.id
+          user_id: user.id,
+          payment_intent_id: 'pi_32154dfdjfhjh'
         },
         headers: headers
 
@@ -102,6 +105,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           price_per_day: '105.96',
           price_total: '1400.36',
           user_id: user.id,
+          payment_intent_id: 'pi_32154dfdjfhjh',
           message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
         },
         headers: headers
@@ -118,6 +122,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           price_per_day: '105.96',
           price_total: '1400.36',
           user_id: user.id,
+          payment_intent_id: 'pi_32154dfdjfhjh',
           message: 'Lorem Ipsum is simply dummy text.'
         },
         headers: headers
@@ -135,6 +140,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
           price_per_day: '105.96',
           price_total: '1400.36',
           user_id: user.id,
+          payment_intent_id: 'pi_32154dfdjfhjh',
           message: 'Lorem Ipsum is simply dummy text.'
         },
         headers: headers
