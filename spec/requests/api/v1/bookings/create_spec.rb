@@ -95,6 +95,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
         expect(json_response['error']).to eq ["Message can't be blank"]
         expect(response.status).to eq 422
+        expect(Delayed::Job.all.count).to eq 1
       end
 
       it 'Booking can not be created if message is more than 400 characters in length' do
@@ -112,6 +113,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
         expect(json_response['error']).to eq ['Message is too long (maximum is 400 characters)']
         expect(response.status).to eq 422
+        expect(Delayed::Job.all.count).to eq 1
       end
 
       it "Booking can not be created if host's availability is altered in the process" do
@@ -130,6 +132,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['error']).to eq ['Someone else just requested to book these days with this host!']
         expect(response.status).to eq 422
         expect(Booking.all.length).to eq 0
+        expect(Delayed::Job.all.count).to eq 1
       end
 
       it 'Booking can not be created if host deletes her account in the proccess' do
@@ -148,6 +151,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['error']).to eq ['Booking cannot be created because the host requested an account deletion! Please find another host in the results page.']
         expect(response.status).to eq 422
         expect(Booking.all.length).to eq 0
+        expect(Delayed::Job.all.count).to eq 1
       end
 
       it 'Booking can not be created if user is not logged in' do

@@ -77,6 +77,7 @@ class Api::V1::BookingsController < ApplicationController
           begin
             Stripe::PaymentIntent.cancel(booking.payment_intent_id)
           rescue Stripe::StripeError
+            StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
           end
           booking.update(status: 'canceled')
           booking.destroy
@@ -86,6 +87,7 @@ class Api::V1::BookingsController < ApplicationController
         begin
           Stripe::PaymentIntent.cancel(booking.payment_intent_id)
         rescue Stripe::StripeError
+          StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
         end
         booking.destroy
         render json: { error: [I18n.t('controllers.bookings.create_error_2')] }, status: 422
@@ -94,6 +96,7 @@ class Api::V1::BookingsController < ApplicationController
       begin
         Stripe::PaymentIntent.cancel(booking.payment_intent_id)
       rescue Stripe::StripeError
+        StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
       end
       render json: { error: booking.errors.full_messages }, status: 422
     end

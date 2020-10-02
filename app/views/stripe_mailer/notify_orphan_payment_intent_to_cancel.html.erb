@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Cancel Payment Intent</title>  
+  </head>
+  <body>
+    <h2 style="color:#c90c61">Error notification from kattBNB server</h2>
+    <p>During the creation of a booking, Stripe encountered an error and did not cancel authorization of a Payment Intent. Please do it manually <a href="https://dashboard.stripe.com/login" target="_blank">here</a>.</p>
+    <h5> <%= @payment_intent %> </h5>
+  </body>
+</html>
