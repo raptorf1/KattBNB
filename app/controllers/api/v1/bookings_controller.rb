@@ -103,6 +103,7 @@ class Api::V1::BookingsController < ApplicationController
   end
 
   def update
+    Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
     booking = Booking.find(params[:id])
     if current_api_v1_user.nickname == booking.host_nickname
       user = User.where(id: booking.user_id)
@@ -119,6 +120,11 @@ class Api::V1::BookingsController < ApplicationController
           profile.update(availability: new_availability)
           render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
           BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_declined_booking(host[0], booking, user[0])
+          begin
+            Stripe::PaymentIntent.cancel(booking.payment_intent_id)
+          rescue Stripe::StripeError
+            StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
+          end
         else
           render json: { error: booking.errors.full_messages }, status: 422
       end

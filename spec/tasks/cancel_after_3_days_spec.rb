@@ -9,9 +9,9 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
   let!(:booking) { FactoryBot.create(:booking, created_at: 'Sat, 09 Nov 2019 09:06:48 UTC +00:00', user_id: user.id, host_nickname: host.nickname, dates: [123, 456]) }
   let!(:booking2) { FactoryBot.create(:booking, created_at: Time.current, user_id: user.id, host_nickname: host.nickname) }
 
-  it 'emails the user and the host' do
+  it 'emails the user, the host and KattBNB to cancel payment' do
     task.execute
-    expect(Delayed::Job.all.count).to eq 2
+    expect(Delayed::Job.all.count).to eq 3
   end
 
   it 'preloads the Rails environment' do
