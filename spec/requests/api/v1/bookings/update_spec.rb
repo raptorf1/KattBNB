@@ -24,17 +24,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         host_message: 'accepted by host'
       },
       headers: headers_host1
-      expect(response.status).to eq 200
-      expect(json_response['message']).to eq 'You have successfully updated this booking!'
-      booking.reload
-      expect(booking.status).to eq 'accepted'
-      expect(booking.host_message).to eq 'accepted by host'
-      expect(profile1.availability).to eq [1562803200000, 1563062400000, 1563148800000]
-      expect(booking.host_full_address).to eq profile1.full_address
-      expect(booking.host_description).to eq profile1.description
-      expect(booking.host_real_lat).to eq profile1.latitude
-      expect(booking.host_real_long).to eq profile1.longitude
-      expect(Delayed::Job.all.count).to eq 1
+      expect(response.status).to eq 503
+      expect(json_response['error']).to eq 'There was a problem connecting to our payments infrastructure provider. Please try again later.'
     end
 
     it 'updates status of certain booking to accepted in under 1 ms and with iteration rate of 5000000 per second' do
