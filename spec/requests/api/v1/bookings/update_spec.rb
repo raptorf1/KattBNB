@@ -24,7 +24,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         host_message: 'accepted by host'
       },
       headers: headers_host1
-      expect(response.status).to eq 503
+      expect(response.status).to eq 555
       expect(json_response['error']).to eq 'There was a problem connecting to our payments infrastructure provider. Please try again later.'
     end
 
