@@ -12,7 +12,7 @@ class Api::V1::StripeController < ApplicationController
           response = Stripe::Account.retrieve(stripe_account)
           render json: { payouts_enabled: response.payouts_enabled, requirements: response.requirements }, status: 200
         rescue Stripe::StripeError
-          render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 500
+          render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
         end
       else
         render json: { message: 'No account' }, status: 200
@@ -24,7 +24,7 @@ class Api::V1::StripeController < ApplicationController
           response = Stripe::Account.create_login_link(stripe_account)
           render json: { url: response.url }, status: 200
         rescue Stripe::StripeError
-          render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 500
+          render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
         end
       end
     elsif params[:occasion] == 'create_payment_intent'
@@ -43,7 +43,7 @@ class Api::V1::StripeController < ApplicationController
         })
         render json: { intent_id: intent.client_secret }, status: 200
       rescue Stripe::StripeError
-        render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 500
+        render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
       end
     else
       render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
