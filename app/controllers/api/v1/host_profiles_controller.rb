@@ -57,9 +57,9 @@ class Api::V1::HostProfilesController < ApplicationController
         profile.update(stripe_account_id: response.stripe_user_id)
         profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success'), id: response.stripe_user_id }, status: 200)
       rescue Stripe::OAuth::InvalidGrantError
-        render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }, status: 400
+        render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }, status: 455
       rescue Stripe::StripeError
-        render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }, status: 500
+        render json: { error: I18n.t('controllers.host_profiles.stripe_create_error') }, status: 555
       end
     elsif current_api_v1_user.id == profile.user_id
       profile.update(host_profile_params)
