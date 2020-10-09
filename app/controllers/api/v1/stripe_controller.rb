@@ -50,4 +50,8 @@ class Api::V1::StripeController < ApplicationController
     end
   end
 
+  def create
+    render json: { message: 'Success dude!!!' }, status: 200
+  end
+
 end
