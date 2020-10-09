@@ -51,7 +51,19 @@ class Api::V1::StripeController < ApplicationController
   end
 
   def create
-    render json: { message: 'Success dude!!!' }, status: 200
+    render json: { message: 'Success!' }, status: 200
+    if params[:type] === 'charge.succeeded'
+      Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
+      payment_intent = params['data']['object']['payment_intent']
+      booking = Booking.where(payment_intent_id: payment_intent)
+      if booking.length == 0
+        begin
+          Stripe::PaymentIntent.cancel(payment_intent)
+        rescue Stripe::StripeError
+          StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
+        end
+      end
+    end
   end
 
 end
