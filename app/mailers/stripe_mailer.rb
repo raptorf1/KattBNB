@@ -10,4 +10,8 @@ class StripeMailer < ApplicationMailer
     mail(to: 'george@kattbnb.se', subject: subject_text)
   end
 
+  def notify_stripe_webhook_dispute_fraud
+    mail(to: 'george@kattbnb.se', subject: 'New dispute or fraud detected')
+  end
+
 end

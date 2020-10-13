@@ -62,9 +62,9 @@ class Api::V1::StripeController < ApplicationController
       if event.type == 'charge.succeeded'
         puts 'charge succeded dude!!!'
       elsif event.type == 'charge.dispute.created' || event.type == 'issuing_dispute.created' || event.type == 'radar.early_fraud_warning.created'
-        puts 'disputes dude!!!'
+        StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_dispute_fraud
       else
-        puts 'Why are we receiving this again?????'
+        puts "Unhandled event type: #{event.type}. Why are we receiving this again???"
       end
     rescue JSON::ParserError
       StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_error('Webhook JSON Parse Error')
