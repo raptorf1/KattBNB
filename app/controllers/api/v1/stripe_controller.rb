@@ -54,7 +54,6 @@ class Api::V1::StripeController < ApplicationController
     render json: { message: 'Success!' }, status: 200
     Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
     endpoint_secret = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_WEBHOOK_SIGN_PROD : Rails.application.credentials.STRIPE_WEBHOOK_SIGN_TEST
-    #endpoint_secret = 'whsec_x8eokqvKYoydtAn3DgPcdiOBBPppGKSj'
     payload = request.body.read
     sig_header = request.env['HTTP_STRIPE_SIGNATURE']
     event = nil
@@ -68,11 +67,11 @@ class Api::V1::StripeController < ApplicationController
         puts 'Why are we receiving this again?????'
       end
     rescue JSON::ParserError
-      puts 'Parse Error'
+      StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_error('Webhook JSON Parse Error')
     rescue Stripe::SignatureVerificationError
-      puts 'Signature verification error'
+      StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_error('Webhook Signature Verification Error')
     rescue Stripe::StripeError
-      puts 'General stripe error'
+      StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_error('General Stripe Webhook Error')
     end
   end
 

@@ -6,4 +6,8 @@ class StripeMailer < ApplicationMailer
     mail(to: 'george@kattbnb.se', subject: 'Cancel authorization of Stripe Payment Intent')
   end
 
+  def notify_stripe_webhook_error(subject_text)
+    mail(to: 'george@kattbnb.se', subject: subject_text)
+  end
+
 end
