@@ -52,17 +52,27 @@ class Api::V1::StripeController < ApplicationController
 
   def create
     render json: { message: 'Success!' }, status: 200
-    if params[:type] === 'charge.succeeded'
-      Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
-      payment_intent = params['data']['object']['payment_intent']
-      booking = Booking.where(payment_intent_id: payment_intent)
-      if booking.length == 0
-        begin
-          Stripe::PaymentIntent.cancel(payment_intent)
-        rescue Stripe::StripeError
-          StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
-        end
+    Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
+    endpoint_secret = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_WEBHOOK_SIGN_PROD : Rails.application.credentials.STRIPE_WEBHOOK_SIGN_TEST
+    #endpoint_secret = 'whsec_x8eokqvKYoydtAn3DgPcdiOBBPppGKSj'
+    payload = request.body.read
+    sig_header = request.env['HTTP_STRIPE_SIGNATURE']
+    event = nil
+    begin
+      event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
+      if event.type == 'charge.succeeded'
+        puts 'charge succeded dude!!!'
+      elsif event.type == 'charge.dispute.created' || event.type == 'issuing_dispute.created' || event.type == 'radar.early_fraud_warning.created'
+        puts 'disputes dude!!!'
+      else
+        puts 'Why are we receiving this again?????'
       end
+    rescue JSON::ParserError
+      puts 'Parse Error'
+    rescue Stripe::SignatureVerificationError
+      puts 'Signature verification error'
+    rescue Stripe::StripeError
+      puts 'General stripe error'
     end
   end
 
