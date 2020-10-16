@@ -81,7 +81,16 @@ class Api::V1::StripeController < ApplicationController
     begin
       event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
       if event.type == 'charge.succeeded'
-        puts 'charge succeded dude!!!'
+        payment_intent = params['data']['object']['payment_intent']
+        number_of_cats = params['data']['object']['metadata']['number_of_cats']
+        message = params['data']['object']['metadata']['message']
+        dates_string = params['data']['object']['metadata']['dates']
+        dates = dates_string.split(',').map(&:to_i)
+        host_nickname = params['data']['object']['metadata']['host_nickname']
+        price_per_day = params['data']['object']['metadata']['price_per_day']
+        price_total = params['data']['object']['metadata']['price_total']
+        user_id = params['data']['object']['metadata']['user_id']
+        Delayed::Job.enqueue CreateBookingForDummies.new(payment_intent, number_of_cats, message, dates, host_nickname, price_per_day, price_total, user_id)
       elsif event.type == 'charge.dispute.created' || event.type == 'issuing_dispute.created' || event.type == 'radar.early_fraud_warning.created'
         StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_dispute_fraud
       else
@@ -93,6 +102,19 @@ class Api::V1::StripeController < ApplicationController
       StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_error('Webhook Signature Verification Error')
     rescue Stripe::StripeError
       StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_error('General Stripe Webhook Error')
+    end
+  end
+
+
+  class CreateBookingForDummies < Struct.new(:payment_intent, :number_of_cats, :message, :dates, :host_nickname, :price_per_day, :price_total, :user_id)
+    def perform
+      sleep(10)
+      booking = Booking.where(payment_intent_id: payment_intent)
+        if booking.length == 0
+          Booking.create(payment_intent_id: payment_intent, number_of_cats: number_of_cats, message: message, dates: dates, host_nickname: host_nickname, price_per_day: price_per_day, price_total: price_total, user_id: user_id)
+        else
+          puts 'Booking already exists! Show me the moneyyyyy!'
+        end
     end
   end
 
