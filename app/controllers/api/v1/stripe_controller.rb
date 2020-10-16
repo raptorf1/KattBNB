@@ -45,6 +45,27 @@ class Api::V1::StripeController < ApplicationController
       rescue Stripe::StripeError
         render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
       end
+    elsif params[:occasion] == 'update_payment_intent'
+      payment_intent_id = params[:payment_intent_id].split('_secret')[0]
+      begin
+        Stripe::PaymentIntent.update(payment_intent_id,
+          { metadata:
+            {
+              number_of_cats: params[:number_of_cats],
+              message: params[:message],
+              dates: params[:dates],
+              host_nickname: params[:host_nickname],
+              price_per_day: params[:price_per_day],
+              price_total: params[:price_total],
+              user_id: params[:user_id],
+              payment_intent_id: payment_intent_id
+            }
+         },
+        )
+        render json: { message: 'Payment Intent updated!' }, status: 200
+      rescue Stripe::StripeError
+        render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
+      end
     else
       render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
     end
