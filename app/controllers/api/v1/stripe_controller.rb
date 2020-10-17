@@ -108,10 +108,44 @@ class Api::V1::StripeController < ApplicationController
 
   class CreateBookingForDummies < Struct.new(:payment_intent, :number_of_cats, :message, :dates, :host_nickname, :price_per_day, :price_total, :user_id)
     def perform
+      Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
       sleep(10)
-      booking = Booking.where(payment_intent_id: payment_intent)
-        if booking.length == 0
-          Booking.create(payment_intent_id: payment_intent, number_of_cats: number_of_cats, message: message, dates: dates, host_nickname: host_nickname, price_per_day: price_per_day, price_total: price_total, user_id: user_id)
+      booking_exists = Booking.where(payment_intent_id: payment_intent)
+        if booking_exists.length == 0
+          booking_to_create = Booking.create(payment_intent_id: payment_intent, number_of_cats: number_of_cats, message: message, dates: dates, host_nickname: host_nickname, price_per_day: price_per_day, price_total: price_total, user_id: user_id)
+          if booking_to_create.persisted?
+            host = User.where(nickname: booking_to_create.host_nickname)
+            if host.length == 1
+              profile = HostProfile.where(user_id: host[0].id)
+              user = User.where(id: booking_to_create.user_id)
+              if (booking_to_create.dates - profile[0].availability).empty? == true
+                new_availability = profile[0].availability - booking_to_create.dates
+                profile.update(availability: new_availability)
+                BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_create_booking(host[0], booking_to_create, user[0])
+              else
+                begin
+                  Stripe::PaymentIntent.cancel(booking_to_create.payment_intent_id)
+                rescue Stripe::StripeError
+                  StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking_to_create.payment_intent_id)
+                end
+                booking_to_create.update(status: 'canceled')
+                booking_to_create.destroy
+              end
+            else
+              begin
+                Stripe::PaymentIntent.cancel(booking_to_create.payment_intent_id)
+              rescue Stripe::StripeError
+                StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking_to_create.payment_intent_id)
+              end
+              booking_to_create.destroy
+            end
+          else
+            begin
+              Stripe::PaymentIntent.cancel(booking_to_create.payment_intent_id)
+            rescue Stripe::StripeError
+              StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking_to_create.payment_intent_id)
+            end
+          end
         else
           puts 'Booking already exists! Show me the moneyyyyy!'
         end
