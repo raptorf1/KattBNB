@@ -21,6 +21,7 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to have_db_column :host_full_address }
     it { is_expected.to have_db_column :host_real_lat }
     it { is_expected.to have_db_column :host_real_long }
+    it { is_expected.to have_db_column :payment_intent_id }
   end
 
   describe 'Validations' do
@@ -64,7 +65,7 @@ RSpec.describe Booking, type: :model do
     it 'performance stats for deletion of user with canceled booking' do
       FactoryBot.create(:booking, status: 'canceled')
       user = Booking.last.user
-      expect { user.destroy }.to perform_under(50).ms.sample(20).times
+      expect { user.destroy }.to perform_under(90).ms.sample(20).times
       expect { user.destroy }.to perform_at_least(100).ips
     end
 

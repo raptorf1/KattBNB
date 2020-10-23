@@ -31,9 +31,9 @@ RSpec.describe MessageBroadcastJob, :type => :job do
       expect { MessageBroadcastJob.perform_later(message.id) }.to perform_under(5).ms.sample(20).times
     end
 
-    it 'performs at least 4000 iterations per second' do
+    it 'performs at least 3000 iterations per second' do
       ActiveJob::Base.queue_adapter = :test
-      expect { MessageBroadcastJob.perform_later(message.id) }.to perform_at_least(4000).ips
+      expect { MessageBroadcastJob.perform_later(message.id) }.to perform_at_least(3000).ips
     end
   end
 

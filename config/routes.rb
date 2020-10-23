@@ -14,7 +14,7 @@ Rails.application.routes.draw do
         resources :bookings, only: [:index, :create, :update]
         resources :conversations, only: [:create, :index, :show, :update]
         resources :reviews, only: [:index, :show, :create, :update]
-        resources :stripe, only: [:index]
+        resources :stripe, only: [:index, :create]
       end
     end
   end
