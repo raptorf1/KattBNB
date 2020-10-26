@@ -22,6 +22,7 @@ RSpec.describe Booking, type: :model do
     it { is_expected.to have_db_column :host_real_lat }
     it { is_expected.to have_db_column :host_real_long }
     it { is_expected.to have_db_column :payment_intent_id }
+    it { is_expected.to have_db_column :paid }
   end
 
   describe 'Validations' do
@@ -49,6 +50,11 @@ RSpec.describe Booking, type: :model do
     it 'returns Array as class for dates field' do
       FactoryBot.create(:booking)
       expect(Booking.last.dates.class).to eq Array
+    end
+
+    it "returns false for 'paid' field" do
+      FactoryBot.create(:booking)
+      expect(Booking.last.paid).to eq false
     end
   end
 
