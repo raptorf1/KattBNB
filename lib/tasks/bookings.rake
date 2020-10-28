@@ -34,13 +34,13 @@ namespace :bookings do
     bookings_to_pay = Booking.where(status: 'accepted', paid: false)
     bookings_to_pay.each do |booking|
       if booking.dates.last < now_epoch_javascript
-        host = User.find(nickname: booking.host_nickname)
-        profile = HostProfile.find(user_id: host.id)
+        host = User.where(nickname: booking.host_nickname)
+        profile = HostProfile.where(user_id: host[0].id)
         begin
           Stripe::Transfer.create({
             amount: (booking.price_total*100).to_i,
             currency: 'sek',
-            destination: profile.stripe_account_id,
+            destination: profile[0].stripe_account_id,
             metadata:
               {
                 booking_id: booking.id
