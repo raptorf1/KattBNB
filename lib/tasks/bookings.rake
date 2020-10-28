@@ -41,9 +41,14 @@ namespace :bookings do
             amount: (booking.price_total*100).to_i,
             currency: 'sek',
             destination: profile.stripe_account_id,
+            metadata:
+              {
+                booking_id: booking.id
+              },
           })
+          booking.update(paid: true)
         rescue Stripe::StripeError
-          puts 'Stripe error :P'
+          StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_error("Payment to host for booking id #{booking.id} failed")
         end
       end
     end
