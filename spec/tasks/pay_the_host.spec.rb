@@ -50,6 +50,7 @@ describe 'rake bookings:pay_the_host', type: :task do
     jobs = Delayed::Job.all
     expect(jobs.count).to eq 1
     expect(jobs[0].queue).to eq 'stripe_email_notifications'
+    expect(jobs[0].handler).to match("Payment to host for booking id #{booking.id} failed")
   end
 
   it 'preloads the Rails environment' do
