@@ -2,6 +2,7 @@ RSpec::Benchmark.configure do |config|
   config.run_in_subprocess = true
 end
 
+# happy path
 describe 'rake bookings:pay_the_host', type: :task do
   let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
@@ -13,10 +14,42 @@ describe 'rake bookings:pay_the_host', type: :task do
   let!(:booking5) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'canceled', paid: false) }
   let!(:booking6) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'accepted', dates: [123, 456], paid: true) }
 
-  it 'emails the user, the host and KattBNB to cancel payment' do
+  it 'pays the host and updates the correct booking' do
+    expect(booking.paid).to eq false
+    expect(booking2.paid).to eq false
+    expect(booking3.paid).to eq false
+    expect(booking4.paid).to eq false
+    expect(booking5.paid).to eq false
+    expect(booking6.paid).to eq true
     task.execute
     booking.reload
+    booking2.reload
+    booking3.reload
+    booking4.reload
+    booking5.reload
+    booking6.reload
     expect(booking.paid).to eq true
+    expect(booking2.paid).to eq false
+    expect(booking3.paid).to eq false
+    expect(booking4.paid).to eq false
+    expect(booking5.paid).to eq false
+    expect(booking6.paid).to eq true
+  end
+
+end
+
+# sad path
+describe 'rake bookings:pay_the_host', type: :task do
+  let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
+  let!(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
+  let!(:profile) { FactoryBot.create(:host_profile, user_id: host.id, stripe_account_id: 'acct_1kdhfsjdhfsfkljsd') }
+  let!(:booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'accepted', dates: [123, 456], paid: false, price_total: 1.0) }
+
+  it 'sends email on Stripe error' do
+    task.execute
+    jobs = Delayed::Job.all
+    expect(jobs.count).to eq 1
+    expect(jobs[0].queue).to eq 'stripe_email_notifications'
   end
 
   it 'preloads the Rails environment' do
@@ -31,8 +64,8 @@ describe 'rake bookings:pay_the_host', type: :task do
     expect { task.execute }.to perform_under(30).ms.sample(20).times
   end
 
-  it 'performs at least 500 iterations per second' do
-    expect { task.execute }.to perform_at_least(500).ips
+  it 'performs at least 1 iteration per second' do
+    expect { task.execute }.to perform_at_least(1).ips
   end
 
 end
