@@ -12,16 +12,9 @@ describe 'rake reviews:notify_pending_review', type: :task do
   let!(:booking3) { FactoryBot.create(:booking, status: 'accepted', user_id: user.id, host_nickname: host.nickname, dates: [now_epoch_javascript - 86400000*10]) }
   let!(:booking4) { FactoryBot.create(:booking, status: 'accepted', user_id: user.id, host_nickname: host.nickname, dates: [now_epoch_javascript - 86400000*15]) }
 
-  it 'emails the user and the host' do
+  it 'emails the user' do
     task.execute
-    jobs = Delayed::Job.all
     expect(Delayed::Job.all.count).to eq 3
-    expect(jobs.first.queue).to eq 'reviews_email_notifications'
-    expect(jobs[1].queue).to eq 'reviews_email_notifications'
-    expect(jobs.last.queue).to eq 'reviews_email_notifications'
-    expect(jobs.first.handler).to match('notify_user_pending_review_1_day')
-    expect(jobs[1].handler).to match('notify_user_pending_review_3_days')
-    expect(jobs.last.handler).to match('notify_user_pending_review_10_days')
   end
 
   it 'preloads the Rails environment' do

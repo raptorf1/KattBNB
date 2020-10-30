@@ -25,4 +25,33 @@ namespace :bookings do
     end
     puts "#{cancelled_bookings.length} pending booking(s) succesfully cancelled!"
   end
+
+  desc 'Pay the host'
+  task pay_the_host: :environment do
+    Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
+    now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
+    now_epoch_javascript = (now.to_f * 1000).to_i
+    bookings_to_pay = Booking.where(status: 'accepted', paid: false)
+    bookings_to_pay.each do |booking|
+      if booking.dates.last < now_epoch_javascript
+        host = User.where(nickname: booking.host_nickname)
+        profile = HostProfile.where(user_id: host[0].id)
+        begin
+          Stripe::Transfer.create({
+            amount: (booking.price_total*100).to_i,
+            currency: 'sek',
+            destination: profile[0].stripe_account_id,
+            metadata:
+              {
+                booking_id: booking.id
+              },
+          })
+          booking.update(paid: true)
+        rescue Stripe::StripeError
+          StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_error("Payment to host for booking id #{booking.id} failed")
+        end
+      end
+    end
+  end
+
 end
