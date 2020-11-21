@@ -36,7 +36,7 @@ RSpec.describe 'User Changes Location Information and API', type: :request do
     expect(json_response['data']['location']).to eq 'Japan'
   end
 
-  it 'returns a user and a token and then changes the location in under 1 ms and with iteration rate of 5000000 per second' do
+  it 'returns a user and a token and then changes the location in under 1 ms and with iteration rate of 1000000 per second' do
 
     post '/api/v1/auth', params: { email: 'felix@craft.se',
                                    password: 'password',
@@ -63,6 +63,6 @@ RSpec.describe 'User Changes Location Information and API', type: :request do
                                                 client: new_user_client
                                              }, headers: headers
     expect { put_request }.to perform_under(1).ms.sample(20).times
-    expect { put_request }.to perform_at_least(5000000).ips
+    expect { put_request }.to perform_at_least(1000000).ips
   end
 end

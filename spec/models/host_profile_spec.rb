@@ -61,7 +61,7 @@ RSpec.describe HostProfile, type: :model do
     it 'performance stats for user deletion with host profile' do
       FactoryBot.create(:host_profile)
       user = HostProfile.last.user
-      expect { user.destroy }.to perform_under(50).ms.sample(20).times
+      expect { user.destroy }.to perform_under(150).ms.sample(20).times
       expect { user.destroy }.to perform_at_least(100).ips
     end
 
