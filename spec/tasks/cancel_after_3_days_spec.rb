@@ -36,8 +36,8 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
     expect(booking2.status).to eq 'pending'
   end
 
-  it 'performs under 30 ms' do
-    expect { task.execute }.to perform_under(30).ms.sample(20).times
+  it 'performs under 150 ms' do
+    expect { task.execute }.to perform_under(150).ms.sample(20).times
   end
 
   it 'performs at least 500 iterations per second' do
