@@ -160,9 +160,9 @@ class Api::V1::StripeController < ApplicationController
   private
 
   def calculate_price (in_date, out_date, cats, host)
-    user = User.where(nickname: host)
-    host_profile = HostProfile.where(user_id: user[0].id)
-    price = host_profile[0].price_per_day_1_cat + ((cats.to_i - 1) * host_profile[0].supplement_price_per_cat_per_day)
+    user = User.find_by(nickname: host)
+    host_profile = HostProfile.find_by(user_id: user.id)
+    price = host_profile.price_per_day_1_cat + ((cats.to_i - 1) * host_profile.supplement_price_per_cat_per_day)
     total = price * (((out_date.to_i - in_date.to_i) / 86400000) + 1)
     final_charge = total + (total * 0.17) + ((total * 0.17) * 0.25)
     '%.2f' % final_charge
