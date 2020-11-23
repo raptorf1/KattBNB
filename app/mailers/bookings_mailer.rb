@@ -24,7 +24,8 @@ class BookingsMailer < ApplicationMailer
     @start_date = Time.at(booking.dates[0] / 1000)
     @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
 
-    string_with_2_decimals = sprintf('%.2f', @booking.price_total.to_s)
+    final_charge = @booking.price_total + (@booking.price_total * 0.17) + ((@booking.price_total * 0.17) * 0.25)
+    string_with_2_decimals = sprintf('%.2f', final_charge.to_s)
     (string_with_2_decimals[string_with_2_decimals.length - 1] == '0' && string_with_2_decimals[string_with_2_decimals.length - 2] == '0') ? total = string_with_2_decimals.to_i : total = sprintf('%.2f', string_with_2_decimals)
 
     I18n.with_locale(@user.lang_pref) do

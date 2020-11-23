@@ -48,10 +48,10 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
       expect(json_response[0].count).to eq 9
     end
 
-    it 'fetches collection of reviews in under 1 ms and with iteration rate of at least 5000000 per second' do
+    it 'fetches collection of reviews in under 1 ms and with iteration rate of at least 1000000 per second' do
       get_request = get "/api/v1/reviews?host_profile_id=#{profile_another_user.id}"
       expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(5000000).ips
+      expect { get_request }.to perform_at_least(1000000).ips
     end
   end
 

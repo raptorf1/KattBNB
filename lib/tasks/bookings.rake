@@ -38,7 +38,7 @@ namespace :bookings do
         profile = HostProfile.where(user_id: host[0].id)
         begin
           Stripe::Transfer.create({
-            amount: (booking.price_total*100).to_i,
+            amount: (booking.price_total * 100).to_i,
             currency: 'sek',
             destination: profile[0].stripe_account_id,
             metadata:
@@ -47,6 +47,7 @@ namespace :bookings do
               },
           })
           booking.update(paid: true)
+          ENV['OFFICIAL'] == 'yes' ? ReportsMailer.delay(:queue => 'financial_reports_email_notifications').bookings_revenue_and_vat(booking) : (puts 'A report email was sent!')
         rescue Stripe::StripeError
           StripeMailer.delay(:queue => 'stripe_email_notifications').notify_stripe_webhook_error("Payment to host for booking id #{booking.id} failed")
         end

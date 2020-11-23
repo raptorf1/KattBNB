@@ -36,6 +36,10 @@ describe 'rake bookings:pay_the_host', type: :task do
     expect(paid_accepted_booking.paid).to eq true
   end
 
+  it 'logs to stdout' do
+    expect { task.execute }.to output("A report email was sent!\n").to_stdout
+  end
+
 end
 
 # sad path

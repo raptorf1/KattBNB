@@ -74,7 +74,7 @@ RSpec.describe Message, type: :model do
       user2 = FactoryBot.create(:user, email: 'zane@sweden.com', nickname: 'zane')
       FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id)
       FactoryBot.create(:message, user_id: user1.id, conversation_id: Conversation.last.id)
-      expect { user1.destroy }.to perform_under(50).ms.sample(20).times
+      expect { user1.destroy }.to perform_under(150).ms.sample(20).times
       expect { user1.destroy }.to perform_at_least(150).ips
     end
 

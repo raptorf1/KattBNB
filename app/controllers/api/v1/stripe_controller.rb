@@ -28,21 +28,25 @@ class Api::V1::StripeController < ApplicationController
         end
       end
     elsif params[:occasion] == 'create_payment_intent'
-      stripe_amount = params[:amount]
-      if stripe_amount.include? '.'
-        stripe_amount = stripe_amount.delete '.'
+      if calculate_price(params[:inDate], params[:outDate], params[:cats], params[:host]) == params[:amount]
+        stripe_amount = params[:amount]
+        if stripe_amount.include? '.'
+          stripe_amount = stripe_amount.delete '.'
+        else
+          stripe_amount = params[:amount] + '00'
+        end
+        begin
+          intent = Stripe::PaymentIntent.create({
+            amount: stripe_amount,
+            currency: params[:currency],
+            receipt_email: current_api_v1_user.email,
+            capture_method: 'manual'
+          })
+          render json: { intent_id: intent.client_secret }, status: 200
+        rescue Stripe::StripeError
+          render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
+        end
       else
-        stripe_amount = params[:amount] + '00'
-      end
-      begin
-        intent = Stripe::PaymentIntent.create({
-          amount: stripe_amount,
-          currency: params[:currency],
-          receipt_email: current_api_v1_user.email,
-          capture_method: 'manual'
-        })
-        render json: { intent_id: intent.client_secret }, status: 200
-      rescue Stripe::StripeError
         render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
       end
     elsif params[:occasion] == 'update_payment_intent'
@@ -149,6 +153,26 @@ class Api::V1::StripeController < ApplicationController
         else
           puts 'Booking already exists! Show me the moneyyyyy!'
         end
+    end
+  end
+
+
+  private
+
+  def calculate_price (in_date, out_date, cats, host)
+    user = User.find_by(nickname: host)
+    if user != nil
+      host_profile = HostProfile.find_by(user_id: user.id)
+      if host_profile != nil
+        price = host_profile.price_per_day_1_cat + ((cats.to_i - 1) * host_profile.supplement_price_per_cat_per_day)
+        total = price * (((out_date.to_i - in_date.to_i) / 86400000) + 1)
+        final_charge = total + (total * 0.17) + ((total * 0.17) * 0.25)
+        '%.2f' % final_charge
+      else
+        '%.2f' % 0
+      end
+    else
+      '%.2f' % 0
     end
   end
 

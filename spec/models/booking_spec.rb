@@ -86,7 +86,7 @@ RSpec.describe Booking, type: :model do
 
     it 'performance stats for declined booking deletion' do
       booking = FactoryBot.create(:booking, status: 'declined')
-      expect { booking.destroy }.to perform_under(50).ms.sample(20).times
+      expect { booking.destroy }.to perform_under(150).ms.sample(20).times
       expect { booking.destroy }.to perform_at_least(700).ips
     end
 
@@ -105,7 +105,7 @@ RSpec.describe Booking, type: :model do
       user2 = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
       host_profile_user2 = FactoryBot.create(:host_profile, user_id: user2.id, availability: [1, 2, 3, 4, 5])
       booking = FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user1.id, status: 'pending', dates: [1562889600000, 1562976000000])
-      expect { user1.destroy }.to perform_under(50).ms.sample(20).times
+      expect { user1.destroy }.to perform_under(150).ms.sample(20).times
       expect { user1.destroy }.to perform_at_least(100).ips
     end
 
@@ -132,7 +132,7 @@ RSpec.describe Booking, type: :model do
       user1 = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
       user2 = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
       booking = FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user1.id, status: 'accepted', dates: [1462889600000, 1462976000000])
-      expect { user1.destroy }.to perform_under(50).ms.sample(20).times
+      expect { user1.destroy }.to perform_under(150).ms.sample(20).times
       expect { user1.destroy }.to perform_at_least(100).ips
     end
 
