@@ -50,6 +50,24 @@ RSpec.describe Api::V1::StripeController, type: :request do
         expect(response.status).to eq 401
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
       end
+
+      it 'requires user to be authenticated to request stripe account deletion' do
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: not_headers
+        expect(response.status).to eq 401
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
+
+      it 'returns error if user tries to request stripe account deletion of another user' do
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: headers2
+        expect(response.status).to eq 422
+        expect(json_response['error']).to eq 'You cannot perform this action!'
+      end
+
+      it 'returns a relevant message if no Stripe account is found when requesting a Stripe account deletion' do
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: headers
+        expect(response.status).to eq 200
+        expect(json_response['message']).to eq 'No account'
+      end
     end
 
   end
