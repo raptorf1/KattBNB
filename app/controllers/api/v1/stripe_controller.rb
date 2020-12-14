@@ -70,6 +70,18 @@ class Api::V1::StripeController < ApplicationController
       rescue Stripe::StripeError
         render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
       end
+    elsif params[:occasion] == 'delete_account' && current_api_v1_user.id == profile[0].user_id
+      stripe_account = profile[0].stripe_account_id
+      if stripe_account
+        begin
+          Stripe::Account.delete(stripe_account)
+          render json: { message: 'Account deleted!' }, status: 200
+        rescue Stripe::StripeError
+          render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
+        end
+      else
+        render json: { message: 'No account' }, status: 200
+      end
     else
       render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
     end
