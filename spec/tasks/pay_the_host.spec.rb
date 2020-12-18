@@ -6,7 +6,7 @@ end
 describe 'rake bookings:pay_the_host', type: :task do
   let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let!(:profile) { FactoryBot.create(:host_profile, user_id: host.id, stripe_account_id: 'acct_1HSQspCYqtPdaLmE') }
+  let!(:profile) { FactoryBot.create(:host_profile, user_id: host.id, stripe_account_id: 'acct_1Hywpk2HucmOr4dd') }
   let!(:unpaid_accepted_booking_past) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'accepted', dates: [123, 456], paid: false, price_total: 1.0) }
   let!(:unpaid_accepted_booking_future) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'accepted', dates: [123, 456, 9563148800000], paid: false) }
   let!(:pending_booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'pending', paid: false) }
