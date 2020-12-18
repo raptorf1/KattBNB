@@ -28,7 +28,7 @@ class Api::V1::StripeController < ApplicationController
         end
       end
     elsif params[:occasion] == 'create_payment_intent'
-      if calculate_price(params[:inDate], params[:outDate], params[:cats], params[:host]) == params[:amount]
+      if calculate_price(params[:inDate], params[:outDate], params[:cats], params[:host]) == '%.2f' % params[:amount]
         stripe_amount = params[:amount]
         if stripe_amount.include? '.'
           stripe_amount = stripe_amount.delete '.'
