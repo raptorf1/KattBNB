@@ -11,6 +11,7 @@ class Api::V1::BookingsController < ApplicationController
         incoming_requests = []
         incoming_upcoming = []
         incoming_history = []
+        incoming_unpaid = []
         incoming_bookings.each do |booking|
           case
             when booking.status == 'pending'
@@ -20,11 +21,15 @@ class Api::V1::BookingsController < ApplicationController
             else
               incoming_history.push(booking)
           end
+          if booking.status == 'accepted' && booking.paid == false
+            incoming_unpaid.push(booking)
+          end
         end
         outgoing_bookings = Booking.where(user_id: params[:user_id])
         outgoing_requests = []
         outgoing_upcoming = []
         outgoing_history = []
+        outgoing_unpaid = []
         outgoing_bookings.each do |booking|
           case
             when booking.status == 'pending'
@@ -34,8 +39,11 @@ class Api::V1::BookingsController < ApplicationController
             else
               outgoing_history.push(booking)
           end
+          if booking.status == 'accepted' && booking.paid == false
+            outgoing_unpaid.push(booking)
+          end
         end
-        render json: { stats: {"in_requests": "#{incoming_requests.length}", "in_upcoming": "#{incoming_upcoming.length}", "in_history": "#{incoming_history.length}", "out_requests": "#{outgoing_requests.length}", "out_upcoming": "#{outgoing_upcoming.length}", "out_history": "#{outgoing_history.length}"} }, status: 200
+        render json: { stats: {"in_requests": "#{incoming_requests.length}", "in_upcoming": "#{incoming_upcoming.length}", "in_history": "#{incoming_history.length}", "in_unpaid": "#{incoming_unpaid.length}", "out_requests": "#{outgoing_requests.length}", "out_upcoming": "#{outgoing_upcoming.length}", "out_history": "#{outgoing_history.length}", "out_unpaid": "#{outgoing_unpaid.length}"} }, status: 200
       when params[:stats] == 'no' && params[:host_nickname] == current_api_v1_user.nickname
         if params.has_key?('dates')
           now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
