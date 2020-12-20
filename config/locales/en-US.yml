@@ -38,7 +38,6 @@ en-US:
       notify_user_declined_booking: "Your booking request got declined!"
       notify_user_cancelled_booking: "Your booking request got cancelled!"
       notify_host_cancelled_booking: "Cancelled booking request!"
-      notify_host_on_user_account_deletion: "Important information about your upcoming booking!"
       notify_user_accepted_booking_sum_drop: "KattBNB booking with %{host} starts - %{total} kr"
       notify_user_accepted_booking_sum_collect: "KattBNB booking with %{host} ends - %{total} kr"
     reviews:
@@ -79,12 +78,6 @@ en-US:
         notify_host_cancelled_booking:
           cancelled_html: "A booking request from <strong>%{user}</strong> for the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong> got automatically cancelled due to no answer from you within 3 days time."
           see_you_html: "We hope to see you soon <a href='%{link}' class='%{class}'>on KattBNB</a>."
-        notify_host_on_user_account_deletion:
-          important_info: "We've got some important information for you!"
-          details_html:
-            one: "<strong>%{user}</strong> has booked a stay with you for <strong>1 cat</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"
-            other: "<strong>%{user}</strong> has booked a stay with you for <strong>%{count} cats</strong> during the dates of <strong>%{start_date}</strong> until <strong>%{end_date}</strong>:"          
-          deletion_html: "<strong>%{user}</strong> has requested an account deletion. You won't be able to communicate through KattBNB and won't be able to see the booking in your incoming bookings. You can contact <strong>%{user}</strong> directly <a href='%{link}' class='%{class}'>here</a>."
         notify_user_accepted_booking:
           happy: "Happy days!"
           details_html:

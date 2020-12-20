@@ -51,7 +51,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
         expect(json_response).to include('stripe_state')
         expect(json_response).to include('stripe_account_id')
         expect(json_response).to include('user')
-        expect(json_response.count).to eq 12
+        expect(json_response.count).to eq 11
         end
       end
 

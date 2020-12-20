@@ -38,7 +38,6 @@ sv-SE:
       notify_user_declined_booking: "Din bokningsförfrågan avvisades!"
       notify_user_cancelled_booking: "Din bokningsförfrågan har avbrutits!"
       notify_host_cancelled_booking: "Avbruten bokningsförfrågan!"
-      notify_host_on_user_account_deletion: "Viktig information om din kommande bokning!"
       notify_user_accepted_booking_sum_drop: "KattBNB bokning med %{host} börjar - %{total} kr"
       notify_user_accepted_booking_sum_collect: "KattBNB bokning med %{host} slutar - %{total} kr"
     reviews:
@@ -79,12 +78,6 @@ sv-SE:
         notify_host_cancelled_booking:
           cancelled_html: "En bokningsförfrågan från <strong>%{user}</strong> för datumen <strong>%{start_date}</strong> till <strong>%{end_date}</strong> avbröts automatiskt på grund av att du inte svarade inom 3 dagar."
           see_you_html: "Vi hoppas att vi kommer ses snart <a href='%{link}' class='%{class}'>på KattBNB</a>."
-        notify_host_on_user_account_deletion:
-          important_info: "Vi har viktig information till dig!"
-          details_html:
-            one: "<strong>%{user}</strong> har bokat en vistelse hos dig för <strong>1 katt</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
-            other: "<strong>%{user}</strong> har bokat en vistelse hos dig för <strong>%{count} katter</strong> mellan datumen <strong>%{start_date}</strong> och <strong>%{end_date}</strong>:"
-          deletion_html: "<strong>%{user}</strong> har begärt att få sitt konto raderat. Ni kommer inte att kunna kommunicera via KattBNB och du kommer inte att kunna se bokningen i dina inkommande bokningar. Du kan kontakta <strong>%{user}</strong> direkt <a href='%{link}' class='%{class}'>här</a>."
         notify_user_accepted_booking:
           happy: "Alla tiders!"
           details_html:

@@ -32,8 +32,8 @@ describe 'rake users:delete_unconfirmed_users', type: :task do
     expect { task.execute }.to perform_under(30).ms.sample(20).times
   end
 
-  it 'performs at least 500 iterations per second' do
-    expect { task.execute }.to perform_at_least(500).ips
+  it 'performs at least 300 iterations per second' do
+    expect { task.execute }.to perform_at_least(300).ips
   end
 
 end

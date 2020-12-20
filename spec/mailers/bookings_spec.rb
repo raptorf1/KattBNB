@@ -16,8 +16,6 @@ RSpec.describe BookingsMailer, type: :mailer do
   let(:declined_request_mail) { BookingsMailer.notify_user_declined_booking(host, booking, user) }
   let(:cancelled_request_user_mail) { BookingsMailer.notify_user_cancelled_booking(host, booking, user) }
   let(:cancelled_request_host_mail) { BookingsMailer.notify_host_cancelled_booking(host, booking, user) }
-  let(:on_delete_account_host_mail) { BookingsMailer.notify_host_on_user_account_deletion(host, booking, user) }
-  let(:on_delete_account_host_mail2) { BookingsMailer.notify_host_on_user_account_deletion(host, booking2, user) }
 
   describe 'notify_host_create_booking' do
     it 'renders the subject' do
@@ -169,41 +167,6 @@ RSpec.describe BookingsMailer, type: :mailer do
 
     it 'performs at least 800K iterations per second' do
       expect { cancelled_request_host_mail }.to perform_at_least(800000).ips
-    end
-  end
-
-  describe 'notify_host_on_user_account_deletion' do
-    it 'renders the subject' do
-      expect(on_delete_account_host_mail.subject).to eql('Important information about your upcoming booking!')
-    end
-
-    it 'renders the receiver email' do
-      expect(on_delete_account_host_mail.to).to eql([host.email])
-    end
-
-    it 'renders the sender email' do
-      expect(on_delete_account_host_mail.from).to eql('KattBNB meow-reply')
-    end
-
-    it "contains basic booking information and host's & user's nicknames" do
-      expect(on_delete_account_host_mail.body.encoded).to match("Hey, #{host.nickname}!")
-      expect(on_delete_account_host_mail.encoded).to match("#{user.nickname}")
-      expect(on_delete_account_host_mail.encoded).to match("#{booking.number_of_cats}")
-      expect(on_delete_account_host_mail.encoded).to match('1550.20 kr')
-    end
-
-    it 'the 100% spec!' do
-      expect(on_delete_account_host_mail2.encoded).to match('1550 kr')
-    end
-
-    it 'is performed under 500ms' do
-      expect { on_delete_account_host_mail }.to perform_under(500).ms.sample(20).times
-      expect { on_delete_account_host_mail2 }.to perform_under(500).ms.sample(20).times
-    end
-
-    it 'performs at least 800K iterations per second' do
-      expect { on_delete_account_host_mail }.to perform_at_least(800000).ips
-      expect { on_delete_account_host_mail2 }.to perform_at_least(800000).ips
     end
   end
 

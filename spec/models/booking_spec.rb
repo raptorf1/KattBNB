@@ -90,16 +90,6 @@ RSpec.describe Booking, type: :model do
       expect { booking.destroy }.to perform_at_least(700).ips
     end
 
-    it 'pending booking is deleted and host profile availability is altered when associated user is deleted from the database' do
-      user1 = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
-      user2 = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
-      host_profile_user2 = FactoryBot.create(:host_profile, user_id: user2.id, availability: [1, 2, 3, 4, 5])
-      booking = FactoryBot.create(:booking, host_nickname: user2.nickname, user_id: user1.id, status: 'pending', dates: [1562889600000, 1562976000000])
-      user1.destroy
-      host_profile_user2.reload
-      expect(host_profile_user2.availability).to eq [1, 2, 3, 4, 5, 1562889600000, 1562976000000]
-    end
-
     it 'performance stats for deletion of user with pending booking and host profile availability update' do
       user1 = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
       user2 = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')

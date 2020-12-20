@@ -33,8 +33,8 @@ describe 'rake conversations:delete_empty_conversations', type: :task do
     expect { task.execute }.to perform_under(150).ms.sample(20).times
   end
 
-  it 'performs at least 350 iterations per second' do
-    expect { task.execute }.to perform_at_least(350).ips
+  it 'performs at least 250 iterations per second' do
+    expect { task.execute }.to perform_at_least(250).ips
   end
 
 end
