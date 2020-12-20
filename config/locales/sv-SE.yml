@@ -172,7 +172,6 @@ sv-SE:
         latitude: "Latitud"
         longitude: "Longitud"
         availability: "Tillgänglighet"
-        forbidden_dates: "Förbjudna datum"
       message:
         body: "Brödtext"
         created_at: "Skapad"

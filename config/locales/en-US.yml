@@ -172,7 +172,6 @@ en-US:
         latitude: "Real latitude"
         longitude: "Real longitude"
         availability: "Availability"
-        forbidden_dates: "Forbidden dates"
       message:
         body: "Body"
         created_at: "Created at"
