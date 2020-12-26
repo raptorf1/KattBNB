@@ -2,7 +2,7 @@
 [![Build Status](https://semaphoreci.com/api/v1/raptorf1/kattbnb_api/branches/development/badge.svg)](https://semaphoreci.com/raptorf1/kattbnb_api)
 
 
-# Project Title
+## Project Title
 
 ## **KattBNB**
 ### **Cat boarding made easy !**
