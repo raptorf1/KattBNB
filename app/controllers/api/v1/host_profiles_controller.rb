@@ -8,17 +8,16 @@ class Api::V1::HostProfilesController < ApplicationController
       render json: profiles, each_serializer: HostProfiles::IndexSerializer
     elsif params[:location]
       profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
-      render json: profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate]), each_serializer: HostProfiles::IndexSerializer
+      render json: {
+        with: ActiveModel::Serializer::CollectionSerializer.new(profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['with'], serializer: HostProfiles::IndexSerializer),
+        without: ActiveModel::Serializer::CollectionSerializer.new(profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['without'], serializer: HostProfiles::IndexSerializer)
+      }
     else
       profiles = HostProfile.all
-#      render json: {
-#        beers: profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])[0], each_serializer: HostProfiles::IndexSerializer
-#        micros: ActiveModel::Serializer::HostProfiles::IndexSerializer.new(profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])[1]).as_json, each_serializer: HostProfiles::IndexSerializer
-#    }
       render json: {
-        'with' => profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['with'], each_serializer: HostProfiles::IndexSerializer,
-        'without' => profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['without'], each_serializer: HostProfiles::IndexSerializer
-    }
+        with: ActiveModel::Serializer::CollectionSerializer.new(profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['with'], serializer: HostProfiles::IndexSerializer),
+        without: ActiveModel::Serializer::CollectionSerializer.new(profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['without'], serializer: HostProfiles::IndexSerializer)
+      }
     end
   end
 
