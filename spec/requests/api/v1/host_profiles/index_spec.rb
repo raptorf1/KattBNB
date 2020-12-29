@@ -17,6 +17,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
 
     it 'returns a collection of host profiles' do
       get '/api/v1/host_profiles?cats=2&startDate=1588032000000&endDate=1588204800000', headers: headers
+      binding.pry
       expect(json_response['with'].count).to eq 2
       expect(json_response['without'].count).to eq 1
       expect(HostProfile.all.length).to eq 3
