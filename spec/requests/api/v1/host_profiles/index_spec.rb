@@ -17,7 +17,6 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
 
     it 'returns a collection of host profiles' do
       get '/api/v1/host_profiles?cats=2&startDate=1588032000000&endDate=1588204800000', headers: headers
-      binding.pry
       expect(json_response['with'].count).to eq 2
       expect(json_response['without'].count).to eq 1
       expect(HostProfile.all.length).to eq 3
@@ -32,12 +31,14 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       get '/api/v1/host_profiles?cats=2&startDate=1587945600000&endDate=1588118400000', headers: headers
       expect(json_response['with'].count).to eq 1
       expect(json_response['with'][0]['id']).to eq profile_user.id
+      expect(json_response['without'].count).to eq 2
     end
 
     it 'performs sorting according to cat params and returns host profiles accordingly' do
       get '/api/v1/host_profiles?cats=6&startDate=1588032000000&endDate=1588118400000', headers: headers
       expect(json_response['with'].count).to eq 1
       expect(json_response['with'][0]['id']).to eq profile_another_user.id
+      expect(json_response['without'].count).to eq 0
     end
 
     it 'performs sorting according to cat and date params and returns host profiles accordingly' do
@@ -75,19 +76,21 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       
       it "responds with specific host profiles according to user's location" do
         get '/api/v1/host_profiles', params: {location: another_user.location, cats: 2, startDate: 1588032000000, endDate: 1588204800000}
-        binding.pry
         expect(json_response['with'][0]['user']['location']).to eq another_user.location
-        expect(json_response.count).to eq 1
+        expect(json_response['with'].count).to eq 1
+        expect(json_response['without'].count).to eq 0
       end
 
       it "responds with specific host profiles according to user's location and sorted based on date params" do
         get '/api/v1/host_profiles', params: {location: another_user.location, cats: 2, startDate: 1588032000000, endDate: 1588291200000}
         expect(json_response['with'].count).to eq 0
+        expect(json_response['without'].count).to eq 1
       end
 
       it "responds with specific host profiles according to user's location and sorted based on cat params" do
         get '/api/v1/host_profiles', params: {location: another_user.location, cats: 10, startDate: 1588032000000, endDate: 1588204800000}
         expect(json_response['with'].count).to eq 0
+        expect(json_response['without'].count).to eq 0
       end
 
     end
