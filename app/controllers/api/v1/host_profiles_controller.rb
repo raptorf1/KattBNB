@@ -8,10 +8,16 @@ class Api::V1::HostProfilesController < ApplicationController
       render json: profiles, each_serializer: HostProfiles::IndexSerializer
     elsif params[:location]
       profiles = HostProfile.joins(:user).where(users: {location: params[:location]})
-      render json: profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate]), each_serializer: HostProfiles::IndexSerializer
+      render json: {
+        with: ActiveModel::Serializer::CollectionSerializer.new(profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['with'], serializer: HostProfiles::IndexSerializer),
+        without: ActiveModel::Serializer::CollectionSerializer.new(profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['without'], serializer: HostProfiles::IndexSerializer)
+      }
     else
       profiles = HostProfile.all
-      render json: profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate]), each_serializer: HostProfiles::IndexSerializer
+      render json: {
+        with: ActiveModel::Serializer::CollectionSerializer.new(profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['with'], serializer: HostProfiles::IndexSerializer),
+        without: ActiveModel::Serializer::CollectionSerializer.new(profiles_to_send(profiles, params[:cats], params[:startDate], params[:endDate])['without'], serializer: HostProfiles::IndexSerializer)
+      }
     end
   end
 
@@ -77,7 +83,7 @@ class Api::V1::HostProfilesController < ApplicationController
   end
 
   def profiles_to_send (profiles, cats, startDate, endDate)
-    profiles_to_send = []
+    profiles_to_send = { 'with' => [], 'without' => [] }
     booking_dates = []
     start_date = startDate.to_i
     stop_date = endDate.to_i
@@ -87,8 +93,12 @@ class Api::V1::HostProfilesController < ApplicationController
       current_date = current_date + 86400000
     end
     profiles.each do |profile|
-      if profile.max_cats_accepted >= cats.to_i && booking_dates - profile.availability == []
-        profiles_to_send.push(profile)
+      if profile.max_cats_accepted >= cats.to_i
+        if booking_dates - profile.availability == []
+          profiles_to_send['with'].push(profile)
+        else
+          profiles_to_send['without'].push(profile)
+        end
       end
     end
     profiles_to_send
