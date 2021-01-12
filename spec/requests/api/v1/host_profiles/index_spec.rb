@@ -9,7 +9,12 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
   let!(:profile_another_user) { FactoryBot.create(:host_profile, user_id: another_user.id, max_cats_accepted: 7, availability: [1588032000000, 1588118400000, 1588204800000]) }
   let(:a_third_user) { FactoryBot.create(:user, email: 'carla@craft.com', nickname: 'The hair', location: 'Rhodos') }
   let!(:profile_third_user) { FactoryBot.create(:host_profile, user_id: a_third_user.id, max_cats_accepted: 3, availability: []) }
+  let(:a_fourth_user) { FactoryBot.create(:user, email: 'ww@craft.com', nickname: 'WW1984', location: 'Sifnos') }
+  let!(:profile_fourth_user) { FactoryBot.create(:host_profile, user_id: a_fourth_user.id, max_cats_accepted: 4, availability: [1588118400000]) }
   let(:booking) { FactoryBot.create(:booking, user_id: user.id) }
+  let!(:booking2) { FactoryBot.create(:booking, user_id: user.id, host_nickname: a_fourth_user.nickname, status: 'pending', dates: [1587945600000, 1588032000000]) }
+  let!(:booking3) { FactoryBot.create(:booking, user_id: user.id, host_nickname: a_fourth_user.nickname, status: 'accepted', dates: [1387945600000, 1388032000000]) }
+  let!(:booking4) { FactoryBot.create(:booking, user_id: user.id, host_nickname: a_fourth_user.nickname, status: 'accepted', dates: [1588204800000, 2588204800000]) }
   let!(:review) { FactoryBot.create(:review, user_id: user.id, booking_id: booking.id, host_profile_id: profile_user.id) }
   let(:headers) { { HTTP_ACCEPT: 'application/json' } }
 
@@ -19,7 +24,9 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       get '/api/v1/host_profiles?cats=2&startDate=1588032000000&endDate=1588204800000', headers: headers
       expect(json_response['with'].count).to eq 2
       expect(json_response['without'].count).to eq 1
-      expect(HostProfile.all.length).to eq 3
+      expect(json_response['without'][0]['id']).to eq profile_third_user.id
+      expect(json_response['without'][0]['id']).not_to eq profile_fourth_user.id
+      expect(HostProfile.all.length).to eq 4
     end
 
     it 'returns 200 response' do
@@ -32,6 +39,8 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       expect(json_response['with'].count).to eq 1
       expect(json_response['with'][0]['id']).to eq profile_user.id
       expect(json_response['without'].count).to eq 2
+      expect(json_response['without'][0]['id']).not_to eq profile_fourth_user.id
+      expect(json_response['without'][1]['id']).not_to eq profile_fourth_user.id
     end
 
     it 'performs sorting according to cat params and returns host profiles accordingly' do
@@ -78,6 +87,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
         get '/api/v1/host_profiles', params: {location: another_user.location, cats: 2, startDate: 1588032000000, endDate: 1588204800000}
         expect(json_response['with'][0]['user']['location']).to eq another_user.location
         expect(json_response['with'].count).to eq 1
+        expect(json_response['with'][0]['id']).to eq profile_another_user.id
         expect(json_response['without'].count).to eq 0
       end
 
@@ -85,6 +95,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
         get '/api/v1/host_profiles', params: {location: another_user.location, cats: 2, startDate: 1588032000000, endDate: 1588291200000}
         expect(json_response['with'].count).to eq 0
         expect(json_response['without'].count).to eq 1
+        expect(json_response['without'][0]['id']).to eq profile_another_user.id
       end
 
       it "responds with specific host profiles according to user's location and sorted based on cat params" do

@@ -87,7 +87,6 @@ class Api::V1::BookingsController < ApplicationController
           rescue Stripe::StripeError
             StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
           end
-          booking.update(status: 'canceled')
           booking.destroy
           render json: { error: [I18n.t('controllers.bookings.create_error_1')] }, status: 422
         end
