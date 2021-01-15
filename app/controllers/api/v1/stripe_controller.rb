@@ -134,7 +134,16 @@ class Api::V1::StripeController < ApplicationController
             if host.length == 1
               profile = HostProfile.where(user_id: host[0].id)
               user = User.where(id: booking_to_create.user_id)
-              if (booking_to_create.dates - profile[0].availability).empty? == true
+              now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
+              now_epoch_javascript = (now.to_f * 1000).to_i
+              host_booked_dates = []
+              host_bookings = Booking.where(host_nickname: profile[0].user.nickname)
+              host_bookings.each do |host_booking|
+                if host_booking.id != booking.id && (host_booking.status == 'pending' || (host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript))
+                  host_booked_dates.push(host_booking.dates)
+                end
+              end
+              if (booking_to_create.dates - profile[0].availability).empty? == true || (booking_to_create.dates - host_booked_dates.flatten.sort) == booking_to_create.dates
                 new_availability = profile[0].availability - booking_to_create.dates
                 profile.update(availability: new_availability)
                 BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_create_booking(host[0], booking_to_create, user[0])
