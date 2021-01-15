@@ -98,8 +98,10 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['error']).to eq ["Message can't be blank"]
         expect(response.status).to eq 422
         expect(user.booking.length).to eq 2
-        expect(user.booking.first.id).to eq booking.id
-        expect(user.booking.last.id).to eq booking2.id
+        first_booking = user.booking.select { |user_booking| user_booking.id == booking.id }
+        second_booking = user.booking.select { |user_booking| user_booking.id == booking2.id }
+        expect(first_booking.length).to eq 1
+        expect(second_booking.length).to eq 1
         expect(Delayed::Job.all.count).to eq 1
       end
 
@@ -119,8 +121,10 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['error']).to eq ['Message is too long (maximum is 400 characters)']
         expect(response.status).to eq 422
         expect(user.booking.length).to eq 2
-        expect(user.booking.first.id).to eq booking.id
-        expect(user.booking.last.id).to eq booking2.id
+        first_booking = user.booking.select { |user_booking| user_booking.id == booking.id }
+        second_booking = user.booking.select { |user_booking| user_booking.id == booking2.id }
+        expect(first_booking.length).to eq 1
+        expect(second_booking.length).to eq 1
         expect(Delayed::Job.all.count).to eq 1
       end
 
@@ -140,8 +144,10 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['error']).to eq ['Someone else just requested to book these days with this host!']
         expect(response.status).to eq 422
         expect(user.booking.length).to eq 2
-        expect(user.booking.first.id).to eq booking.id
-        expect(user.booking.last.id).to eq booking2.id
+        first_booking = user.booking.select { |user_booking| user_booking.id == booking.id }
+        second_booking = user.booking.select { |user_booking| user_booking.id == booking2.id }
+        expect(first_booking.length).to eq 1
+        expect(second_booking.length).to eq 1
         expect(Delayed::Job.all.count).to eq 1
       end
 
@@ -161,8 +167,10 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['error']).to eq ['Someone else just requested to book these days with this host!']
         expect(response.status).to eq 422
         expect(user.booking.length).to eq 2
-        expect(user.booking.first.id).to eq booking.id
-        expect(user.booking.last.id).to eq booking2.id
+        first_booking = user.booking.select { |user_booking| user_booking.id == booking.id }
+        second_booking = user.booking.select { |user_booking| user_booking.id == booking2.id }
+        expect(first_booking.length).to eq 1
+        expect(second_booking.length).to eq 1
         expect(Delayed::Job.all.count).to eq 1
       end
 
@@ -182,8 +190,10 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(json_response['error']).to eq ['Booking cannot be created because the host requested an account deletion! Please find another host in the results page.']
         expect(response.status).to eq 422
         expect(user.booking.length).to eq 2
-        expect(user.booking.first.id).to eq booking.id
-        expect(user.booking.last.id).to eq booking2.id
+        first_booking = user.booking.select { |user_booking| user_booking.id == booking.id }
+        second_booking = user.booking.select { |user_booking| user_booking.id == booking2.id }
+        expect(first_booking.length).to eq 1
+        expect(second_booking.length).to eq 1
         expect(Delayed::Job.all.count).to eq 1
       end
 
