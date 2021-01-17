@@ -51,7 +51,7 @@ class Api::V1::BookingsController < ApplicationController
           dates = []
           bookings = Booking.where(host_nickname: params[:host_nickname])
           bookings.each do |booking|
-            next unless booking.status == 'pending' || (booking.status == 'accepted' && booking.dates.last > now_epoch_javascript)
+            next unless booking.status == 'accepted' && booking.dates.last > now_epoch_javascript
               dates.push(booking.dates)
           end
           render json: dates.flatten.sort
@@ -81,7 +81,7 @@ class Api::V1::BookingsController < ApplicationController
         host_booked_dates = []
         host_bookings = Booking.where(host_nickname: profile[0].user.nickname)
         host_bookings.each do |host_booking|
-          if host_booking.id != booking.id && (host_booking.status == 'pending' || (host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript))
+          if host_booking.id != booking.id && (host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript)
             host_booked_dates.push(host_booking.dates)
           end
         end
