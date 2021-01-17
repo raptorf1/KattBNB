@@ -18,8 +18,8 @@ RSpec.describe Api::V1::BookingsController, type: :request do
   describe 'GET /api/v1/bookings' do
 
     before do
-      booking = FactoryBot.create(:booking, user_id: user1.id, host_nickname: user2.nickname, dates: [1,2,3])
-      booking2 = FactoryBot.create(:booking, user_id: user3.id, host_nickname: user2.nickname, dates: [4,5,6])
+      booking = FactoryBot.create(:booking, user_id: user1.id, host_nickname: user2.nickname, status: 'accepted', dates: [1, 2, 3, 2562889600000])
+      booking2 = FactoryBot.create(:booking, user_id: user3.id, host_nickname: user2.nickname, status: 'accepted', dates: [4, 5, 6, 2462889600000])
       review = FactoryBot.create(:review, user_id: user1.id, host_profile_id: profile2.id, booking_id: booking.id)
     end
 
@@ -42,12 +42,12 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
     it 'returns relevant stats for host if appropriate params are passed' do
       get "/api/v1/bookings?stats=yes&host_nickname=#{user2.nickname}&user_id=#{user2.id}", headers: headers2
-      expect(json_response['stats'].to_json).to eq "{\"in_requests\":\"2\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"in_unpaid\":\"0\",\"out_requests\":\"0\",\"out_upcoming\":\"0\",\"out_history\":\"0\",\"out_unpaid\":\"0\"}"
+      expect(json_response['stats'].to_json).to eq "{\"in_requests\":\"0\",\"in_upcoming\":\"2\",\"in_history\":\"0\",\"in_unpaid\":\"2\",\"out_requests\":\"0\",\"out_upcoming\":\"0\",\"out_history\":\"0\",\"out_unpaid\":\"0\"}"
     end
 
     it 'returns relevant stats for user if appropriate params are passed' do
       get "/api/v1/bookings?stats=yes&host_nickname=#{user1.nickname}&user_id=#{user1.id}", headers: headers1
-      expect(json_response['stats'].to_json).to eq "{\"in_requests\":\"0\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"in_unpaid\":\"0\",\"out_requests\":\"1\",\"out_upcoming\":\"0\",\"out_history\":\"0\",\"out_unpaid\":\"0\"}"
+      expect(json_response['stats'].to_json).to eq "{\"in_requests\":\"0\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"in_unpaid\":\"0\",\"out_requests\":\"0\",\"out_upcoming\":\"1\",\"out_history\":\"0\",\"out_unpaid\":\"1\"}"
     end
 
     it 'performance stats for stat returning' do
@@ -65,7 +65,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
 
     it 'returns only dates sorted to 1 array of all booking dates to the involved host' do
       get "/api/v1/bookings?dates=only&stats=no&host_nickname=#{user2.nickname}", headers: headers2
-      expect(json_response).to eq [1,2,3,4,5,6]
+      expect(json_response).to eq [1, 2, 3, 4, 5, 6, 2462889600000, 2562889600000]
     end
 
     it 'returns a booking by host nickname in under 1 ms and with iteration rate of 5000000 per second' do
