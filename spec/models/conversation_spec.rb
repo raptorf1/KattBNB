@@ -57,7 +57,7 @@ RSpec.describe Conversation, type: :model do
       conversation1 = FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id)
       conversation2 = FactoryBot.create(:conversation, user1_id: user3.id, user2_id: user1.id)
       conversation3 = FactoryBot.create(:conversation, user1_id: user2.id, user2_id: user3.id)
-      expect { user1.destroy }.to perform_under(50).ms.sample(20).times
+      expect { user1.destroy }.to perform_under(100).ms.sample(20).times
       expect { user1.destroy }.to perform_at_least(100).ips
     end
 

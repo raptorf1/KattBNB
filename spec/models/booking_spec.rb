@@ -132,7 +132,7 @@ RSpec.describe Booking, type: :model do
       profile = FactoryBot.create(:host_profile, user_id: host.id)
       booking = FactoryBot.create(:booking, host_nickname: host.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000])
       review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
-      expect { booking.destroy }.to perform_under(50).ms.sample(20).times
+      expect { booking.destroy }.to perform_under(100).ms.sample(20).times
       expect { booking.destroy }.to perform_at_least(100).ips
     end
   end
