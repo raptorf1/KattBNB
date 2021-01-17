@@ -30,14 +30,14 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       expect(host_profile_user.description).to eq 'I am the best cat sitter in the whole wide world!!!'
     end
 
-    it 'updates fields in under 1 ms and with iteration rate of at least 5000000 per second' do
+    it 'updates fields in under 1 ms and with iteration rate of at least 3000000 per second' do
       update_request = patch "/api/v1/host_profiles/#{host_profile_user.id}", params: {
         description: 'I am the best cat sitter in the whole wide world!!!',
         price_per_day_1_cat: '250'
       },
       headers: headers_user
       expect { update_request }.to perform_under(1).ms.sample(20).times
-      expect { update_request }.to perform_at_least(5000000).ips
+      expect { update_request }.to perform_at_least(3000000).ips
     end
 
     it "does not update another user's host profile" do

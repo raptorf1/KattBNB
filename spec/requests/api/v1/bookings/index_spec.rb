@@ -80,10 +80,10 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(json_response.count).to eq 1
     end
 
-    it 'returns a booking by user id in under 1 ms and with iteration rate of 5000000 per second' do
+    it 'returns a booking by user id in under 1 ms and with iteration rate of 3000000 per second' do
       get_request = get '/api/v1/bookings', params: {stats: 'no', user_id: user1.id}, headers: headers1
       expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(5000000).ips
+      expect { get_request }.to perform_at_least(3000000).ips
     end
 
     it 'has correct keys in the response' do
