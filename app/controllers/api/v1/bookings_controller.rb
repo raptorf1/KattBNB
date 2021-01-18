@@ -85,7 +85,7 @@ class Api::V1::BookingsController < ApplicationController
             host_booked_dates.push(host_booking.dates)
           end
         end
-        if (booking.dates - profile[0].availability).empty? == true || (booking.dates - host_booked_dates.flatten.sort) == booking.dates
+        if (booking.dates - host_booked_dates.flatten.sort) == booking.dates
           render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200
           BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_create_booking(host[0], booking, user[0])
         else
@@ -126,14 +126,36 @@ class Api::V1::BookingsController < ApplicationController
       booking.update(status: params[:status], host_message: params[:host_message])
       case
         when booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'accepted'
-          begin
-            Stripe::PaymentIntent.capture(booking.payment_intent_id)
-            render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
-            booking.update(host_description: profile[0].description, host_full_address: profile[0].full_address, host_real_lat: profile[0].latitude, host_real_long: profile[0].longitude)
-            BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_accepted_booking(host[0], booking, user[0])
-          rescue Stripe::StripeError
-            booking.update(status: 'pending', host_message: nil)
-            render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
+          now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
+          now_epoch_javascript = (now.to_f * 1000).to_i
+          host_booked_dates = []
+          host_bookings = Booking.where(host_nickname: profile[0].user.nickname)
+          host_bookings.each do |host_booking|
+            if host_booking.id != booking.id && (host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript)
+              host_booked_dates.push(host_booking.dates)
+            end
+          end
+          if (booking.dates - host_booked_dates.flatten.sort) == booking.dates
+            begin
+              Stripe::PaymentIntent.capture(booking.payment_intent_id)
+              render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
+              booking.update(host_description: profile[0].description, host_full_address: profile[0].full_address, host_real_lat: profile[0].latitude, host_real_long: profile[0].longitude)
+              new_availability = profile[0].availability - booking.dates
+              profile.update(availability: new_availability)
+              BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_accepted_booking(host[0], booking, user[0])
+            rescue Stripe::StripeError
+              booking.update(status: 'pending', host_message: nil)
+              render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
+            end
+          else
+            render json: { error: I18n.t('controllers.bookings.update_error_same_dates') }, status: 422
+            booking.update(status: 'canceled', host_message: 'This booking got canceled by KattBNB. The host has accepted another booking in that date range.')
+            BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_declined_booking(host[0], booking, user[0])
+            begin
+              Stripe::PaymentIntent.cancel(booking.payment_intent_id)
+            rescue Stripe::StripeError
+              StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
+            end
           end
         when booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'declined'
           render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
