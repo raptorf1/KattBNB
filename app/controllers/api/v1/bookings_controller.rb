@@ -87,8 +87,6 @@ class Api::V1::BookingsController < ApplicationController
         end
         if (booking.dates - profile[0].availability).empty? == true || (booking.dates - host_booked_dates.flatten.sort) == booking.dates
           render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200
-          new_availability = profile[0].availability - booking.dates
-          profile.update(availability: new_availability)
           BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_create_booking(host[0], booking, user[0])
         else
           begin

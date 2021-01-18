@@ -39,11 +39,6 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(Delayed::Job.all.count).to eq 1
       end
 
-      it 'alters hosts availability' do
-        profile2.reload
-        expect(profile2.availability).to eq [1562803200000, 1562889600000, 1563148800000]
-      end
-
       it 'creates another booking and sends a second email' do
         post '/api/v1/bookings', params: {
           number_of_cats: '23',
@@ -119,7 +114,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(Delayed::Job.all.count).to eq 1
       end
 
-      it "Booking cannot be created if host already accepted someone else's booking with similar dates" do
+      it "Booking cannot be created if host already accepted someone else's booking request with similar dates" do
         post '/api/v1/bookings', params: {
           number_of_cats: '2',
           host_nickname: 'JJoker',
