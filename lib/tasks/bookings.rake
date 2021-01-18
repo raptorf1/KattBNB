@@ -8,7 +8,6 @@ namespace :bookings do
       if ((Time.current - booking.created_at)/1.hour).round > 72
         user = User.where(id: booking.user_id)
         host = User.where(nickname: booking.host_nickname)
-        profile = HostProfile.where(user_id: host[0].id)
         booking.update_column(:status, 'canceled')
         booking.update_column(:host_message, 'cancelled by system')
         begin
@@ -17,8 +16,6 @@ namespace :bookings do
           StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
         end
         cancelled_bookings.push(booking)
-        new_availability = (profile[0].availability + booking.dates).sort
-        profile.update(availability: new_availability)
         BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_cancelled_booking(host[0], booking, user[0])
         BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_cancelled_booking(host[0], booking, user[0])
       end
