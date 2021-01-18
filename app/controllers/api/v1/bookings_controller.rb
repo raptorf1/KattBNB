@@ -136,8 +136,6 @@ class Api::V1::BookingsController < ApplicationController
             render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
           end
         when booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'declined'
-          new_availability = (profile[0].availability + booking.dates).sort
-          profile.update(availability: new_availability)
           render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
           BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_declined_booking(host[0], booking, user[0])
           begin
