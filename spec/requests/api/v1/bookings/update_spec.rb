@@ -57,7 +57,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       },
       headers: headers_host1
 
-      expect(response.status).to eq 422
+      expect(response.status).to eq 427
       expect(json_response['error']).to eq 'You have already accepted a booking in that date range. This one will be canceled and we will notify the user.'
       expect(Delayed::Job.all.count).to eq 2
       expect(Delayed::Job.first.handler.include?('notify_user_declined_booking')).to eq true

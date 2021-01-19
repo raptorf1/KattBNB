@@ -148,7 +148,7 @@ class Api::V1::BookingsController < ApplicationController
               render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
             end
           else
-            render json: { error: I18n.t('controllers.bookings.update_error_same_dates') }, status: 422
+            render json: { error: I18n.t('controllers.bookings.update_error_same_dates') }, status: 427
             booking.update(status: 'canceled', host_message: 'This booking got canceled by KattBNB. The host has accepted another booking in that date range.')
             BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_declined_booking(host[0], booking, user[0])
             begin
