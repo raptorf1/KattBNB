@@ -1,5 +1,7 @@
 class Api::V1::HostProfilesController < ApplicationController
-  
+
+  include BookingsConcern
+
   before_action :authenticate_api_v1_user!, only: [:show, :create, :update]
 
   def index
@@ -74,17 +76,9 @@ class Api::V1::HostProfilesController < ApplicationController
     end
     profiles.each do |profile|
       if profile.max_cats_accepted >= cats.to_i
-        now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
-        now_epoch_javascript = (now.to_f * 1000).to_i
-        host_booked_dates = []
-        host_bookings = Booking.where(host_nickname: profile.user.nickname)
-        host_bookings.each do |booking|
-          next unless booking.status == 'accepted' && booking.dates.last > now_epoch_javascript
-            host_booked_dates.push(booking.dates)
-        end
         if booking_dates - profile.availability == []
           profiles_to_send['with'].push(profile)
-        elsif booking_dates - host_booked_dates.flatten.sort == booking_dates
+        elsif booking_dates - find_host_bookings(profile.user.nickname, 0) == booking_dates
           profiles_to_send['without'].push(profile)
         end
       end

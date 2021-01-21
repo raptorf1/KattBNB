@@ -1,5 +1,7 @@
 class Api::V1::BookingsController < ApplicationController
-  
+
+  include BookingsConcern
+
   before_action :authenticate_api_v1_user!, only: [:index, :create, :update]
 
   def index
@@ -46,15 +48,7 @@ class Api::V1::BookingsController < ApplicationController
         render json: { stats: {"in_requests": "#{incoming_requests.length}", "in_upcoming": "#{incoming_upcoming.length}", "in_history": "#{incoming_history.length}", "in_unpaid": "#{incoming_unpaid.length}", "out_requests": "#{outgoing_requests.length}", "out_upcoming": "#{outgoing_upcoming.length}", "out_history": "#{outgoing_history.length}", "out_unpaid": "#{outgoing_unpaid.length}"} }, status: 200
       when params[:stats] == 'no' && params[:host_nickname] == current_api_v1_user.nickname
         if params.has_key?('dates')
-          now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
-          now_epoch_javascript = (now.to_f * 1000).to_i
-          dates = []
-          bookings = Booking.where(host_nickname: params[:host_nickname])
-          bookings.each do |booking|
-            next unless booking.status == 'accepted' && booking.dates.last > now_epoch_javascript
-              dates.push(booking.dates)
-          end
-          render json: dates.flatten.sort
+          render json: find_host_bookings(params[:host_nickname], 0)
         else
           bookings = Booking.where(host_nickname: params[:host_nickname])
           render json: bookings, each_serializer: Bookings::IndexSerializer
@@ -76,16 +70,7 @@ class Api::V1::BookingsController < ApplicationController
       if host.length == 1
         profile = HostProfile.where(user_id: host[0].id)
         user = User.where(id: booking.user_id)
-        now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
-        now_epoch_javascript = (now.to_f * 1000).to_i
-        host_booked_dates = []
-        host_bookings = Booking.where(host_nickname: profile[0].user.nickname)
-        host_bookings.each do |host_booking|
-          if host_booking.id != booking.id && (host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript)
-            host_booked_dates.push(host_booking.dates)
-          end
-        end
-        if (booking.dates - host_booked_dates.flatten.sort) == booking.dates
+        if (booking.dates - find_host_bookings(profile[0].user.nickname, booking.id)) == booking.dates
           render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200
           BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_create_booking(host[0], booking, user[0])
         else
@@ -126,16 +111,7 @@ class Api::V1::BookingsController < ApplicationController
       booking.update(status: params[:status], host_message: params[:host_message])
       case
         when booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'accepted'
-          now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
-          now_epoch_javascript = (now.to_f * 1000).to_i
-          host_booked_dates = []
-          host_bookings = Booking.where(host_nickname: profile[0].user.nickname)
-          host_bookings.each do |host_booking|
-            if host_booking.id != booking.id && (host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript)
-              host_booked_dates.push(host_booking.dates)
-            end
-          end
-          if (booking.dates - host_booked_dates.flatten.sort) == booking.dates
+          if (booking.dates - find_host_bookings(profile[0].user.nickname, booking.id)) == booking.dates
             begin
               Stripe::PaymentIntent.capture(booking.payment_intent_id)
               render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200

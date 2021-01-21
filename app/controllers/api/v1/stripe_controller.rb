@@ -1,5 +1,5 @@
 class Api::V1::StripeController < ApplicationController
-  
+
   before_action :authenticate_api_v1_user!, only: [:index]
 
   def index
