@@ -3,6 +3,7 @@ module BookingsConcern
 
   included do
     helper_method :find_host_bookings
+    helper_method :cancel_payment_intent
   end
 
   def find_host_bookings (nickname, id_number)
@@ -22,4 +23,14 @@ module BookingsConcern
     end
     host_booked_dates.flatten.sort
   end
+
+  def cancel_payment_intent(booking_payment_intent_id)
+    Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
+    begin
+      Stripe::PaymentIntent.cancel(booking_payment_intent_id)
+    rescue Stripe::StripeError
+      StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking_payment_intent_id)
+    end
+  end
+
 end

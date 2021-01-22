@@ -63,7 +63,6 @@ class Api::V1::BookingsController < ApplicationController
   end
 
   def create
-    Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
     booking = Booking.create(booking_params)
     if booking.persisted?
       host = User.where(nickname: booking.host_nickname)
@@ -74,29 +73,17 @@ class Api::V1::BookingsController < ApplicationController
           render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200
           BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_create_booking(host[0], booking, user[0])
         else
-          begin
-            Stripe::PaymentIntent.cancel(booking.payment_intent_id)
-          rescue Stripe::StripeError
-            StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
-          end
+          cancel_payment_intent(booking.payment_intent_id)
           booking.destroy
           render json: { error: [I18n.t('controllers.bookings.create_error_1')] }, status: 422
         end
       else
-        begin
-          Stripe::PaymentIntent.cancel(booking.payment_intent_id)
-        rescue Stripe::StripeError
-          StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
-        end
+        cancel_payment_intent(booking.payment_intent_id)
         booking.destroy
         render json: { error: [I18n.t('controllers.bookings.create_error_2')] }, status: 422
       end
     else
-      begin
-        Stripe::PaymentIntent.cancel(booking.payment_intent_id)
-      rescue Stripe::StripeError
-        StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
-      end
+      cancel_payment_intent(booking.payment_intent_id)
       render json: { error: booking.errors.full_messages }, status: 422
     end
   end
@@ -127,20 +114,12 @@ class Api::V1::BookingsController < ApplicationController
             render json: { error: I18n.t('controllers.bookings.update_error_same_dates') }, status: 427
             booking.update(status: 'canceled', host_message: 'This booking got canceled by KattBNB. The host has accepted another booking in that date range.')
             BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_declined_booking(host[0], booking, user[0])
-            begin
-              Stripe::PaymentIntent.cancel(booking.payment_intent_id)
-            rescue Stripe::StripeError
-              StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
-            end
+            cancel_payment_intent(booking.payment_intent_id)
           end
         when booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'declined'
           render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
           BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_user_declined_booking(host[0], booking, user[0])
-          begin
-            Stripe::PaymentIntent.cancel(booking.payment_intent_id)
-          rescue Stripe::StripeError
-            StripeMailer.delay(:queue => 'stripe_email_notifications').notify_orphan_payment_intent_to_cancel(booking.payment_intent_id)
-          end
+          cancel_payment_intent(booking.payment_intent_id)
         else
           render json: { error: booking.errors.full_messages }, status: 422
       end
