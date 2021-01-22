@@ -42,9 +42,9 @@ RSpec.describe ConversationsChannel, type: :channel do
     expect { subscription_request }.to perform_under(1).ms.sample(20).times
   end
 
-  it 'subscribes to a stream with iteration of at least 5000000 per second' do
+  it 'subscribes to a stream with iteration of at least 3000000 per second' do
     subscription_request = subscribe(conversations_id: conversation.id)
-    expect { subscription_request }.to perform_at_least(5000000).ips
+    expect { subscription_request }.to perform_at_least(3000000).ips
   end
 
   it 'transmits relevant errors when message arguments are not within permitted params' do
@@ -86,12 +86,12 @@ RSpec.describe ConversationsChannel, type: :channel do
     expect(conversation3.hidden).to eq nil
   end
 
-  it 'updates conversation hidden field to nil and broadcasts message in under 1 ms and with iteration rate of 5000000 per second' do
+  it 'updates conversation hidden field to nil and broadcasts message in under 1 ms and with iteration rate of 3000000 per second' do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation3.id)
     send_message = subscription.send_message({'conversation_id' => conversation3.id, 'user_id' => user3.id, 'body' => 'Batman, I love you!'})
     expect { send_message }.to perform_under(1).ms.sample(20).times
-    expect { send_message }.to perform_at_least(5000000).ips
+    expect { send_message }.to perform_at_least(3000000).ips
   end
 
   it 'broadcasts message with image attached' do

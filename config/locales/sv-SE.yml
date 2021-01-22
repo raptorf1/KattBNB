@@ -13,12 +13,12 @@ sv-SE:
       create_error_2: "Bokningsförfrågan kunde inte skapas eftersom kattvakten begärde att kontot skulle raderas! Vänligen hitta en annan kvattvakt på resultatsidan."
       update_success: "Du har nu uppdaterat den här bokningen!"
       update_error: "Vi kunde inte uppdatera denna bokning eftersom användaren begärde att få sitt konto raderat! Vänligen återvänd till din bokningssida."
+      update_error_same_dates: "Du har redan accepterat en bokning inom det datumintervallet. Den här kommer att avbokas och vi kommer att meddela användaren."
     conversations:
       create_exists: "Konversation finns redan!"
       update_success: "Uppdatering lyckades!"
     host_profiles:
       update_success: "Du har uppdaterat din kattvaktsprofil!"
-      update_error: "Det går inte att uppdatera tillgängligheten. Du har inkommande bokningar på några av dessa datum! Uppdatera sidan eller besök din bokningsdashboard."
       stripe_create_error: "Ett problem uppstod när ditt konto skulle skapas hos vår betalväxel. Vänligen försök igen senare."
   channels:
     conversations:

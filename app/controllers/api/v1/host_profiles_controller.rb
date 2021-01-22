@@ -1,5 +1,7 @@
 class Api::V1::HostProfilesController < ApplicationController
-  
+
+  include BookingsConcern
+
   before_action :authenticate_api_v1_user!, only: [:show, :create, :update]
 
   def index
@@ -33,27 +35,7 @@ class Api::V1::HostProfilesController < ApplicationController
 
   def update
     profile = HostProfile.find(params[:id])
-    if current_api_v1_user.id == profile.user_id && params[:availability]
-      host = User.where(id: profile.user_id)
-      bookings = Booking.where(host_nickname: host[0].nickname, status: 'pending')
-      if bookings.length > 0
-        dates = []
-        bookings.each do |booking|
-          dates.push(booking.dates)
-        end
-        one_array_dates = dates.flatten
-        comparison = params[:availability].map(&:to_i)&one_array_dates
-        if comparison.length > 0
-          render json: { error: [I18n.t('controllers.host_profiles.update_error')] }, status: 422
-        else
-          profile.update(host_profile_params)
-          profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
-        end
-      else
-        profile.update(host_profile_params)
-        profile.persisted? == true && (render json: { message: I18n.t('controllers.host_profiles.update_success') }, status: 200)
-      end
-    elsif current_api_v1_user.id == profile.user_id && params[:code]
+    if current_api_v1_user.id == profile.user_id && params[:code]
       begin
         Stripe.api_key = ENV['OFFICIAL'] == 'yes' ? Rails.application.credentials.STRIPE_API_KEY_PROD : Rails.application.credentials.STRIPE_API_KEY_DEV
         response = Stripe::OAuth.token({
@@ -94,17 +76,9 @@ class Api::V1::HostProfilesController < ApplicationController
     end
     profiles.each do |profile|
       if profile.max_cats_accepted >= cats.to_i
-        now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
-        now_epoch_javascript = (now.to_f * 1000).to_i
-        host_booked_dates = []
-        host_bookings = Booking.where(host_nickname: profile.user.nickname)
-        host_bookings.each do |booking|
-          next unless booking.status == 'pending' || (booking.status == 'accepted' && booking.dates.last > now_epoch_javascript)
-            host_booked_dates.push(booking.dates)
-        end
         if booking_dates - profile.availability == []
           profiles_to_send['with'].push(profile)
-        elsif booking_dates - host_booked_dates.flatten.sort == booking_dates
+        elsif booking_dates - find_host_bookings(profile.user.nickname, 0) == booking_dates
           profiles_to_send['without'].push(profile)
         end
       end

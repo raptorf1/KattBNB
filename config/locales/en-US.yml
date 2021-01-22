@@ -13,12 +13,12 @@ en-US:
       create_error_2: "Booking cannot be created because the host requested an account deletion! Please find another host in the results page."
       update_success: "You have successfully updated this booking!"
       update_error: "We cannot update this booking because the user requested an account deletion! Please go back to your bookings page."
+      update_error_same_dates: "You have already accepted a booking in that date range. This one will be canceled and we will notify the user."
     conversations:
       create_exists: "Conversation already exists!"
       update_success: "Success!"
     host_profiles:
       update_success: "You have successfully updated your host profile!"
-      update_error: "Cannot update availability. You have incoming bookings to some of those dates! Refresh the page or visit your bookings dashboard."
       stripe_create_error: "There was a problem creating your account with our payments infrastructure provider. Please try again later."
   channels:
     conversations:

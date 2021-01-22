@@ -1,5 +1,5 @@
 class Api::V1::StripeController < ApplicationController
-  
+
   before_action :authenticate_api_v1_user!, only: [:index]
 
   def index
@@ -139,13 +139,11 @@ class Api::V1::StripeController < ApplicationController
               host_booked_dates = []
               host_bookings = Booking.where(host_nickname: profile[0].user.nickname)
               host_bookings.each do |host_booking|
-                if host_booking.id != booking_to_create.id && (host_booking.status == 'pending' || (host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript))
+                if host_booking.id != booking_to_create.id && (host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript)
                   host_booked_dates.push(host_booking.dates)
                 end
               end
-              if (booking_to_create.dates - profile[0].availability).empty? == true || (booking_to_create.dates - host_booked_dates.flatten.sort) == booking_to_create.dates
-                new_availability = profile[0].availability - booking_to_create.dates
-                profile.update(availability: new_availability)
+              if (booking_to_create.dates - host_booked_dates.flatten.sort) == booking_to_create.dates
                 BookingsMailer.delay(:queue => 'bookings_email_notifications').notify_host_create_booking(host[0], booking_to_create, user[0])
               else
                 begin

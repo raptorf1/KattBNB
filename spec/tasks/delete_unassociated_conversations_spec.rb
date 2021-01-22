@@ -54,8 +54,8 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
     expect { task.execute }.to output("2 unassociated conversation(s) succesfully deleted!\n").to_stdout
   end
 
-  it 'performs under 30 ms' do
-    expect { task.execute }.to perform_under(30).ms.sample(20).times
+  it 'performs under 60 ms' do
+    expect { task.execute }.to perform_under(60).ms.sample(20).times
   end
 
   it 'performs at least 500 iterations per second' do
