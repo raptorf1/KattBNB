@@ -26,7 +26,7 @@ gem 'stripe', '~> 5.23', '>= 5.23.1'
 group :development, :test do
   gem 'pry-rails'
   gem 'pry-byebug'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '3.9.1'
   gem 'shoulda-matchers'
   gem 'factory_bot_rails'
   gem 'coveralls', require: false
