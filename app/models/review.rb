@@ -1,5 +1,4 @@
 class Review < ApplicationRecord
-
   after_create_commit :update_host_score
 
   belongs_to :user
@@ -12,8 +11,7 @@ class Review < ApplicationRecord
 
   def update_host_score
     profile = HostProfile.find(self.host_profile_id)
-    average_score = profile.review.sum(&:score)/profile.review.count.to_f
+    average_score = profile.review.sum(&:score) / profile.review.count.to_f
     profile.update_column(:score, average_score)
   end
-
 end

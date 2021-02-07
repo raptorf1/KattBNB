@@ -1,0 +1,10 @@
+{
+  "printWidth": 120,
+  "rubyArrayLiteral": true,
+  "rubyHashLabel": true,
+  "rubyModifier": true,
+  "rubySingleQuote": true,
+  "rubyToProc": false,
+  "tabWidth": 2,
+  "trailingComma": "none"
+}

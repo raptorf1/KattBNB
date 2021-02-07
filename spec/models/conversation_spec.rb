@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe Conversation, type: :model do
   it 'should have a valid Factory' do
@@ -25,7 +23,7 @@ RSpec.describe Conversation, type: :model do
     it { is_expected.to belong_to(:user2) }
   end
 
-  describe "Relations" do
+  describe 'Relations' do
     it { is_expected.to have_many(:message) }
   end
 
@@ -60,7 +58,5 @@ RSpec.describe Conversation, type: :model do
       expect { user1.destroy }.to perform_under(100).ms.sample(20).times
       expect { user1.destroy }.to perform_at_least(100).ips
     end
-
   end
-
 end

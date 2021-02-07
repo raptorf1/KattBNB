@@ -1,11 +1,17 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe ReportsMailer, type: :mailer do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let(:booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, dates: [1,2,3,4,5,6,7,8,9], price_total: 1550.06) }
+  let(:booking) do
+    FactoryBot.create(
+      :booking,
+      user_id: user.id,
+      host_nickname: host.nickname,
+      dates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      price_total: 1550.06
+    )
+  end
   let(:new_report_mail) { ReportsMailer.bookings_revenue_and_vat(booking) }
 
   describe 'bookings_revenue_and_vat' do
@@ -33,8 +39,7 @@ RSpec.describe ReportsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { new_report_mail }.to perform_at_least(800000).ips
+      expect { new_report_mail }.to perform_at_least(800_000).ips
     end
   end
-
 end

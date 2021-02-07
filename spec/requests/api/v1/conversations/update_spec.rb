@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
@@ -17,12 +15,8 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:headers_no_auth) { { HTTP_ACCEPT: 'application/json' } }
 
   describe 'PATCH /api/v1/conversations/id' do
-
     it 'updates hidden field of certain conversation if action comes from associated host' do
-      patch "/api/v1/conversations/#{conversation1.id}", params: {
-        hidden: user1.id
-      },
-      headers: headers_user1
+      patch "/api/v1/conversations/#{conversation1.id}", params: { hidden: user1.id }, headers: headers_user1
       expect(response.status).to eq 200
       expect(json_response['message']).to eq 'Success!'
       conversation1.reload
@@ -30,19 +24,14 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
     end
 
     it 'updates hidden field of certain conversation in under 1 ms and with iteration rate of 5000000 per second' do
-      patch_request = patch "/api/v1/conversations/#{conversation1.id}", params: {
-        hidden: user1.id
-      },
-      headers: headers_user1
+      patch_request =
+        patch "/api/v1/conversations/#{conversation1.id}", params: { hidden: user1.id }, headers: headers_user1
       expect { patch_request }.to perform_under(1).ms.sample(20).times
-      expect { patch_request }.to perform_at_least(5000000).ips
+      expect { patch_request }.to perform_at_least(5_000_000).ips
     end
 
     it 'does not update hidden field of certain conversation if action comes from an unassociated host' do
-      patch "/api/v1/conversations/#{conversation1.id}", params: {
-        hidden: user3.id
-      },
-      headers: headers_user3
+      patch "/api/v1/conversations/#{conversation1.id}", params: { hidden: user3.id }, headers: headers_user3
       expect(response.status).to eq 422
       expect(json_response['error']).to eq 'You cannot perform this action!'
     end
@@ -55,22 +44,17 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
 
     it 'deletes coversation if hidden field is not nil' do
       expect(Conversation.all.length).to eq 2
-      patch "/api/v1/conversations/#{conversation2.id}", params: {
-        hidden: user2.id
-      },
-      headers: headers_user3
+      patch "/api/v1/conversations/#{conversation2.id}", params: { hidden: user2.id }, headers: headers_user3
       expect(response.status).to eq 204
       expect(Conversation.all.length).to eq 1
       expect(Conversation.first.id).to eq conversation1.id
     end
 
     it 'deletes coversation if hidden field is not nil in under 1 ms and with iteration rate of 5000000 per second' do
-      patch_request = patch "/api/v1/conversations/#{conversation2.id}", params: {
-        hidden: user2.id
-      },
-      headers: headers_user3
+      patch_request =
+        patch "/api/v1/conversations/#{conversation2.id}", params: { hidden: user2.id }, headers: headers_user3
       expect { patch_request }.to perform_under(1).ms.sample(20).times
-      expect { patch_request }.to perform_at_least(5000000).ips
+      expect { patch_request }.to perform_at_least(5_000_000).ips
     end
   end
 end

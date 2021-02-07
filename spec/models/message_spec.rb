@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe Message, type: :model do
   it 'should have a valid Factory' do
@@ -25,7 +23,11 @@ RSpec.describe Message, type: :model do
 
   describe 'Attached image' do
     it 'is valid' do
-      subject.image.attach(io: File.open('spec/fixtures/greece.jpg'), filename: 'attachment.jpg', content_type: 'image/jpg')
+      subject.image.attach(
+        io: File.open('spec/fixtures/greece.jpg'),
+        filename: 'attachment.jpg',
+        content_type: 'image/jpg'
+      )
       expect(subject.image).to be_attached
     end
   end
@@ -77,7 +79,5 @@ RSpec.describe Message, type: :model do
       expect { user1.destroy }.to perform_under(150).ms.sample(20).times
       expect { user1.destroy }.to perform_at_least(150).ips
     end
-
   end
-
 end

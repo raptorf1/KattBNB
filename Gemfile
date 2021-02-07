@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
-  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
   "https://github.com/#{repo_name}.git"
 end
 
@@ -22,6 +22,7 @@ gem 'newrelic_rpm'
 gem 'icalendar'
 gem 'delayed_job_active_record'
 gem 'stripe', '~> 5.23', '>= 5.23.1'
+gem 'prettier'
 
 group :development, :test do
   gem 'pry-rails'

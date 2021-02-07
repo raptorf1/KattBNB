@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -8,19 +6,12 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:user3) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
   let!(:conversation) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id) }
   let(:credentials) { user1.create_new_auth_token }
-  let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
-  let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
+  let(:headers) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials) }
+  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   describe 'POST /api/v1/conversations' do
-
     describe 'successfully' do
-      before do
-        post '/api/v1/conversations', params: {
-          user1_id: user1.id,
-          user2_id: user2.id
-        },
-        headers: headers
-      end
+      before { post '/api/v1/conversations', params: { user1_id: user1.id, user2_id: user2.id }, headers: headers }
 
       it 'creates a new conversation' do
         expect(json_response['message']).to eq 'Successfully created!'
@@ -33,11 +24,7 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       end
 
       it 'returns the id of an existing conversation' do
-        post '/api/v1/conversations', params: {
-          user1_id: user1.id,
-          user2_id: user3.id
-        }, 
-        headers: headers
+        post '/api/v1/conversations', params: { user1_id: user1.id, user2_id: user3.id }, headers: headers
 
         expect(json_response['message']).to eq 'Conversation already exists!'
         expect(json_response['id']).to eq conversation.id
@@ -47,20 +34,12 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
 
     describe 'unsuccessfully' do
       it 'Conversation cannot be created if user is not logged in' do
-        post '/api/v1/conversations', params: {
-          user1_id: user1.id,
-          user2_id: user2.id
-        },
-        headers: not_headers
+        post '/api/v1/conversations', params: { user1_id: user1.id, user2_id: user2.id }, headers: not_headers
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
       end
 
       it 'Conversation cannot be created if user does not exist' do
-        post '/api/v1/conversations', params: {
-          user1_id: user1.id,
-          user2_id: 10000
-        },
-        headers: headers
+        post '/api/v1/conversations', params: { user1_id: user1.id, user2_id: 10_000 }, headers: headers
         expect(json_response['error']).to eq ['User2 must exist']
         expect(response.status).to eq 422
       end
@@ -68,13 +47,10 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
 
     describe 'performance wise' do
       it 'creates conversation in under 1 ms and with iteration of 5000000 per second' do
-        post_request = post '/api/v1/conversations', params: {
-          user1_id: user1.id,
-          user2_id: user2.id
-        },
-        headers: headers
+        post_request =
+          post '/api/v1/conversations', params: { user1_id: user1.id, user2_id: user2.id }, headers: headers
         expect { post_request }.to perform_under(1).ms.sample(20).times
-        expect { post_request }.to perform_at_least(5000000).ips
+        expect { post_request }.to perform_at_least(5_000_000).ips
       end
     end
   end

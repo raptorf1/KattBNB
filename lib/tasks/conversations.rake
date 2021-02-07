@@ -16,7 +16,11 @@ namespace :conversations do
     conversations = Conversation.all
     unassociated_conversations = []
     conversations.each do |conversation|
-      next unless (conversation.user1_id == nil && conversation.user2_id == nil) || (conversation.user1_id == conversation.hidden && conversation.user2_id == nil) || (conversation.user2_id == conversation.hidden && conversation.user1_id == nil)
+      unless (conversation.user1_id == nil && conversation.user2_id == nil) ||
+               (conversation.user1_id == conversation.hidden && conversation.user2_id == nil) ||
+               (conversation.user2_id == conversation.hidden && conversation.user1_id == nil)
+        next
+      end
       unassociated_conversations.push(conversation)
       conversation.destroy
     end

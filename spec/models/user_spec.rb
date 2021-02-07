@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe User, type: :model do
   it 'should have valid Factory' do
@@ -53,25 +51,26 @@ RSpec.describe User, type: :model do
     it { is_expected.to validate_confirmation_of :password }
 
     context 'should not have an invalid email address' do
-      emails = ['stefan@ craft.com', '@felix.com', 'test mail@gmail.com',
-                'user@mail', 'foobar@.yo. .yo', 'wazzup@.dawg']
+      emails = [
+        'stefan@ craft.com',
+        '@felix.com',
+        'test mail@gmail.com',
+        'user@mail',
+        'foobar@.yo. .yo',
+        'wazzup@.dawg'
+      ]
 
-      emails.each do |email|
-        it { is_expected.not_to allow_value(email).for(:email) }
-      end
+      emails.each { |email| it { is_expected.not_to allow_value(email).for(:email) } }
     end
 
     context 'should have a valid email address' do
-      emails = ['felix@craft.com', 'foobar@craft.co.uk', 'carla123@craft.se',
-                'george@craft.gr']
+      emails = %w[felix@craft.com foobar@craft.co.uk carla123@craft.se george@craft.gr]
 
-      emails.each do |email|
-        it { is_expected.to allow_value(email).for(:email) }
-      end
+      emails.each { |email| it { is_expected.to allow_value(email).for(:email) } }
     end
   end
 
-  describe "Relations" do
+  describe 'Relations' do
     it { is_expected.to have_one(:host_profile) }
     it { is_expected.to have_many(:booking) }
     it { is_expected.to have_many(:conversation1) }
@@ -83,7 +82,11 @@ RSpec.describe User, type: :model do
 
   describe 'Attached image' do
     it 'is valid' do
-      subject.profile_avatar.attach(io: File.open('spec/fixtures/greece.jpg'), filename: 'attachment.jpg', content_type: 'image/jpg')
+      subject.profile_avatar.attach(
+        io: File.open('spec/fixtures/greece.jpg'),
+        filename: 'attachment.jpg',
+        content_type: 'image/jpg'
+      )
       expect(subject.profile_avatar).to be_attached
     end
   end
@@ -93,7 +96,14 @@ RSpec.describe User, type: :model do
       user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
       host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
       profile = FactoryBot.create(:host_profile, user_id: host.id)
-      booking = FactoryBot.create(:booking, host_nickname: host.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000])
+      booking =
+        FactoryBot.create(
+          :booking,
+          host_nickname: host.nickname,
+          user_id: user.id,
+          status: 'accepted',
+          dates: [1_462_889_600_000, 1_462_976_000_000]
+        )
       review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
       user.destroy
       review.reload
@@ -105,11 +115,17 @@ RSpec.describe User, type: :model do
       user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
       host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
       profile = FactoryBot.create(:host_profile, user_id: host.id)
-      booking = FactoryBot.create(:booking, host_nickname: host.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000])
+      booking =
+        FactoryBot.create(
+          :booking,
+          host_nickname: host.nickname,
+          user_id: user.id,
+          status: 'accepted',
+          dates: [1_462_889_600_000, 1_462_976_000_000]
+        )
       review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
       expect { user.destroy }.to perform_under(150).ms.sample(20).times
       expect { user.destroy }.to perform_at_least(100).ips
     end
-
   end
 end

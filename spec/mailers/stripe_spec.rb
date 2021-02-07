@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe StripeMailer, type: :mailer do
   let(:new_stripe_mail) { StripeMailer.notify_orphan_payment_intent_to_cancel('pi_testing123with123rspec') }
@@ -29,7 +27,7 @@ RSpec.describe StripeMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { new_stripe_mail }.to perform_at_least(800000).ips
+      expect { new_stripe_mail }.to perform_at_least(800_000).ips
     end
   end
 
@@ -51,7 +49,7 @@ RSpec.describe StripeMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { new_stripe_mail2 }.to perform_at_least(800000).ips
+      expect { new_stripe_mail2 }.to perform_at_least(800_000).ips
     end
   end
 
@@ -73,8 +71,7 @@ RSpec.describe StripeMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { new_stripe_mail2 }.to perform_at_least(800000).ips
+      expect { new_stripe_mail2 }.to perform_at_least(800_000).ips
     end
   end
-
 end

@@ -1,5 +1,4 @@
 module DecodeImageService
-
   def self.attach_image(img, target)
     Rails.env == 'test' ? image = img : image = split_base64(img[0])
     decoded_data = Base64.decode64(image[:data])
@@ -8,7 +7,6 @@ module DecodeImageService
     io.rewind
     target.attach(io: io, filename: "base.#{image[:extension]}")
   end
-
 
   private
 

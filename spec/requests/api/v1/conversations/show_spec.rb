@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -10,17 +8,20 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
   let!(:conversation2) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id) }
   let(:credentials1) { user1.create_new_auth_token }
   let(:credentials2) { user2.create_new_auth_token }
-  let(:headers1) { { HTTP_ACCEPT: "application/json" }.merge!(credentials1) }
-  let(:headers2) { { HTTP_ACCEPT: "application/json" }.merge!(credentials2) }
-  let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
+  let(:headers1) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials1) }
+  let(:headers2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials2) }
+  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   describe 'GET /api/v1/conversations' do
-
     describe 'successfully' do
       before do
         FactoryBot.create(:message, user_id: user1.id, conversation_id: conversation1.id, body: 'Hello, Harley!')
         FactoryBot.create(:message, user_id: user2.id, conversation_id: conversation1.id, body: 'Hello, Joker!')
-        Message.last.image.attach(io: File.open('spec/fixtures/greece.jpg'), filename: 'attachment_amazon_s3.jpg', content_type: 'image/jpg')
+        Message.last.image.attach(
+          io: File.open('spec/fixtures/greece.jpg'),
+          filename: 'attachment_amazon_s3.jpg',
+          content_type: 'image/jpg'
+        )
         get "/api/v1/conversations/#{conversation1.id}", headers: headers1
       end
 
@@ -74,13 +75,17 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       before do
         FactoryBot.create(:message, user_id: user1.id, conversation_id: conversation1.id, body: 'Hello, Harley!')
         FactoryBot.create(:message, user_id: user2.id, conversation_id: conversation1.id, body: 'Hello, Joker!')
-        Message.last.image.attach(io: File.open('spec/fixtures/greece.jpg'), filename: 'attachment_amazon_s3.jpg', content_type: 'image/jpg')
+        Message.last.image.attach(
+          io: File.open('spec/fixtures/greece.jpg'),
+          filename: 'attachment_amazon_s3.jpg',
+          content_type: 'image/jpg'
+        )
       end
 
       it 'fetches specific conversation in under 1 ms and with iteration rate of 5000000 per second' do
         get_request = get "/api/v1/conversations/#{conversation1.id}", headers: headers1
         expect { get_request }.to perform_under(1).ms.sample(20).times
-        expect { get_request }.to perform_at_least(5000000).ips
+        expect { get_request }.to perform_at_least(5_000_000).ips
       end
     end
   end
