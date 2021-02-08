@@ -25,5 +25,8 @@
 # Ignore coverage metrics
 /coverage
 
+# Ignore db folder
+/db
+
 
 # bundle exec rbprettier --write '**/*'
