@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe ConversationsMailer, type: :mailer do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -40,8 +38,8 @@ RSpec.describe ConversationsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { new_conversation_mail }.to perform_at_least(800000).ips
-      expect { new_conversation_mail2 }.to perform_at_least(800000).ips
+      expect { new_conversation_mail }.to perform_at_least(800_000).ips
+      expect { new_conversation_mail2 }.to perform_at_least(800_000).ips
     end
   end
 end

@@ -4,7 +4,7 @@ namespace :users do
     unconfirmed_users = User.where(confirmed_at: nil)
     deleted_users = []
     unconfirmed_users.each do |user|
-      if ((Time.current - user.created_at)/1.hour).round > 24
+      if ((Time.current - user.created_at) / 1.hour).round > 24
         deleted_users.push(user)
         user.destroy
       end

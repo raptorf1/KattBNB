@@ -1,13 +1,13 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe ReviewsMailer, type: :mailer do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
   let!(:profile_host) { FactoryBot.create(:host_profile, user_id: host.id) }
   let(:booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname) }
-  let!(:review) { FactoryBot.create(:review, user_id: user.id, host_profile_id: profile_host.id, booking_id: booking.id, score: 2) }
+  let!(:review) do
+    FactoryBot.create(:review, user_id: user.id, host_profile_id: profile_host.id, booking_id: booking.id, score: 2)
+  end
   let(:new_review_mail) { ReviewsMailer.notify_host_create_review(host, booking, user, review) }
   let(:pending_review_1_day) { ReviewsMailer.notify_user_pending_review_1_day(host, user, booking) }
   let(:pending_review_3_days) { ReviewsMailer.notify_user_pending_review_3_days(host, user, booking) }
@@ -37,7 +37,7 @@ RSpec.describe ReviewsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { new_review_mail }.to perform_at_least(800000).ips
+      expect { new_review_mail }.to perform_at_least(800_000).ips
     end
   end
 
@@ -65,7 +65,7 @@ RSpec.describe ReviewsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { pending_review_1_day }.to perform_at_least(800000).ips
+      expect { pending_review_1_day }.to perform_at_least(800_000).ips
     end
   end
 
@@ -85,7 +85,9 @@ RSpec.describe ReviewsMailer, type: :mailer do
     it 'contains basic information' do
       expect(pending_review_3_days.body.encoded).to match("Hey, #{user.nickname}!")
       expect(pending_review_3_days.body.encoded).to match("#{host.nickname}")
-      expect(pending_review_3_days.body.encoded).to match("We don't mean to spam you but we really would like to know what you think about your recent booking")
+      expect(pending_review_3_days.body.encoded).to match(
+        "We don't mean to spam you but we really would like to know what you think about your recent booking"
+      )
     end
 
     it 'is performed under 600ms' do
@@ -93,7 +95,7 @@ RSpec.describe ReviewsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { pending_review_3_days }.to perform_at_least(800000).ips
+      expect { pending_review_3_days }.to perform_at_least(800_000).ips
     end
   end
 
@@ -114,7 +116,9 @@ RSpec.describe ReviewsMailer, type: :mailer do
       expect(pending_review_10_days.body.encoded).to match("Hey, #{user.nickname}!")
       expect(pending_review_10_days.body.encoded).to match("#{host.nickname}")
       expect(pending_review_10_days.body.encoded).to match('Positive or negative feedback - we want to hear it!')
-      expect(pending_review_10_days.body.encoded).to match('If you have feedback you are not comfortable sharing on kattbnb.se you are always welcome to reach out to us via')
+      expect(pending_review_10_days.body.encoded).to match(
+        'If you have feedback you are not comfortable sharing on kattbnb.se you are always welcome to reach out to us via'
+      )
     end
 
     it 'is performed under 600ms' do
@@ -122,8 +126,7 @@ RSpec.describe ReviewsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { pending_review_10_days }.to perform_at_least(800000).ips
+      expect { pending_review_10_days }.to perform_at_least(800_000).ips
     end
   end
-
 end

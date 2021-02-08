@@ -1,10 +1,10 @@
 class Api::V1::UsersController < ApplicationController
-
   before_action :authenticate_api_v1_user!, only: [:update]
 
   def update
     user = User.find(params[:id])
-    if current_api_v1_user.id == user.id && params[:client] != nil && params['access-token'] != nil && params[:profile_avatar] != nil
+    if current_api_v1_user.id == user.id && params[:client] != nil && params['access-token'] != nil &&
+         params[:profile_avatar] != nil
       client = params[:client]
       token = params['access-token']
       pic = params[:profile_avatar]
@@ -20,11 +20,9 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-
-  private 
+  private
 
   def attach_image(avatar, user)
     (avatar && avatar.present?) && DecodeImageService.attach_image(avatar, user.profile_avatar)
   end
-
 end

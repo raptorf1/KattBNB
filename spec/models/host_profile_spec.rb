@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe HostProfile, type: :model do
   it 'should have valid Factory' do
@@ -82,7 +80,14 @@ RSpec.describe HostProfile, type: :model do
       user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
       host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
       profile = FactoryBot.create(:host_profile, user_id: host.id)
-      booking = FactoryBot.create(:booking, host_nickname: host.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000])
+      booking =
+        FactoryBot.create(
+          :booking,
+          host_nickname: host.nickname,
+          user_id: user.id,
+          status: 'accepted',
+          dates: [1_462_889_600_000, 1_462_976_000_000]
+        )
       review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
       profile.destroy
       review.reload
@@ -93,11 +98,17 @@ RSpec.describe HostProfile, type: :model do
       user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
       host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
       profile = FactoryBot.create(:host_profile, user_id: host.id)
-      booking = FactoryBot.create(:booking, host_nickname: host.nickname, user_id: user.id, status: 'accepted', dates: [1462889600000, 1462976000000])
+      booking =
+        FactoryBot.create(
+          :booking,
+          host_nickname: host.nickname,
+          user_id: user.id,
+          status: 'accepted',
+          dates: [1_462_889_600_000, 1_462_976_000_000]
+        )
       review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
       expect { profile.destroy }.to perform_under(100).ms.sample(20).times
       expect { profile.destroy }.to perform_at_least(300).ips
     end
-
   end
 end

@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 describe 'rake conversations:delete_empty_conversations', type: :task do
   let!(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -8,7 +6,9 @@ describe 'rake conversations:delete_empty_conversations', type: :task do
   let!(:user3) { FactoryBot.create(:user, email: 'cat@woman.com', nickname: 'Catwoman') }
   let!(:conversation1) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
   let!(:conversation2) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id) }
-  let!(:message1) { FactoryBot.create(:message, conversation_id:conversation1.id, user_id: user1.id, body: 'Sweet child of mine!!!!') }
+  let!(:message1) do
+    FactoryBot.create(:message, conversation_id: conversation1.id, user_id: user1.id, body: 'Sweet child of mine!!!!')
+  end
 
   it 'preloads the Rails environment' do
     expect(task.prerequisites).to include 'environment'
@@ -36,5 +36,4 @@ describe 'rake conversations:delete_empty_conversations', type: :task do
   it 'performs at least 250 iterations per second' do
     expect { task.execute }.to perform_at_least(250).ips
   end
-
 end

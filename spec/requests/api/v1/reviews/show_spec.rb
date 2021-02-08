@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe Api::V1::ReviewsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -14,16 +12,13 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
   let(:review2) { FactoryBot.create(:review, user_id: user2.id, host_profile_id: profile2.id, booking_id: booking2.id) }
   let(:credentials1) { user1.create_new_auth_token }
   let(:credentials2) { user2.create_new_auth_token }
-  let(:headers1) { { HTTP_ACCEPT: "application/json" }.merge!(credentials1) }
-  let(:headers2) { { HTTP_ACCEPT: "application/json" }.merge!(credentials2) }
-  let(:not_headers) { {HTTP_ACCEPT: "application/json"} }
+  let(:headers1) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials1) }
+  let(:headers2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials2) }
+  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   describe 'GET /api/v1/reviews' do
-
     describe 'successfully' do
-      before do
-        get "/api/v1/reviews/#{review1.id}", headers: headers1
-      end
+      before { get "/api/v1/reviews/#{review1.id}", headers: headers1 }
 
       it 'views a specific review' do
         expect(json_response['id']).to eq review1.id
@@ -62,7 +57,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
       it 'fetches specific review in under 1 ms and with iteration rate of 3000000 per second' do
         get_request = get "/api/v1/reviews/#{review1.id}", headers: headers1
         expect { get_request }.to perform_under(1).ms.sample(20).times
-        expect { get_request }.to perform_at_least(3000000).ips
+        expect { get_request }.to perform_at_least(3_000_000).ips
       end
     end
   end

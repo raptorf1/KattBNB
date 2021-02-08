@@ -1,5 +1,4 @@
 class ReportsMailer < ApplicationMailer
-
   def bookings_revenue_and_vat(booking)
     id = booking.id
     @host = booking.host_nickname
@@ -8,5 +7,4 @@ class ReportsMailer < ApplicationMailer
 
     mail(to: 'george@kattbnb.se', subject: "New paid booking with id #{id}")
   end
-
 end

@@ -1,5 +1,4 @@
 RSpec.describe Review, type: :model do
-
   it 'should have valid Factory' do
     expect(create(:review)).to be_valid
   end
@@ -27,5 +26,4 @@ RSpec.describe Review, type: :model do
     it { is_expected.to belong_to(:host_profile) }
     it { is_expected.to belong_to(:booking) }
   end
-
 end

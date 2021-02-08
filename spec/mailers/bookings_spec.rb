@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe BookingsMailer, type: :mailer do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -47,8 +45,8 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { new_request_mail }.to perform_at_least(800000).ips
-      expect { new_request_mail2 }.to perform_at_least(800000).ips
+      expect { new_request_mail }.to perform_at_least(800_000).ips
+      expect { new_request_mail2 }.to perform_at_least(800_000).ips
     end
   end
 
@@ -72,8 +70,12 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'contains 2 calendar events as attachments' do
-      expect(accepted_request_mail.body.parts[1].content_disposition).to eql('attachment; filename=AddToMyCalendarDropOff.ics')
-      expect(accepted_request_mail.body.parts[2].content_disposition).to eql('attachment; filename=AddToMyCalendarPickUp.ics')
+      expect(accepted_request_mail.body.parts[1].content_disposition).to eql(
+        'attachment; filename=AddToMyCalendarDropOff.ics'
+      )
+      expect(accepted_request_mail.body.parts[2].content_disposition).to eql(
+        'attachment; filename=AddToMyCalendarPickUp.ics'
+      )
     end
 
     it 'is performed under 500ms' do
@@ -81,7 +83,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { accepted_request_mail }.to perform_at_least(800000).ips
+      expect { accepted_request_mail }.to perform_at_least(800_000).ips
     end
   end
 
@@ -110,7 +112,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { declined_request_mail }.to perform_at_least(800000).ips
+      expect { declined_request_mail }.to perform_at_least(800_000).ips
     end
   end
 
@@ -138,7 +140,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { cancelled_request_user_mail }.to perform_at_least(800000).ips
+      expect { cancelled_request_user_mail }.to perform_at_least(800_000).ips
     end
   end
 
@@ -166,8 +168,7 @@ RSpec.describe BookingsMailer, type: :mailer do
     end
 
     it 'performs at least 800K iterations per second' do
-      expect { cancelled_request_host_mail }.to perform_at_least(800000).ips
+      expect { cancelled_request_host_mail }.to perform_at_least(800_000).ips
     end
   end
-
 end

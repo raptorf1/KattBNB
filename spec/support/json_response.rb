@@ -4,6 +4,4 @@ module ResponseJSON
   end
 end
 
-RSpec.configure do |config|
-  config.include ResponseJSON
-end
+RSpec.configure { |config| config.include ResponseJSON }

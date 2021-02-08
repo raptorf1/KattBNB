@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 describe 'rake conversations:delete_unassociated_conversations', type: :task do
   let!(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -10,8 +8,17 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
   let!(:conversation1) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
   let!(:conversation2) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
   let!(:conversation3) { FactoryBot.create(:conversation, user1_id: user3.id, user2_id: user4.id, hidden: user3.id) }
-  let!(:message1) { FactoryBot.create(:message, conversation_id:conversation1.id, user_id: user1.id, body: 'Sweet child of mine!!!!') }
-  let!(:message2) { FactoryBot.create(:message, conversation_id:conversation2.id, user_id: user2.id, body: 'Who wants to live forever???') }
+  let!(:message1) do
+    FactoryBot.create(:message, conversation_id: conversation1.id, user_id: user1.id, body: 'Sweet child of mine!!!!')
+  end
+  let!(:message2) do
+    FactoryBot.create(
+      :message,
+      conversation_id: conversation2.id,
+      user_id: user2.id,
+      body: 'Who wants to live forever???'
+    )
+  end
 
   it 'preloads the Rails environment' do
     expect(task.prerequisites).to include 'environment'
@@ -61,5 +68,4 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
   it 'performs at least 500 iterations per second' do
     expect { task.execute }.to perform_at_least(500).ips
   end
-
 end

@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 describe 'rake reviews:delete_unassociated_reviews', type: :task do
   let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -40,5 +38,4 @@ describe 'rake reviews:delete_unassociated_reviews', type: :task do
   it 'performs at least 500 iterations per second' do
     expect { task.execute }.to perform_at_least(500).ips
   end
-
 end

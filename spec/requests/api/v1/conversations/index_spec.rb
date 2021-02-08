@@ -1,6 +1,4 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -15,7 +13,6 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   describe 'GET /api/v1/conversations' do
-
     before do
       @conversation1 = FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id)
       @conversation2 = FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id)
@@ -41,34 +38,41 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
     it 'returns a list of conversations in under 1 ms and with iteration rate of 3000000 per second' do
       get_request = get '/api/v1/conversations', headers: headers1
       expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(3000000).ips
+      expect { get_request }.to perform_at_least(3_000_000).ips
     end
-      
+
     it 'returns a list of conversations to the involved user' do
-      get '/api/v1/conversations', params: {user_id: user1.id}, headers: headers1
+      get '/api/v1/conversations', params: { user_id: user1.id }, headers: headers1
       expect(json_response[0]['id']).to eq @conversation1.id
       expect(json_response[1]['id']).to eq @conversation2.id
     end
 
     it 'returns the last message of the conversation and created_at' do
-      msg1 =  FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: 'Batman, I love you!')
-      msg2 =  FactoryBot.create(:message, user_id: user2.id, conversation_id: @conversation1.id, body: 'Joker, u drunk.')
-      msg3 =  FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: "Naw, I promise you, let's be friends!!!")
-      
-      get '/api/v1/conversations', params: {user_id: user1.id}, headers: headers1
+      msg1 =
+        FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: 'Batman, I love you!')
+      msg2 = FactoryBot.create(:message, user_id: user2.id, conversation_id: @conversation1.id, body: 'Joker, u drunk.')
+      msg3 =
+        FactoryBot.create(
+          :message,
+          user_id: user1.id,
+          conversation_id: @conversation1.id,
+          body: "Naw, I promise you, let's be friends!!!"
+        )
+
+      get '/api/v1/conversations', params: { user_id: user1.id }, headers: headers1
       expect(json_response[0]['msg_body']).to eq msg3.body
       expect(json_response[0]).to include('msg_created')
     end
 
     it 'returns fixed text if the last message is an image attachment' do
-      msg1 =  FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: '')
-      
-      get '/api/v1/conversations', params: {user_id: user1.id}, headers: headers1
+      msg1 = FactoryBot.create(:message, user_id: user1.id, conversation_id: @conversation1.id, body: '')
+
+      get '/api/v1/conversations', params: { user_id: user1.id }, headers: headers1
       expect(json_response[0]['msg_body']).to eq 'Image attachment'
     end
 
     it 'does not return a list of conversations to an uninvolved user' do
-      get '/api/v1/conversations', params: {user_id: user2.id}, headers: headers3
+      get '/api/v1/conversations', params: { user_id: user2.id }, headers: headers3
       expect(json_response.count).to eq 0
       expect(Conversation.all.length).to eq 2
     end

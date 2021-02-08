@@ -1,5 +1,4 @@
 class MessageBroadcastJob < ApplicationJob
-  
   queue_as :messages
 
   def perform(message_id)
@@ -11,5 +10,4 @@ class MessageBroadcastJob < ApplicationJob
       return I18n.t('jobs.message_broadcast.error', message: message_id)
     end
   end
-
 end

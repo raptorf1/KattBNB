@@ -1,18 +1,50 @@
-RSpec::Benchmark.configure do |config|
-  config.run_in_subprocess = true
-end
+RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
 
 # happy path
 describe 'rake bookings:pay_the_host', type: :task do
   let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
   let!(:profile) { FactoryBot.create(:host_profile, user_id: host.id, stripe_account_id: 'acct_1Hywpk2HucmOr4dd') }
-  let!(:unpaid_accepted_booking_past) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'accepted', dates: [123, 456], paid: false, price_total: 1.0) }
-  let!(:unpaid_accepted_booking_future) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'accepted', dates: [123, 456, 9563148800000], paid: false) }
-  let!(:pending_booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'pending', paid: false) }
-  let!(:declined_booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'declined', paid: false) }
-  let!(:canceled_booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'canceled', paid: false) }
-  let!(:paid_accepted_booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'accepted', dates: [123, 456], paid: true) }
+  let!(:unpaid_accepted_booking_past) do
+    FactoryBot.create(
+      :booking,
+      user_id: user.id,
+      host_nickname: host.nickname,
+      status: 'accepted',
+      dates: [123, 456],
+      paid: false,
+      price_total: 1.0
+    )
+  end
+  let!(:unpaid_accepted_booking_future) do
+    FactoryBot.create(
+      :booking,
+      user_id: user.id,
+      host_nickname: host.nickname,
+      status: 'accepted',
+      dates: [123, 456, 9_563_148_800_000],
+      paid: false
+    )
+  end
+  let!(:pending_booking) do
+    FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'pending', paid: false)
+  end
+  let!(:declined_booking) do
+    FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'declined', paid: false)
+  end
+  let!(:canceled_booking) do
+    FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'canceled', paid: false)
+  end
+  let!(:paid_accepted_booking) do
+    FactoryBot.create(
+      :booking,
+      user_id: user.id,
+      host_nickname: host.nickname,
+      status: 'accepted',
+      dates: [123, 456],
+      paid: true
+    )
+  end
 
   it 'pays the host and updates the correct booking' do
     expect(unpaid_accepted_booking_past.paid).to eq false
@@ -39,7 +71,6 @@ describe 'rake bookings:pay_the_host', type: :task do
   it 'logs to stdout' do
     expect { task.execute }.to output("A report email was sent!\n").to_stdout
   end
-
 end
 
 # sad path
@@ -47,7 +78,17 @@ describe 'rake bookings:pay_the_host', type: :task do
   let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
   let!(:profile) { FactoryBot.create(:host_profile, user_id: host.id, stripe_account_id: 'acct_1kdhfsjdhfsfkljsd') }
-  let!(:booking) { FactoryBot.create(:booking, user_id: user.id, host_nickname: host.nickname, status: 'accepted', dates: [123, 456], paid: false, price_total: 1.0) }
+  let!(:booking) do
+    FactoryBot.create(
+      :booking,
+      user_id: user.id,
+      host_nickname: host.nickname,
+      status: 'accepted',
+      dates: [123, 456],
+      paid: false,
+      price_total: 1.0
+    )
+  end
 
   it 'sends email on Stripe error' do
     task.execute
@@ -72,5 +113,4 @@ describe 'rake bookings:pay_the_host', type: :task do
   it 'performs at least 1 iteration per second' do
     expect { task.execute }.to perform_at_least(1).ips
   end
-
 end

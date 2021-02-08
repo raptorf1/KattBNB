@@ -1,5 +1,4 @@
 class ReviewsMailer < ApplicationMailer
-
   def notify_host_create_review(host, booking, user, review)
     @review = review
     @host = host
@@ -54,5 +53,4 @@ class ReviewsMailer < ApplicationMailer
       mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
     end
   end
-
 end
