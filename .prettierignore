@@ -25,7 +25,7 @@
 # Ignore coverage metrics
 /coverage
 
-# Ignore db folder
+# Ignore folders
 /db
 
 
