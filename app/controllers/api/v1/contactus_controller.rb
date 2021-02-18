@@ -1,5 +1,4 @@
 class Api::V1::ContactusController < ApplicationController
-
   def index
     if Truemail.valid?(params[:email])
       render json: { message: 'Success!!!' }, status: 200
