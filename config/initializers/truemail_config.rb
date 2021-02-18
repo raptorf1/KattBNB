@@ -91,7 +91,7 @@ Truemail.configure do |config|
   # Tracking event by default is :error
   config.logger = {
     tracking_event: :all,
-    stdout: true,
+    stdout: Rails.env == 'production' ? false : true,
   #  log_absolute_path: '/home/app/log/truemail.log'
   }
 end
