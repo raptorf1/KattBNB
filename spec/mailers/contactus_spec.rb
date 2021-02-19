@@ -18,9 +18,9 @@ RSpec.describe ContactusMailer, type: :mailer do
   end
 
   it 'contains visitor input' do
-    expect(new_visitor_message.body.encoded).to match('Richard Dragon')
-    expect(new_visitor_message.body.encoded).to match('rdrag@drop.nl')
-    expect(new_visitor_message.body.encoded).to match('A question for the website owners!')
+    expect(new_visitor_message.body.encoded).to match('Richard Dragon').and match('rdrag@drop.nl').and match(
+                                                             'A question for the website owners!'
+                                                           )
   end
 
   it 'is performed under 500ms' do
