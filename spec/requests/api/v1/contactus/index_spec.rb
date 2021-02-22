@@ -15,7 +15,7 @@ RSpec.describe 'User can fill contact us form in the front-end and API', type: :
   it 'responds with 422 if email is invalid' do
     get '/api/v1/contactus?name=Access Token&email=tefgdgst@hotjgjmail.com&message=Can I order pizza from your website???'
     expect(json_response['error']).to eq [
-         "There was a problem validating your email! You sure it's the right one? You can always find us by following our social media links below."
+         "There was a problem validating your email! Are you sure it's the right one? You can always find us by following our social media links below."
        ]
     expect(response.status).to eq 422
   end
