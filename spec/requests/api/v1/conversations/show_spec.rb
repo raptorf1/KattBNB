@@ -82,10 +82,10 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
         )
       end
 
-      it 'fetches specific conversation in under 1 ms and with iteration rate of 5000000 per second' do
+      it 'fetches specific conversation in under 1 ms and with iteration rate of 2000000 per second' do
         get_request = get "/api/v1/conversations/#{conversation1.id}", headers: headers1
         expect { get_request }.to perform_under(1).ms.sample(20).times
-        expect { get_request }.to perform_at_least(5_000_000).ips
+        expect { get_request }.to perform_at_least(2_000_000).ips
       end
     end
   end

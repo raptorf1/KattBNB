@@ -14,11 +14,11 @@ RSpec.describe 'Reset Password', type: :request do
       expect(response.status).to eq 200
     end
 
-    it 'sends an email to the user that already exists in the database in under 1 ms and with iteration rate of 5000000 per second' do
+    it 'sends an email to the user that already exists in the database in under 1 ms and with iteration rate of 2000000 per second' do
       post_request =
         post '/api/v1/auth/password', params: { email: user.email, redirect_url: 'confirmed' }, headers: headers
       expect { post_request }.to perform_under(1).ms.sample(20).times
-      expect { post_request }.to perform_at_least(5_000_000).ips
+      expect { post_request }.to perform_at_least(2_000_000).ips
     end
 
     it 'raises an error if user/email does not exist in the database' do

@@ -85,10 +85,10 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
            headers: headers
     end
 
-    it 'fetches specific host profile in under 1 ms and with iteration rate of at least 5000000 per second' do
+    it 'fetches specific host profile in under 1 ms and with iteration rate of at least 2000000 per second' do
       get_request = get "/api/v1/host_profiles/#{HostProfile.last.id}", headers: headers
       expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(5_000_000).ips
+      expect { get_request }.to perform_at_least(2_000_000).ips
     end
   end
 

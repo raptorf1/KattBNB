@@ -32,14 +32,14 @@ RSpec.describe ConversationsMailer, type: :mailer do
       expect(new_conversation_mail2.body.encoded).to match("Hallå, #{user4.nickname}!")
     end
 
-    it 'is performed under 500ms' do
-      expect { new_conversation_mail }.to perform_under(500).ms.sample(20).times
-      expect { new_conversation_mail2 }.to perform_under(500).ms.sample(20).times
+    it 'is performed under 1000ms' do
+      expect { new_conversation_mail }.to perform_under(1000).ms.sample(20).times
+      expect { new_conversation_mail2 }.to perform_under(1000).ms.sample(20).times
     end
 
-    it 'performs at least 800K iterations per second' do
-      expect { new_conversation_mail }.to perform_at_least(800_000).ips
-      expect { new_conversation_mail2 }.to perform_at_least(800_000).ips
+    it 'performs at least 500K iterations per second' do
+      expect { new_conversation_mail }.to perform_at_least(500_000).ips
+      expect { new_conversation_mail2 }.to perform_at_least(500_000).ips
     end
   end
 end

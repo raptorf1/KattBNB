@@ -39,14 +39,14 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(new_request_mail2.body.encoded).to match("Hallå, #{host2.nickname}!")
     end
 
-    it 'is performed under 500ms' do
-      expect { new_request_mail }.to perform_under(500).ms.sample(20).times
-      expect { new_request_mail2 }.to perform_under(500).ms.sample(20).times
+    it 'is performed under 1000ms' do
+      expect { new_request_mail }.to perform_under(1000).ms.sample(20).times
+      expect { new_request_mail2 }.to perform_under(1000).ms.sample(20).times
     end
 
-    it 'performs at least 800K iterations per second' do
-      expect { new_request_mail }.to perform_at_least(800_000).ips
-      expect { new_request_mail2 }.to perform_at_least(800_000).ips
+    it 'performs at least 500K iterations per second' do
+      expect { new_request_mail }.to perform_at_least(500_000).ips
+      expect { new_request_mail2 }.to perform_at_least(500_000).ips
     end
   end
 
@@ -78,8 +78,8 @@ RSpec.describe BookingsMailer, type: :mailer do
       )
     end
 
-    it 'is performed under 500ms' do
-      expect { accepted_request_mail }.to perform_under(500).ms.sample(20).times
+    it 'is performed under 1000ms' do
+      expect { accepted_request_mail }.to perform_under(1000).ms.sample(20).times
     end
 
     it 'performs at least 800K iterations per second' do
@@ -107,8 +107,8 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(declined_request_mail.body.encoded).to match("#{booking.host_message}")
     end
 
-    it 'is performed under 500ms' do
-      expect { declined_request_mail }.to perform_under(500).ms.sample(20).times
+    it 'is performed under 1000ms' do
+      expect { declined_request_mail }.to perform_under(1000).ms.sample(20).times
     end
 
     it 'performs at least 800K iterations per second' do
@@ -135,8 +135,8 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(cancelled_request_user_mail.encoded).to match("#{booking.number_of_cats}")
     end
 
-    it 'is performed under 500ms' do
-      expect { cancelled_request_user_mail }.to perform_under(500).ms.sample(20).times
+    it 'is performed under 1000ms' do
+      expect { cancelled_request_user_mail }.to perform_under(1000).ms.sample(20).times
     end
 
     it 'performs at least 800K iterations per second' do
@@ -163,12 +163,12 @@ RSpec.describe BookingsMailer, type: :mailer do
       expect(cancelled_request_host_mail.encoded).to match("#{booking.number_of_cats}")
     end
 
-    it 'is performed under 500ms' do
-      expect { cancelled_request_host_mail }.to perform_under(500).ms.sample(20).times
+    it 'is performed under 1000ms' do
+      expect { cancelled_request_host_mail }.to perform_under(1000).ms.sample(20).times
     end
 
-    it 'performs at least 800K iterations per second' do
-      expect { cancelled_request_host_mail }.to perform_at_least(800_000).ips
+    it 'performs at least 500K iterations per second' do
+      expect { cancelled_request_host_mail }.to perform_at_least(500_000).ips
     end
   end
 end

@@ -20,7 +20,7 @@ RSpec.describe 'User Registration', type: :request do
       expect(response.status).to eq 200
     end
 
-    it 'returns a user and a token in under 1 ms and with iteration rate of 5000000 per second' do
+    it 'returns a user and a token in under 1 ms and with iteration rate of 2000000 per second' do
       post_request =
         post '/api/v1/auth',
              params: {
@@ -34,7 +34,7 @@ RSpec.describe 'User Registration', type: :request do
              },
              headers: headers
       expect { post_request }.to perform_under(1).ms.sample(20).times
-      expect { post_request }.to perform_at_least(5_000_000).ips
+      expect { post_request }.to perform_at_least(2_000_000).ips
     end
   end
 

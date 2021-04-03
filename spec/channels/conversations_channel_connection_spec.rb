@@ -16,10 +16,10 @@ RSpec.describe ApplicationCable::Connection, type: :channel do
     expect { connect_request }.to perform_under(1).ms.sample(20).times
   end
 
-  it 'successfully connects with iteration of at least 5000000 per second' do
+  it 'successfully connects with iteration of at least 2000000 per second' do
     connect_request =
       connect "/cable/conversation/5?token=#{headers1['access-token']}&uid=#{headers1['uid']}&client=#{headers1['client']}"
-    expect { connect_request }.to perform_at_least(5_000_000).ips
+    expect { connect_request }.to perform_at_least(2_000_000).ips
   end
 
   it 'rejects connection if invalid params are passed' do

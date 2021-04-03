@@ -80,11 +80,11 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
     end
 
     describe 'performance wise' do
-      it 'updates a review in under 1 ms and with iteration rate of 5000000 per second' do
+      it 'updates a review in under 1 ms and with iteration rate of 2000000 per second' do
         patch_request =
           patch "/api/v1/reviews/#{review1.id}", params: { host_reply: 'Thanks a lot!' }, headers: headers2
         expect { patch_request }.to perform_under(1).ms.sample(20).times
-        expect { patch_request }.to perform_at_least(5_000_000).ips
+        expect { patch_request }.to perform_at_least(2_000_000).ips
       end
     end
   end

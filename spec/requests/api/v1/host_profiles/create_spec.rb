@@ -79,7 +79,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
   end
 
   describe 'POST /api/v1/host_profile' do
-    it 'creates a host profile in under 1 ms and with iteration rate of at least 5000000 per second' do
+    it 'creates a host profile in under 1 ms and with iteration rate of at least 2000000 per second' do
       create_profile =
         post '/api/v1/host_profiles',
              params: {
@@ -103,7 +103,7 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
              },
              headers: headers
       expect { create_profile }.to perform_under(1).ms.sample(20).times
-      expect { create_profile }.to perform_at_least(5_000_000).ips
+      expect { create_profile }.to perform_at_least(2_000_000).ips
     end
   end
 end

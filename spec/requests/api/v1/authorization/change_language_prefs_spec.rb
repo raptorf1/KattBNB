@@ -38,7 +38,7 @@ RSpec.describe 'User Changes Language Preference Information and API', type: :re
     expect(json_response['data']['lang_pref']).to eq 'en-US'
   end
 
-  it 'returns a user and a token and then changes the language preference in under 1 ms and with iteration rate of 5000000 per second' do
+  it 'returns a user and a token and then changes the language preference in under 1 ms and with iteration rate of 2000000 per second' do
     post '/api/v1/auth',
          params: {
            email: 'felix@craft.se',
@@ -70,6 +70,6 @@ RSpec.describe 'User Changes Language Preference Information and API', type: :re
           },
           headers: headers
     expect { put_request }.to perform_under(1).ms.sample(20).times
-    expect { put_request }.to perform_at_least(5_000_000).ips
+    expect { put_request }.to perform_at_least(2_000_000).ips
   end
 end

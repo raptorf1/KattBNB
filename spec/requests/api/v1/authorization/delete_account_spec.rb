@@ -36,7 +36,7 @@ RSpec.describe 'User Account Deletion', type: :request do
     expect(User.all.length).to eq 0
   end
 
-  it 'returns a user and a token and then deletes user from the database' do
+  it 'returns a user and a token and then deletes user from the database in under 1ms and with iteration rate of 2000000 per second' do
     post '/api/v1/auth',
          params: {
            email: 'zane@craft.se',
@@ -65,6 +65,6 @@ RSpec.describe 'User Account Deletion', type: :request do
              },
              headers: headers
     expect { delete_request }.to perform_under(1).ms.sample(20).times
-    expect { delete_request }.to perform_at_least(5_000_000).ips
+    expect { delete_request }.to perform_at_least(2_000_000).ips
   end
 end

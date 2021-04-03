@@ -142,7 +142,7 @@ RSpec.describe ConversationsChannel, type: :channel do
     expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
   end
 
-  it 'broadcasts message with image attached in under 1 ms and with iteration rate of 5000000 per second' do
+  it 'broadcasts message with image attached in under 1 ms and with iteration rate of 2000000 per second' do
     image = {
       type: 'image/png',
       encoder: 'name=carbon (5).png;base64',
@@ -162,7 +162,7 @@ RSpec.describe ConversationsChannel, type: :channel do
         }
       )
     expect { send_message }.to perform_under(1).ms.sample(20).times
-    expect { send_message }.to perform_at_least(5_000_000).ips
+    expect { send_message }.to perform_at_least(2_000_000).ips
   end
 
   it 'broadcasts message with only image attached, without body' do

@@ -44,7 +44,7 @@ RSpec.describe 'User Changes Password and API', type: :request do
     expect(response.status).to eq 200
   end
 
-  it 'successfully changes the user password in under 1 ms and with iteration rate of 5000000 per second' do
+  it 'successfully changes the user password in under 1 ms and with iteration rate of 2000000 per second' do
     put_request =
       put '/api/v1/auth/password',
           params: {
@@ -57,7 +57,7 @@ RSpec.describe 'User Changes Password and API', type: :request do
           },
           headers: headers
     expect { put_request }.to perform_under(1).ms.sample(20).times
-    expect { put_request }.to perform_at_least(5_000_000).ips
+    expect { put_request }.to perform_at_least(2_000_000).ips
   end
 
   it 'successfully changes the user password and does not let user log in with the old password' do

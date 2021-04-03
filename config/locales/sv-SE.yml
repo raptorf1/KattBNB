@@ -207,7 +207,7 @@ sv-SE:
       password_change:
         subject: "Lösenord ändrat"
     omniauth_callbacks:
-      failure: "Kunde inte autentisera dig med %{kind} för \"%{reason}\"."
+      failure: 'Kunde inte autentisera dig med %{kind} för "%{reason}".'
       success: "Autentiserat med %{kind}-konto."
     passwords:
       no_token: "Du har endast tillgång till den här sidan via ett epost för att återställa ditt lösenord. Om detta är fallet, var god kontrollera att du använder den fullständiga adressen i meddelandet."

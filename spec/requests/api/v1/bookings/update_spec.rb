@@ -57,7 +57,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       ).to eq 'There was a problem connecting to our payments infrastructure provider. Please try again later.'
     end
 
-    it 'updates status of certain booking to accepted in under 1 ms and with iteration rate of 5000000 per second' do
+    it 'updates status of certain booking to accepted in under 1 ms and with iteration rate of 2000000 per second' do
       patch_request =
         patch "/api/v1/bookings/#{booking.id}",
               params: {
@@ -66,10 +66,10 @@ RSpec.describe Api::V1::BookingsController, type: :request do
               },
               headers: headers_host1
       expect { patch_request }.to perform_under(1).ms.sample(20).times
-      expect { patch_request }.to perform_at_least(5_000_000).ips
+      expect { patch_request }.to perform_at_least(2_000_000).ips
     end
 
-    it 'updates status of certain booking to declined in under 1 ms and with iteration rate of 5000000 per second' do
+    it 'updates status of certain booking to declined in under 1 ms and with iteration rate of 2000000 per second' do
       patch_request =
         patch "/api/v1/bookings/#{booking.id}",
               params: {
@@ -78,7 +78,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
               },
               headers: headers_host1
       expect { patch_request }.to perform_under(1).ms.sample(20).times
-      expect { patch_request }.to perform_at_least(5_000_000).ips
+      expect { patch_request }.to perform_at_least(2_000_000).ips
     end
 
     it 'cannot accept a booking if another one has already been accepted on the same date range' do

@@ -23,11 +23,11 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       expect(conversation1.hidden).to eq user1.id
     end
 
-    it 'updates hidden field of certain conversation in under 1 ms and with iteration rate of 5000000 per second' do
+    it 'updates hidden field of certain conversation in under 1 ms and with iteration rate of 2000000 per second' do
       patch_request =
         patch "/api/v1/conversations/#{conversation1.id}", params: { hidden: user1.id }, headers: headers_user1
       expect { patch_request }.to perform_under(1).ms.sample(20).times
-      expect { patch_request }.to perform_at_least(5_000_000).ips
+      expect { patch_request }.to perform_at_least(2_000_000).ips
     end
 
     it 'does not update hidden field of certain conversation if action comes from an unassociated host' do
@@ -50,11 +50,11 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
       expect(Conversation.first.id).to eq conversation1.id
     end
 
-    it 'deletes coversation if hidden field is not nil in under 1 ms and with iteration rate of 5000000 per second' do
+    it 'deletes coversation if hidden field is not nil in under 1 ms and with iteration rate of 2000000 per second' do
       patch_request =
         patch "/api/v1/conversations/#{conversation2.id}", params: { hidden: user2.id }, headers: headers_user3
       expect { patch_request }.to perform_under(1).ms.sample(20).times
-      expect { patch_request }.to perform_at_least(5_000_000).ips
+      expect { patch_request }.to perform_at_least(2_000_000).ips
     end
   end
 end

@@ -34,12 +34,12 @@ RSpec.describe ReportsMailer, type: :mailer do
       expect(new_report_mail.body.encoded).to match("Host got paid: #{booking.price_total}")
     end
 
-    it 'is performed under 500ms' do
-      expect { new_report_mail }.to perform_under(500).ms.sample(20).times
+    it 'is performed under 1000ms' do
+      expect { new_report_mail }.to perform_under(1000).ms.sample(20).times
     end
 
-    it 'performs at least 800K iterations per second' do
-      expect { new_report_mail }.to perform_at_least(800_000).ips
+    it 'performs at least 500K iterations per second' do
+      expect { new_report_mail }.to perform_at_least(500_000).ips
     end
   end
 end

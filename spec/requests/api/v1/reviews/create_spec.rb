@@ -67,7 +67,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         expect(profile2.score).to eq 3.5
       end
 
-      it 'creates review in under 1 ms and with iteration rate of 5000000 per second' do
+      it 'creates review in under 1 ms and with iteration rate of 2000000 per second' do
         post_request =
           post '/api/v1/reviews',
                params: {
@@ -81,7 +81,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
                headers: headers
 
         expect { post_request }.to perform_under(1).ms.sample(20).times
-        expect { post_request }.to perform_at_least(5_000_000).ips
+        expect { post_request }.to perform_at_least(2_000_000).ips
       end
     end
 

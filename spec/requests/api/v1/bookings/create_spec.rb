@@ -85,7 +85,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(Delayed::Job.all.count).to eq 2
       end
 
-      it 'creates booking in under 1 ms and with iteration rate of 5000000 per second' do
+      it 'creates booking in under 1 ms and with iteration rate of 2000000 per second' do
         post_request =
           post '/api/v1/bookings',
                params: {
@@ -99,7 +99,7 @@ RSpec.describe Api::V1::BookingsController, type: :request do
                },
                headers: headers
         expect { post_request }.to perform_under(1).ms.sample(20).times
-        expect { post_request }.to perform_at_least(5_000_000).ips
+        expect { post_request }.to perform_at_least(2_000_000).ips
       end
     end
 
