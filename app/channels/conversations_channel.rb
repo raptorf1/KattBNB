@@ -13,7 +13,7 @@ class ConversationsChannel < ApplicationCable::Channel
     stop_all_streams
   end
 
-  def send_message(data)
+  def receive(data)
     conversation = Conversation.find_by(id: data['conversation_id'])
     if conversation.hidden == nil
       send_actions(data, conversation)

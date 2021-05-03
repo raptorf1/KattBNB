@@ -49,8 +49,8 @@ RSpec.describe ConversationsChannel, type: :channel do
 
   it 'transmits relevant errors when message arguments are not within permitted params' do
     subscribe(conversations_id: conversation.id)
-    expect(subscription.send_message({ 'conversation_id' => conversation.id })[1]['message']['type']).to eq 'errors'
-    expect(subscription.send_message({ 'conversation_id' => conversation.id })[1]['message']['data']).to eq [
+    expect(subscription.receive({ 'conversation_id' => conversation.id })[1]['message']['type']).to eq 'errors'
+    expect(subscription.receive({ 'conversation_id' => conversation.id })[1]['message']['data']).to eq [
          'User must exist'
        ]
   end
@@ -58,7 +58,7 @@ RSpec.describe ConversationsChannel, type: :channel do
   it 'transmits relevant error when unassociated with a conversation user tries to send a message and then it deletes the message' do
     subscribe(conversations_id: conversation.id)
     expect(
-      subscription.send_message(
+      subscription.receive(
         { 'conversation_id' => conversation.id, 'body' => 'Happy New Year!', 'user_id' => user3.id }
       )[
         1
@@ -69,7 +69,7 @@ RSpec.describe ConversationsChannel, type: :channel do
       ]
     ).to eq 'errors'
     expect(
-      subscription.send_message(
+      subscription.receive(
         { 'conversation_id' => conversation.id, 'body' => 'Happy New Year!', 'user_id' => user3.id }
       )[
         1
@@ -85,7 +85,7 @@ RSpec.describe ConversationsChannel, type: :channel do
   it 'broadcasts message and does not send an email to receiver if she opts out of that notification' do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation2.id)
-    subscription.send_message(
+    subscription.receive(
       { 'conversation_id' => conversation2.id, 'user_id' => user1.id, 'body' => 'Batman, I hate you!' }
     )
     expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
@@ -95,7 +95,7 @@ RSpec.describe ConversationsChannel, type: :channel do
   it 'broadcasts message and sends an email to receiver when message arguments are within permitted params' do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation.id)
-    subscription.send_message(
+    subscription.receive(
       { 'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => 'Batman, I love you!' }
     )
     expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
@@ -106,7 +106,7 @@ RSpec.describe ConversationsChannel, type: :channel do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation3.id)
     expect(conversation3.hidden).to eq user2.id
-    subscription.send_message(
+    subscription.receive(
       { 'conversation_id' => conversation3.id, 'user_id' => user3.id, 'body' => 'Batman, I love you!' }
     )
     conversation3.reload
@@ -118,7 +118,7 @@ RSpec.describe ConversationsChannel, type: :channel do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation3.id)
     send_message =
-      subscription.send_message(
+      subscription.receive(
         { 'conversation_id' => conversation3.id, 'user_id' => user3.id, 'body' => 'Batman, I love you!' }
       )
     expect { send_message }.to perform_under(1).ms.sample(20).times
@@ -135,7 +135,7 @@ RSpec.describe ConversationsChannel, type: :channel do
     }
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation.id)
-    subscription.send_message(
+    subscription.receive(
       { 'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => 'Batman, I love you!', 'image' => image }
     )
     expect(Message.last.image).to be_attached
@@ -153,7 +153,7 @@ RSpec.describe ConversationsChannel, type: :channel do
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation.id)
     send_message =
-      subscription.send_message(
+      subscription.receive(
         {
           'conversation_id' => conversation.id,
           'user_id' => user1.id,
@@ -175,7 +175,7 @@ RSpec.describe ConversationsChannel, type: :channel do
     }
     ActiveJob::Base.queue_adapter = :test
     subscribe(conversations_id: conversation.id)
-    subscription.send_message(
+    subscription.receive(
       { 'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => '', 'image' => image }
     )
     expect(Message.last.image).to be_attached
