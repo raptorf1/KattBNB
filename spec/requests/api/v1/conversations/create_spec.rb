@@ -19,10 +19,6 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
         expect(response.status).to eq 200
       end
 
-      it 'sends an email upon creation' do
-        expect(Delayed::Job.all.count).to eq 1
-      end
-
       it 'returns the id of an existing conversation' do
         post '/api/v1/conversations', params: { user1_id: user1.id, user2_id: user3.id }, headers: headers
 

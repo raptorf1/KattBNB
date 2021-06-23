@@ -45,8 +45,6 @@ sv-SE:
     reviews:
       notify_host_create_review: "Du har en ny recension!"
       notify_user_pending_review: "Lämna en recension för %{host}"
-    conversations:
-      notify_user_new_conversation: "%{user} startade en konversation med dig!"
     messages:
       notify_user_new_message: "Nytt meddelande från %{user}!"
     views:
@@ -66,10 +64,6 @@ sv-SE:
           new_html: "<strong>%{user}</strong> har precis skickat dig ett meddelande."
           view_html: "<a href='%{link}' class='%{class}'>Klicka här</a> för att se det."
           turn_off_html: "<strong>P.S.</strong> För många e-postmeddelanden? Du kan stänga av det här meddelandet i <a href='%{link}' class='%{class}'>din profilsida</a>."
-      conversation:
-        notify_user_new_conversation:
-          started_html: "<strong>%{user}</strong> har precis startat en konversation med dig."
-          view_html: "Du kan se den <a href='%{link}' class='%{class}'>på KattBNB</a>."
       booking:
         notify_host_create_booking:
           great_news: "Vi har spännande nyheter åt dig!"
