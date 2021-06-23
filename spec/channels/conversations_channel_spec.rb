@@ -55,6 +55,16 @@ RSpec.describe ConversationsChannel, type: :channel do
        ]
   end
 
+  it 'transmits relevant errors when message contains email or phone number' do
+    subscribe(conversations_id: conversation.id)
+
+    subscription.receive(
+      { 'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => 'private@email.com' }
+    )
+
+    expect(subscription.receive({ 'conversation_id' => conversation.id })[1]['message']['type']).to eq 'errors'
+  end
+
   it 'transmits relevant error when unassociated with a conversation user tries to send a message and then it deletes the message' do
     subscribe(conversations_id: conversation.id)
     expect(

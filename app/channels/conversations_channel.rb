@@ -50,5 +50,7 @@ class ConversationsChannel < ApplicationCable::Channel
       message.destroy
       transmit({ type: 'errors', data: I18n.t('channels.conversations.message_error') })
     end
+    rescue =>  e
+      binding.pry
   end
 end
