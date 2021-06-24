@@ -50,7 +50,13 @@ class ConversationsChannel < ApplicationCable::Channel
       message.destroy
       transmit({ type: 'errors', data: I18n.t('channels.conversations.message_error') })
     end
-    rescue =>  e
-      binding.pry
+  rescue => e
+    transmit(
+      {
+        type: 'errors',
+        data:
+          'Please do not share private information like phone numbers or email addresses on our messenger as that is against our Terms and Conditions.'
+      }
+    )
   end
 end

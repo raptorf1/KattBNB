@@ -55,14 +55,20 @@ RSpec.describe ConversationsChannel, type: :channel do
        ]
   end
 
-  it 'transmits relevant errors when message contains email or phone number' do
+  it 'transmits relevant errors when message contains email and/or phone number' do
     subscribe(conversations_id: conversation.id)
-
     subscription.receive(
-      { 'conversation_id' => conversation.id, 'user_id' => user1.id, 'body' => 'private@email.com' }
+      {
+        'conversation_id' => conversation.id,
+        'user_id' => user1.id,
+        'body' => 'Hi there! You can contact me at private@email.com or at 0771793336.'
+      }
     )
-
     expect(subscription.receive({ 'conversation_id' => conversation.id })[1]['message']['type']).to eq 'errors'
+    expect(
+      subscription.receive({ 'conversation_id' => conversation.id })[1]['message']['data']
+    ).to eq 'Please do not share private information like phone numbers or email addresses on our messenger as that is against our Terms and Conditions.'
+    expect(Message.all.length).to eq 0
   end
 
   it 'transmits relevant error when unassociated with a conversation user tries to send a message and then it deletes the message' do
