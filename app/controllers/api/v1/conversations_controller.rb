@@ -33,12 +33,7 @@ class Api::V1::ConversationsController < ApplicationController
     else
       conversation = Conversation.create(conversation_params)
       if conversation.persisted?
-        user1 = current_api_v1_user
-        user2 = User.where(id: conversation.user2_id)
         render json: { message: I18n.t('controllers.reusable.create_success'), id: conversation.id }, status: 200
-        ConversationsMailer
-          .delay(queue: 'conversations_email_notifications')
-          .notify_user_new_conversation(user1, user2[0])
       else
         render json: { error: conversation.errors.full_messages }, status: 422
       end

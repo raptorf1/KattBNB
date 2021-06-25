@@ -45,8 +45,6 @@ en-US:
     reviews:
       notify_host_create_review: "You got a new review!"
       notify_user_pending_review: "Leave a review for %{host}"
-    conversations:
-      notify_user_new_conversation: "%{user} started a conversation with you!"
     messages:
       notify_user_new_message: "New message from %{user}!"
     views:
@@ -66,10 +64,6 @@ en-US:
           new_html: "<strong>%{user}</strong> has just sent you a new message."
           view_html: "<a href='%{link}' class='%{class}'>Click here</a> to check it out."
           turn_off_html: "<strong>P.S.</strong> Too many emails? You can turn off this notification in <a href='%{link}' class='%{class}'>your profile page</a>."
-      conversation:
-        notify_user_new_conversation:
-          started_html: "<strong>%{user}</strong> has just started a conversation with you."
-          view_html: "You can check it out <a href='%{link}' class='%{class}'>on KattBNB</a>."
       booking:
         notify_host_create_booking:
           great_news: "We've got some great news for you!"
