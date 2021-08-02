@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
 
   include DeviseTokenAuth::Concerns::User
 
+  before_create :remove_whitespace_nickname
+
   has_one :host_profile, dependent: :destroy
   has_one_attached :profile_avatar
   has_many :message, dependent: :nullify
@@ -23,5 +25,9 @@ class User < ActiveRecord::Base
 
   def send_devise_notification(notification, *args)
     I18n.with_locale(self.lang_pref) { super(notification, *args) }
+  end
+
+  def remove_whitespace_nickname
+    self.nickname = self.nickname.strip
   end
 end

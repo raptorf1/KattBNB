@@ -18,6 +18,24 @@ RSpec.describe 'User Registration', type: :request do
            headers: headers
       expect(json_response['status']).to eq 'success'
       expect(response.status).to eq 200
+      expect(json_response['data']['nickname']).to eq 'KittenPrincess'
+    end
+
+    it 'removes leading and trailing only whitespace from nickname if it exists and returns a user and a token' do
+      post '/api/v1/auth',
+           params: {
+             email: 'zane@craft.se',
+             password: 'password',
+             password_confirmation: 'password',
+             nickname: '  Kitten Princess   ',
+             location: 'Gothenburg',
+             confirm_success_url: 'confirmed',
+             lang_pref: 'sv-SE'
+           },
+           headers: headers
+      expect(json_response['data']['nickname']).to eq 'Kitten Princess'
+      expect(json_response['status']).to eq 'success'
+      expect(response.status).to eq 200
     end
 
     it 'returns a user and a token in under 1 ms and with iteration rate of 2000000 per second' do
