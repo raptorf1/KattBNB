@@ -1,36 +1,45 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
-RSpec.describe 'Reset Password', type: :request do
+RSpec.describe 'POST /api/v1/auth/password', type: :request do
   let(:user) { FactoryBot.create(:user) }
   let(:headers) { { HTTP_ACCEPT: 'application/json' } }
 
-  describe 'POST /api/v1/auth/password' do
-    it 'sends an email to the user that already exists in the database' do
-      post '/api/v1/auth/password', params: { email: user.email, redirect_url: 'confirmed' }, headers: headers
+  describe 'successfully' do
+    before { post '/api/v1/auth/password', params: { email: user.email, redirect_url: 'confirmed' }, headers: headers }
+
+    it 'is expected to return a success message' do
       expect(json_response['success']).to eq true
-      expect(
-        json_response['message']
-      ).to eq 'An email has been sent to kattbnb@fgreat.com containing instructions for resetting your password.'
+    end
+
+    it 'is expected to return a 200 response status' do
       expect(response.status).to eq 200
     end
 
-    it 'sends an email to the user that already exists in the database in under 1 ms and with iteration rate of 2000000 per second' do
-      post_request =
-        post '/api/v1/auth/password', params: { email: user.email, redirect_url: 'confirmed' }, headers: headers
-      expect { post_request }.to perform_under(1).ms.sample(20).times
-      expect { post_request }.to perform_at_least(2_000_000).ips
+    it 'is expected to return message about confirmation email' do
+      expect(
+        json_response['message']
+      ).to eq 'An email has been sent to kattbnb@fgreat.com containing instructions for resetting your password.'
     end
+  end
 
-    it 'raises an error if user/email does not exist in the database' do
+  describe 'unsuccessfully if user/email does not exist in the database' do
+    before do
       post '/api/v1/auth/password',
            params: {
              email: 'gameofthrones@mail.ru',
              redirect_url: 'confirmed'
            },
            headers: headers
-      expect(json_response['success']).to eq false
-      expect(json_response['errors']).to eq ['Unable to find user with email gameofthrones@mail.ru.']
+    end
+
+    it 'is expected to return a 404 response status' do
       expect(response.status).to eq 404
+    end
+
+    it 'is expected to return an error message' do
+      expect(json_response['errors']).to eq ['Unable to find user with email gameofthrones@mail.ru.']
+    end
+
+    it 'is expected to return a false success message' do
+      expect(json_response['success']).to eq false
     end
   end
 end
