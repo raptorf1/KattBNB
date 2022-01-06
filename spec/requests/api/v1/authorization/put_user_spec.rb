@@ -5,15 +5,14 @@ RSpec.describe 'PUT /api/v1/auth', type: :request do
 
   describe 'update language preference' do
     before do
-      @put_request =
-        put '/api/v1/auth',
-            params: {
-              lang_pref: 'en-US',
-              uid: user.uid,
-              'access-token': auth_token['access-token'],
-              client: auth_token['client']
-            },
-            headers: headers
+      put '/api/v1/auth',
+          params: {
+            lang_pref: 'en-US',
+            uid: user.uid,
+            'access-token': auth_token['access-token'],
+            client: auth_token['client']
+          },
+          headers: headers
     end
 
     it 'is expected to return a success message' do
@@ -31,15 +30,14 @@ RSpec.describe 'PUT /api/v1/auth', type: :request do
 
   describe 'update location' do
     before do
-      @put_request =
-        put '/api/v1/auth',
-            params: {
-              location: 'Japan',
-              uid: user.uid,
-              'access-token': auth_token['access-token'],
-              client: auth_token['client']
-            },
-            headers: headers
+      put '/api/v1/auth',
+          params: {
+            location: 'Japan',
+            uid: user.uid,
+            'access-token': auth_token['access-token'],
+            client: auth_token['client']
+          },
+          headers: headers
     end
 
     it 'is expected to return a success message' do
@@ -57,15 +55,14 @@ RSpec.describe 'PUT /api/v1/auth', type: :request do
 
   describe 'update message notification' do
     before do
-      @put_request =
-        put '/api/v1/auth',
-            params: {
-              message_notification: false,
-              uid: user.uid,
-              'access-token': auth_token['access-token'],
-              client: auth_token['client']
-            },
-            headers: headers
+      put '/api/v1/auth',
+          params: {
+            message_notification: false,
+            uid: user.uid,
+            'access-token': auth_token['access-token'],
+            client: auth_token['client']
+          },
+          headers: headers
     end
 
     it 'is expected to return a success message' do
