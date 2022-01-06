@@ -5,6 +5,8 @@ RSpec.describe User, type: :model do
     expect(create(:user)).to be_valid
   end
 
+  # test removing of whitespace on nickname
+
   describe 'Database table' do
     it { is_expected.to have_db_column :id }
     it { is_expected.to have_db_column :provider }
