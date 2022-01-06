@@ -1,71 +1,59 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
-RSpec.describe 'Sessions', type: :request do
+RSpec.describe 'POST /api/v1/auth/sign_in', type: :request do
   let(:user) { FactoryBot.create(:user) }
   let(:headers) { { HTTP_ACCEPT: 'application/json' } }
 
-  describe 'POST /api/v1/auth/sign_in' do
-    it 'valid credentials returns a user' do
-      post '/api/v1/auth/sign_in', params: { email: user.email, password: user.password }, headers: headers
+  describe 'successfully' do
+    before { post '/api/v1/auth/sign_in', params: { email: user.email, password: user.password }, headers: headers }
 
-      expected_response = {
-        'data' => {
-          'id' => user.id,
-          'uid' => user.email,
-          'email' => user.email,
-          'provider' => 'email',
-          'name' => nil,
-          'nickname' => user.nickname,
-          'location' => user.location,
-          'image' => nil,
-          'avatar' => nil,
-          'allow_password_change' => false,
-          'message_notification' => true,
-          'lang_pref' => nil
-        }
-      }
+    it 'is expected to return a 200 response status' do
+      expect(response.status).to eq 200
+    end
+  end
 
-      expect(json_response).to eq expected_response
+  describe 'unsuccessfully' do
+    describe 'if they have not confirmed their email' do
+      before do
+        unconfirmed_user = FactoryBot.create(:user, confirmed_at: nil)
+
+        post '/api/v1/auth/sign_in',
+             params: {
+               email: unconfirmed_user.email,
+               password: unconfirmed_user.password
+             },
+             headers: headers
+      end
+
+      it 'is expected to return a 401 response status' do
+        expect(response.status).to eq 401
+      end
+
+      it 'is expected to return an error message' do
+        expect(json_response['errors']).to eq [
+             'A confirmation email was sent to your account at kattbnb@fgreat.com. You must follow the instructions in the email before your account can be activated.'
+           ]
+      end
+
+      it 'is expected to return a false success message' do
+        expect(json_response['success']).to eq false
+      end
     end
 
-    it 'returns a user in under 1 ms and with iteration rate of 2000000 per second' do
-      post_request =
-        post '/api/v1/auth/sign_in', params: { email: user.email, password: user.password }, headers: headers
-      expect { post_request }.to perform_under(1).ms.sample(20).times
-      expect { post_request }.to perform_at_least(2_000_000).ips
-    end
+    describe 'with invalid credentials' do
+      before do
+        post '/api/v1/auth/sign_in', params: { email: 'wrong@email.com', password: 'bad_password' }, headers: headers
+      end
 
-    it 'does not allow user to sign in unless he clicks on the activation link sent by email from the API' do
-      user2 =
-        User.create(
-          email: 'alonso@formula1.com',
-          password: 'password',
-          password_confirmation: 'password',
-          location: 'Athens',
-          nickname: 'boa'
-        )
-      post '/api/v1/auth/sign_in', params: { email: user2.email, password: user2.password }, headers: headers
-      expect(response.status).to eq 401
-      expect(json_response['success']).to eq false
-      expect(json_response['errors']).to eq [
-           'A confirmation email was sent to your account at alonso@formula1.com. You must follow the instructions in the email before your account can be activated.'
-         ]
-    end
+      it 'is expected to return a 401 response status' do
+        expect(response.status).to eq 401
+      end
 
-    it 'invalid password returns an error message' do
-      post '/api/v1/auth/sign_in', params: { email: user.email, password: 'bad_password' }, headers: headers
+      it 'is expected to return an error message' do
+        expect(json_response['errors']).to eq ['Invalid login credentials. Please try again.']
+      end
 
-      expect(json_response['errors']).to eq ['Invalid login credentials. Please try again.']
-
-      expect(response.status).to eq 401
-    end
-
-    it 'invalid email returns an error message' do
-      post '/api/v1/auth/sign_in', params: { email: 'bad@craft.com', password: user.password }, headers: headers
-
-      expect(json_response['errors']).to eq ['Invalid login credentials. Please try again.']
-
-      expect(response.status).to eq 401
+      it 'is expected to return a false success message' do
+        expect(json_response['success']).to eq false
+      end
     end
   end
 end
