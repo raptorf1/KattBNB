@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 describe 'rake bookings:cancel_after_3_days', type: :task do
   let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
@@ -35,13 +33,5 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
     booking2.reload
     expect(booking.status).to eq 'canceled'
     expect(booking2.status).to eq 'pending'
-  end
-
-  it 'performs under 150 ms' do
-    expect { task.execute }.to perform_under(150).ms.sample(20).times
-  end
-
-  it 'performs at least 500 iterations per second' do
-    expect { task.execute }.to perform_at_least(500).ips
   end
 end

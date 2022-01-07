@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 describe 'rake reviews:delete_unassociated_reviews', type: :task do
   let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
@@ -29,13 +27,5 @@ describe 'rake reviews:delete_unassociated_reviews', type: :task do
     review2.update_attribute(:booking_id, nil)
     review2.update_attribute(:host_profile_id, nil)
     expect { task.execute }.to output("2 unassociated review(s) successfully deleted!\n").to_stdout
-  end
-
-  it 'performs under 50 ms' do
-    expect { task.execute }.to perform_under(50).ms.sample(20).times
-  end
-
-  it 'performs at least 500 iterations per second' do
-    expect { task.execute }.to perform_at_least(500).ips
   end
 end

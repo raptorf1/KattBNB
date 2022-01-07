@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe 'User Saves / Changes Avatar and API', type: :request do
   let!(:user) { FactoryBot.create(:user) }
   let(:credentials) { user.create_new_auth_token }
@@ -71,25 +69,6 @@ RSpec.describe 'User Saves / Changes Avatar and API', type: :request do
     expect(response.status).to eq 422
     user.reload
     expect(user.profile_avatar.attached?).to eq false
-  end
-
-  it 'saves the avatar in ActiveStorage in under 1 ms and with iteration rate of 3000000 per second' do
-    put_request =
-      put "/api/v1/users/#{user.id}",
-          params: {
-            profile_avatar: {
-              type: 'image/png',
-              encoder: 'name=carbon (5).png;base64',
-              data:
-                'iVBORw0KGgoAAAANSUhEUgAABjAAAAOmCAYAAABFYNwHAAAgAElEQVR4XuzdB3gU1cLG8Te9EEgISQi9I71KFbBXbFixN6zfvSiIjSuKInoVFOyIDcWuiKiIol4Q6SBVOtI7IYSWBkm+58y6yW4a2SS7O4n/eZ7vuWR35pwzvzO76zf',
-              extension: 'png'
-            },
-            'access-token': headers['access-token'],
-            client: headers['client']
-          },
-          headers: headers
-    expect { put_request }.to perform_under(1).ms.sample(20).times
-    expect { put_request }.to perform_at_least(3_000_000).ips
   end
 
   it 'raises an error if user is not signed in' do

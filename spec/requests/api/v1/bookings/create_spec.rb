@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Api::V1::BookingsController, type: :request do
   let(:user) { FactoryBot.create(:user) }
   let!(:user2) do
@@ -83,23 +81,6 @@ RSpec.describe Api::V1::BookingsController, type: :request do
         expect(response.status).to eq 200
         expect(Booking.all.length).to eq 3
         expect(Delayed::Job.all.count).to eq 2
-      end
-
-      it 'creates booking in under 1 ms and with iteration rate of 2000000 per second' do
-        post_request =
-          post '/api/v1/bookings',
-               params: {
-                 number_of_cats: '23',
-                 message: 'I want my cats to have a good time, pls!',
-                 host_nickname: 'JJoker',
-                 dates: [1_562_803_200_000, 1_562_889_600_000],
-                 price_per_day: '125.96',
-                 price_total: '1452.36',
-                 user_id: user.id
-               },
-               headers: headers
-        expect { post_request }.to perform_under(1).ms.sample(20).times
-        expect { post_request }.to perform_at_least(2_000_000).ips
       end
     end
 

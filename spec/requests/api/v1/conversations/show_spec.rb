@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:user2) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'Harley Quinn') }
@@ -80,12 +78,6 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
           filename: 'attachment_amazon_s3.jpg',
           content_type: 'image/jpg'
         )
-      end
-
-      it 'fetches specific conversation in under 1 ms and with iteration rate of 2000000 per second' do
-        get_request = get "/api/v1/conversations/#{conversation1.id}", headers: headers1
-        expect { get_request }.to perform_under(1).ms.sample(20).times
-        expect { get_request }.to perform_at_least(2_000_000).ips
       end
     end
   end

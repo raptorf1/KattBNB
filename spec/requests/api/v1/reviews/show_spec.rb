@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Api::V1::ReviewsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:user2) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'Harley Quinn') }
@@ -50,14 +48,6 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         get "/api/v1/reviews/#{review1.id}", headers: headers2
         expect(response.status).to eq 422
         expect(json_response['error']).to eq ['You cannot perform this action!']
-      end
-    end
-
-    describe 'performance wise' do
-      it 'fetches specific review in under 1 ms and with iteration rate of 3000000 per second' do
-        get_request = get "/api/v1/reviews/#{review1.id}", headers: headers1
-        expect { get_request }.to perform_under(1).ms.sample(20).times
-        expect { get_request }.to perform_at_least(3_000_000).ips
       end
     end
   end

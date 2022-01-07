@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Api::V1::ConversationsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:user2) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'Harley Queen') }
@@ -38,15 +36,6 @@ RSpec.describe Api::V1::ConversationsController, type: :request do
         post '/api/v1/conversations', params: { user1_id: user1.id, user2_id: 10_000 }, headers: headers
         expect(json_response['error']).to eq ['User2 must exist']
         expect(response.status).to eq 422
-      end
-    end
-
-    describe 'performance wise' do
-      it 'creates conversation in under 1 ms and with iteration of 2000000 per second' do
-        post_request =
-          post '/api/v1/conversations', params: { user1_id: user1.id, user2_id: user2.id }, headers: headers
-        expect { post_request }.to perform_under(1).ms.sample(20).times
-        expect { post_request }.to perform_at_least(2_000_000).ips
       end
     end
   end

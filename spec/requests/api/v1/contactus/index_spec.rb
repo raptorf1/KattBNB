@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe 'User can fill contact us form in the front-end and API', type: :request do
   it 'responds with 200 if email is valid' do
     get '/api/v1/contactus?name=Access Token&email=test@hotmail.com&message=Can I order pizza from your website???'

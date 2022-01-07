@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Api::V1::HostProfilesController, type: :request do
   let(:user) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
   let(:credentials) { user.create_new_auth_token }
@@ -83,12 +81,6 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
              user_id: user.id
            },
            headers: headers
-    end
-
-    it 'fetches specific host profile in under 1 ms and with iteration rate of at least 2000000 per second' do
-      get_request = get "/api/v1/host_profiles/#{HostProfile.last.id}", headers: headers
-      expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(2_000_000).ips
     end
   end
 

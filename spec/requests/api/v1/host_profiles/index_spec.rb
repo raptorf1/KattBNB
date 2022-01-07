@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Api::V1::HostProfilesController, type: :request do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens') }
   let!(:profile_user) do
@@ -85,12 +83,6 @@ RSpec.describe Api::V1::HostProfilesController, type: :request do
       expect(no_review.length).to eq 1
       expect(with_review[0]['id']).to eq profile_user.id
       expect(no_review[0]['id']).to eq profile_another_user.id
-    end
-
-    it 'fetches collection of host profiles in under 1 ms and with iteration rate of at least 2000000 per second' do
-      get_request = get '/api/v1/host_profiles?cats=2&startDate=1588032000000&endDate=1588204800000', headers: headers
-      expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(2_000_000).ips
     end
 
     describe 'for a specific user' do

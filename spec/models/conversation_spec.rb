@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Conversation, type: :model do
   it 'should have a valid Factory' do
     expect(create(:conversation)).to be_valid
@@ -46,17 +44,6 @@ RSpec.describe Conversation, type: :model do
       expect(conversation1.user2_id).to eq user2.id
       expect(conversation2.user1_id).to eq user3.id
       expect(conversation2.user2_id).to eq nil
-    end
-
-    it 'performance stats for user deletion and nullification of conversation' do
-      user1 = FactoryBot.create(:user, email: 'george@cyprus.com', nickname: 'george')
-      user2 = FactoryBot.create(:user, email: 'zane@sweden.com', nickname: 'zane')
-      user3 = FactoryBot.create(:user, email: 'boa@norway.com', nickname: 'boa')
-      conversation1 = FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id)
-      conversation2 = FactoryBot.create(:conversation, user1_id: user3.id, user2_id: user1.id)
-      conversation3 = FactoryBot.create(:conversation, user1_id: user2.id, user2_id: user3.id)
-      expect { user1.destroy }.to perform_under(100).ms.sample(20).times
-      expect { user1.destroy }.to perform_at_least(100).ips
     end
   end
 end

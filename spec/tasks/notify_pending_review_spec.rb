@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 describe 'rake reviews:notify_pending_review', type: :task do
   now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
   now_epoch_javascript = (now.to_f * 1000).to_i
@@ -59,13 +57,5 @@ describe 'rake reviews:notify_pending_review', type: :task do
     expect { task.execute }.to output(
       "1 user(s) notified to leave review after 1 day!\n1 user(s) notified to leave review after 3 days!\n1 user(s) notified to leave review after 10 days!\n"
     ).to_stdout
-  end
-
-  it 'performs under 50 ms' do
-    expect { task.execute }.to perform_under(50).ms.sample(20).times
-  end
-
-  it 'performs at least 5 iterations per second' do
-    expect { task.execute }.to perform_at_least(5).ips
   end
 end

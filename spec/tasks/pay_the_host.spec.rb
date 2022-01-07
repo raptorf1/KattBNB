@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 # happy path
 describe 'rake bookings:pay_the_host', type: :task do
   let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -104,13 +102,5 @@ describe 'rake bookings:pay_the_host', type: :task do
 
   it 'runs gracefully with no errors' do
     expect { task.execute }.not_to raise_error
-  end
-
-  it 'performs under 30 ms' do
-    expect { task.execute }.to perform_under(30).ms.sample(20).times
-  end
-
-  it 'performs at least 1 iteration per second' do
-    expect { task.execute }.to perform_at_least(1).ips
   end
 end

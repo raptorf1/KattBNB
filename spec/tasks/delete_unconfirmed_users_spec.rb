@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 describe 'rake users:delete_unconfirmed_users', type: :task do
   let!(:user1) do
     FactoryBot.create(
@@ -42,13 +40,5 @@ describe 'rake users:delete_unconfirmed_users', type: :task do
 
   it 'logs to stdout' do
     expect { task.execute }.to output("1 user(s) succesfully deleted!\n").to_stdout
-  end
-
-  it 'performs under 30 ms' do
-    expect { task.execute }.to perform_under(30).ms.sample(20).times
-  end
-
-  it 'performs at least 300 iterations per second' do
-    expect { task.execute }.to perform_at_least(300).ips
   end
 end

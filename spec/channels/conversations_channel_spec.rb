@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe ConversationsChannel, type: :channel do
   let!(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
@@ -35,16 +33,6 @@ RSpec.describe ConversationsChannel, type: :channel do
     subscribe(conversations_id: conversation.id)
     expect(subscription).to be_confirmed
     expect(subscription).to have_stream_from("conversations_#{conversation.id}_channel")
-  end
-
-  it 'subscribes to a stream in under 1 ms' do
-    subscription_request = subscribe(conversations_id: conversation.id)
-    expect { subscription_request }.to perform_under(1).ms.sample(20).times
-  end
-
-  it 'subscribes to a stream with iteration of at least 3000000 per second' do
-    subscription_request = subscribe(conversations_id: conversation.id)
-    expect { subscription_request }.to perform_at_least(3_000_000).ips
   end
 
   it 'transmits relevant errors when message arguments are not within permitted params' do
@@ -114,17 +102,6 @@ RSpec.describe ConversationsChannel, type: :channel do
     expect(conversation3.hidden).to eq nil
   end
 
-  it 'updates conversation hidden field to nil and broadcasts message in under 1 ms and with iteration rate of 3000000 per second' do
-    ActiveJob::Base.queue_adapter = :test
-    subscribe(conversations_id: conversation3.id)
-    send_message =
-      subscription.receive(
-        { 'conversation_id' => conversation3.id, 'user_id' => user3.id, 'body' => 'Batman, I love you!' }
-      )
-    expect { send_message }.to perform_under(1).ms.sample(20).times
-    expect { send_message }.to perform_at_least(3_000_000).ips
-  end
-
   it 'broadcasts message with image attached' do
     image = {
       type: 'image/png',
@@ -140,29 +117,6 @@ RSpec.describe ConversationsChannel, type: :channel do
     )
     expect(Message.last.image).to be_attached
     expect { MessageBroadcastJob.perform_later }.to have_enqueued_job
-  end
-
-  it 'broadcasts message with image attached in under 1 ms and with iteration rate of 2000000 per second' do
-    image = {
-      type: 'image/png',
-      encoder: 'name=carbon (5).png;base64',
-      data:
-        'iVBORw0KGgoAAAANSUhEUgAABjAAAAOmCAYAAABFYNwHAAAgAElEQVR4XuzdB3gU1cLG8Te9EEgISQi9I71KFbBXbFixN6zfvSiIjSuKInoVFOyIDcWuiKiIol4Q6SBVOtI7IYSWBkm+58y6yW4a2SS7O4n/eZ7vuWR35pwzvzO76zf',
-      extension: 'png'
-    }
-    ActiveJob::Base.queue_adapter = :test
-    subscribe(conversations_id: conversation.id)
-    send_message =
-      subscription.receive(
-        {
-          'conversation_id' => conversation.id,
-          'user_id' => user1.id,
-          'body' => 'Batman, I love you!',
-          'image' => image
-        }
-      )
-    expect { send_message }.to perform_under(1).ms.sample(20).times
-    expect { send_message }.to perform_at_least(2_000_000).ips
   end
 
   it 'broadcasts message with only image attached, without body' do

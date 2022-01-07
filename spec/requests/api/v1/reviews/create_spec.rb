@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Api::V1::ReviewsController, type: :request do
   let!(:user) { FactoryBot.create(:user) }
   let!(:user2) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
@@ -65,23 +63,6 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
         expect(response.status).to eq 200
         profile2.reload
         expect(profile2.score).to eq 3.5
-      end
-
-      it 'creates review in under 1 ms and with iteration rate of 2000000 per second' do
-        post_request =
-          post '/api/v1/reviews',
-               params: {
-                 score: 2,
-                 body: 'Fantastic host! Fully recommended!',
-                 host_nickname: 'Joker',
-                 user_id: user.id,
-                 booking_id: booking.id,
-                 host_profile_id: profile2.id
-               },
-               headers: headers
-
-        expect { post_request }.to perform_under(1).ms.sample(20).times
-        expect { post_request }.to perform_at_least(2_000_000).ips
       end
     end
 

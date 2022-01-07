@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Api::V1::BookingsController, type: :request do
   let(:host1) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
   let(:host2) { FactoryBot.create(:user, email: 'noel@craft.com', nickname: 'MacOS') }
@@ -55,30 +53,6 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(
         json_response['error']
       ).to eq 'There was a problem connecting to our payments infrastructure provider. Please try again later.'
-    end
-
-    it 'updates status of certain booking to accepted in under 1 ms and with iteration rate of 2000000 per second' do
-      patch_request =
-        patch "/api/v1/bookings/#{booking.id}",
-              params: {
-                status: 'accepted',
-                host_message: 'accepted by host'
-              },
-              headers: headers_host1
-      expect { patch_request }.to perform_under(1).ms.sample(20).times
-      expect { patch_request }.to perform_at_least(2_000_000).ips
-    end
-
-    it 'updates status of certain booking to declined in under 1 ms and with iteration rate of 2000000 per second' do
-      patch_request =
-        patch "/api/v1/bookings/#{booking.id}",
-              params: {
-                status: 'declined',
-                host_message: 'iDecline!!!'
-              },
-              headers: headers_host1
-      expect { patch_request }.to perform_under(1).ms.sample(20).times
-      expect { patch_request }.to perform_at_least(2_000_000).ips
     end
 
     it 'cannot accept a booking if another one has already been accepted on the same date range' do

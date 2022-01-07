@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe MessagesMailer, type: :mailer do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
@@ -63,18 +61,6 @@ RSpec.describe MessagesMailer, type: :mailer do
 
     it "contains users' nicknames in SV" do
       expect(new_message_mail3.body.encoded).to match("Hallå, #{user4.nickname}!")
-    end
-
-    it 'is performed under 1000ms' do
-      expect { new_message_mail }.to perform_under(1000).ms.sample(20).times
-      expect { new_message_mail2 }.to perform_under(1000).ms.sample(20).times
-      expect { new_message_mail3 }.to perform_under(1000).ms.sample(20).times
-    end
-
-    it 'performs at least 500K iterations per second' do
-      expect { new_message_mail }.to perform_at_least(500_000).ips
-      expect { new_message_mail2 }.to perform_at_least(500_000).ips
-      expect { new_message_mail3 }.to perform_at_least(500_000).ips
     end
   end
 end

@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Api::V1::BookingsController, type: :request do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens') }
   let(:credentials1) { user1.create_new_auth_token }
@@ -65,13 +63,6 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       ).to eq "{\"in_requests\":\"0\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"in_unpaid\":\"0\",\"out_requests\":\"0\",\"out_upcoming\":\"1\",\"out_history\":\"0\",\"out_unpaid\":\"1\"}"
     end
 
-    it 'performance stats for stat returning' do
-      get_request =
-        get "/api/v1/bookings?stats=yes&host_nickname=#{user1.nickname}&user_id=#{user1.id}", headers: headers1
-      expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(2_000_000).ips
-    end
-
     it 'returns a booking by host nickname to the involved host' do
       get "/api/v1/bookings?stats=no&host_nickname=#{user2.nickname}", headers: headers2
       expect(json_response[0]['host_nickname']).to eq user2.nickname
@@ -84,22 +75,10 @@ RSpec.describe Api::V1::BookingsController, type: :request do
       expect(json_response).to eq [1, 2, 3, 4, 5, 6, 2_462_889_600_000, 2_562_889_600_000]
     end
 
-    it 'returns a booking by host nickname in under 1 ms and with iteration rate of 2000000 per second' do
-      get_request = get '/api/v1/bookings', params: { stats: 'no', host_nickname: user2.nickname }, headers: headers2
-      expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(2_000_000).ips
-    end
-
     it 'returns a booking by user id to the involved user' do
       get '/api/v1/bookings', params: { stats: 'no', user_id: user1.id }, headers: headers1
       expect(json_response[0]['user_id']).to eq user1.id
       expect(json_response.count).to eq 1
-    end
-
-    it 'returns a booking by user id in under 1 ms and with iteration rate of 3000000 per second' do
-      get_request = get '/api/v1/bookings', params: { stats: 'no', user_id: user1.id }, headers: headers1
-      expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(3_000_000).ips
     end
 
     it 'has correct keys in the response' do
