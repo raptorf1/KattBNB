@@ -16,6 +16,8 @@ rescue ActiveRecord::PendingMigrationError => e
   exit 1
 end
 
+
+
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
@@ -23,4 +25,9 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
+  config.before(type: :task) do
+    output = StringIO.new
+    $stdout = output
+    @std_output = $stdout.string
+  end
 end

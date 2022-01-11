@@ -22,13 +22,11 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
 
   describe 'successfully' do
     before do
-      output = StringIO.new
-      $stdout = output
       @subject = task.execute                   
     end
 
     it 'logs to stdout' do  
-      expect($stdout.string).to eq("1 pending booking(s) succesfully cancelled!\n")
+      expect(@std_output).to eq("1 pending booking(s) succesfully cancelled!\n")
     end
 
     it 'changes status of booking to cancelled' do
