@@ -13,9 +13,7 @@ describe 'rake conversations:delete_empty_conversations', type: :task do
   end
 
   describe 'successfully' do
-    before do
-      @subject = task.execute                   
-    end
+    before { @subject = task.execute }
 
     it 'runs gracefully with no errors' do
       expect { @subject }.not_to raise_error
@@ -24,11 +22,11 @@ describe 'rake conversations:delete_empty_conversations', type: :task do
     it 'removes the empty conversation' do
       expect(Conversation.all.length).to eq 1
     end
-  
+
     it 'does not remove active conversation' do
       expect(Conversation.last.id).to eq conversation.id
     end
-  
+
     it 'logs to stdout' do
       expect(@std_output).to eq("1 empty conversation(s) succesfully deleted!\n")
     end

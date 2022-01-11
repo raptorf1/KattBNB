@@ -1,7 +1,7 @@
 describe 'rake bookings:cancel_after_3_days', type: :task do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  
+
   let!(:cancelled_booking) do
     FactoryBot.create(
       :booking,
@@ -21,11 +21,9 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
   end
 
   describe 'successfully' do
-    before do
-      @subject = task.execute                   
-    end
+    before { @subject = task.execute }
 
-    it 'logs to stdout' do  
+    it 'logs to stdout' do
       expect(@std_output).to eq("1 pending booking(s) succesfully cancelled!\n")
     end
 
@@ -39,12 +37,12 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
       expect(pending_booking.status).to eq 'pending'
     end
 
-    it 'emails the user, the host and KattBNB to cancel payment' do    
+    it 'emails the user, the host and KattBNB to cancel payment' do
       expect(Delayed::Job.all.count).to eq 3
     end
-    
+
     it 'runs gracefully with no errors' do
       expect { @subject }.not_to raise_error
-    end 
+    end
   end
 end
