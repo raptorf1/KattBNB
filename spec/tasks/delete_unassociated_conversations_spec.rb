@@ -1,11 +1,11 @@
 describe 'rake conversations:delete_unassociated_conversations', type: :task do
-  let!(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let!(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let!(:user3) { FactoryBot.create(:user, email: 'cat@woman.com', nickname: 'Catwoman') }
-  let!(:user4) { FactoryBot.create(:user, email: 'dead@pool.com', nickname: 'Deadpool') }
+  let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
+  let(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
+  let(:user3) { FactoryBot.create(:user, email: 'cat@woman.com', nickname: 'Catwoman') }
+  let(:user4) { FactoryBot.create(:user, email: 'dead@pool.com', nickname: 'Deadpool') }
 
-  let!(:conversation1) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
-  let!(:conversation2) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
+  let(:conversation1) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
+  let(:conversation2) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
   let!(:hidden_conversation) do
     FactoryBot.create(:conversation, user1_id: user3.id, user2_id: user4.id, hidden: user3.id)
   end
