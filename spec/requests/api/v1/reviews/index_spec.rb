@@ -41,7 +41,15 @@ RSpec.describe 'GET /api/v1/reviews', type: :request do
       end
 
       it 'returns correct key names in the response' do
-        expect(json_response.first).to include('id', 'score', 'body', 'host_reply', 'host_nickname', 'host_avatar', 'user')
+        expect(json_response.first).to include(
+          'id',
+          'score',
+          'body',
+          'host_reply',
+          'host_nickname',
+          'host_avatar',
+          'user'
+        )
       end
     end
   end
