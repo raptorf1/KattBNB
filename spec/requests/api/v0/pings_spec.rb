@@ -1,11 +1,12 @@
-require 'rails_helper'
+RSpec.describe 'GET /v0/pings', type: :request do
+  describe 'succesfully' do
+    before { get '/api/v0/pings' }
 
-RSpec.describe Api::V0::PingsController, type: :request do
-  describe 'GET /v0/pings' do
-    it 'should return Meow' do
-      get '/api/v0/pings'
-
+    it 'with 200 status' do
       expect(response.status).to eq 200
+    end
+
+    it 'with correct message' do
       expect(json_response['message']).to eq 'Meow!'
     end
   end
