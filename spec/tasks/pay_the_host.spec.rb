@@ -50,7 +50,7 @@ describe 'rake bookings:pay_the_host', type: :task do
       paid_accepted_booking.reload
     end
 
-    it 'runs gracefully with no errors' do
+    it 'runs with no errors' do
       expect { @subject }.not_to raise_error
     end
 
@@ -87,7 +87,7 @@ describe 'rake bookings:pay_the_host', type: :task do
     end
 
     it 'sent email has the correct booking ID as subject' do
-      expect(@jobs[0].handler).to match("Payment to host for booking id #{unpaid_accepted_booking_past.id} failed")
+      expect(@jobs.first.handler).to match("Payment to host for booking id #{unpaid_accepted_booking_past.id} failed")
     end
   end
 end

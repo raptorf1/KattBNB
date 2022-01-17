@@ -60,7 +60,7 @@ describe 'rake reviews:notify_pending_review', type: :task do
       Delayed::Job.all.each { |email| expect(email.handler[(now_epoch_javascript - 86_400_000 * 15).to_s]).to eq nil }
     end
 
-    it 'runs gracefully with no errors' do
+    it 'runs with no errors' do
       expect { @subject }.not_to raise_error
     end
 

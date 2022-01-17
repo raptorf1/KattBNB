@@ -21,19 +21,21 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
   end
 
   describe 'successfully' do
-    before { @subject = task.execute }
+    before do
+      @subject = task.execute
+      cancelled_booking.reload
+      pending_booking.reload
+    end
 
     it 'logs to stdout' do
       expect(@std_output).to eq("1 pending booking(s) succesfully cancelled!\n")
     end
 
     it 'changes status of booking to cancelled' do
-      cancelled_booking.reload
       expect(cancelled_booking.status).to eq 'canceled'
     end
 
     it 'does not change status of pending booking' do
-      pending_booking.reload
       expect(pending_booking.status).to eq 'pending'
     end
 
@@ -41,7 +43,7 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
       expect(Delayed::Job.all.count).to eq 3
     end
 
-    it 'runs gracefully with no errors' do
+    it 'runs with no errors' do
       expect { @subject }.not_to raise_error
     end
   end

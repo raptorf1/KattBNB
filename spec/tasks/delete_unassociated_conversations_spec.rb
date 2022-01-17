@@ -27,16 +27,14 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
     expect(task.prerequisites).to include 'environment'
   end
 
-  describe 'successfully deletes hidden conversation' do
+  describe 'successfully for hidden conversation' do
     before do
       user4.destroy
-
       hidden_conversation.reload
-
       @subject = task.execute
     end
 
-    it 'runs gracefully with no errors' do
+    it 'runs with no errors' do
       expect { @subject }.not_to raise_error
     end
 
@@ -49,18 +47,16 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
     end
   end
 
-  describe 'successfully deletes unassociated conversations' do
+  describe 'successfully for unassociated conversations' do
     before do
       user1.destroy
       user2.destroy
-
       conversation1.reload
       conversation2.reload
-
       @subject = task.execute
     end
 
-    it 'runs gracefully with no errors' do
+    it 'runs with no errors' do
       expect { @subject }.not_to raise_error
     end
 

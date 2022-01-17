@@ -2,8 +2,10 @@ describe 'rake conversations:delete_empty_conversations', type: :task do
   let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
   let(:user3) { FactoryBot.create(:user, email: 'cat@woman.com', nickname: 'Catwoman') }
+
   let(:conversation) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
   let!(:empty_conversation) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id) }
+
   let!(:message1) do
     FactoryBot.create(:message, conversation_id: conversation.id, user_id: user1.id, body: 'Sweet child of mine!!!!')
   end
@@ -15,7 +17,7 @@ describe 'rake conversations:delete_empty_conversations', type: :task do
   describe 'successfully' do
     before { @subject = task.execute }
 
-    it 'runs gracefully with no errors' do
+    it 'runs with no errors' do
       expect { @subject }.not_to raise_error
     end
 

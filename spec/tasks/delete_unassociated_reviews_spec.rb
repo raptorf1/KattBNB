@@ -22,7 +22,7 @@ describe 'rake reviews:delete_unassociated_reviews', type: :task do
       @subject = task.execute
     end
 
-    it 'runs gracefully with no errors' do
+    it 'runs with no errors' do
       expect { @subject }.not_to raise_error
     end
 
