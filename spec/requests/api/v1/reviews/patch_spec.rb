@@ -67,36 +67,43 @@ RSpec.describe 'PATCH /api/v1/reviews/id', type: :request do
   end
 
   describe 'unsuccessfully' do
-    it 'with relevant error message if host is not logged in' do
-      patch "/api/v1/reviews/#{review1.id}", params: { host_reply: 'Thanks a lot!' }, headers: not_headers
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+    describe 'if host is not logged in' do
+      before { patch "/api/v1/reviews/#{review1.id}", params: { host_reply: 'Thanks a lot!' }, headers: not_headers }
+
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
+
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
     end
 
-    it 'with 401 status if host is not logged in' do
-      patch "/api/v1/reviews/#{review1.id}", params: { host_reply: 'Thanks a lot!' }, headers: not_headers
-      expect(response.status).to eq 401
+    describe 'if host tries to update review they are not part of' do
+      before { patch "/api/v1/reviews/#{review2.id}", params: { host_reply: 'Thanks a lot!' }, headers: headers2 }
+
+      it 'with relevant error' do
+        expect(json_response['error']).to eq ['You cannot perform this action!']
+      end
+
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
     end
 
-    it 'with relevant error message if host tries to update review they are not part of' do
-      patch "/api/v1/reviews/#{review2.id}", params: { host_reply: 'Thanks a lot!' }, headers: headers2
-      expect(json_response['error']).to eq ['You cannot perform this action!']
-    end
+    describe 'if review has already been updated by the host' do
+      before do
+        review1.update(host_reply: 'Already updated!')
+        patch "/api/v1/reviews/#{review1.id}", params: { host_reply: 'Thanks a lot!' }, headers: headers2
+      end
 
-    it 'with 422 status if host tries to update review they are not part of' do
-      patch "/api/v1/reviews/#{review2.id}", params: { host_reply: 'Thanks a lot!' }, headers: headers2
-      expect(response.status).to eq 422
-    end
+      it 'with relevant error' do
+        expect(json_response['error']).to eq ['You cannot perform this action!']
+      end
 
-    it 'with relevant message if review has already been updated with a host reply' do
-      review1.update(host_reply: 'Already updated!')
-      patch "/api/v1/reviews/#{review1.id}", params: { host_reply: 'Thanks a lot!' }, headers: headers2
-      expect(json_response['error']).to eq ['You cannot perform this action!']
-    end
-
-    it 'with 422 status if review has already been updated with a host reply' do
-      review1.update(host_reply: 'Already updated!')
-      patch "/api/v1/reviews/#{review1.id}", params: { host_reply: 'Thanks a lot!' }, headers: headers2
-      expect(response.status).to eq 422
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
     end
   end
 end

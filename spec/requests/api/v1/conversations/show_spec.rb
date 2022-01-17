@@ -47,27 +47,27 @@ RSpec.describe 'GET /api/v1/conversations/id', type: :request do
     end
 
     it 'has correct number of keys in the response for the message' do
-      expect(json_response['message'][0].count).to eq 5
+      expect(json_response['message'].first.count).to eq 5
     end
 
     it 'has correct keys in the response for the message' do
-      expect(json_response['message'][0]).to include('body', 'created_at', 'user', 'id', 'image')
+      expect(json_response['message'].first).to include('body', 'created_at', 'user', 'id', 'image')
     end
 
     it 'has correct number of keys in the response user of the message' do
-      expect(json_response['message'][0]['user'].count).to eq 1
+      expect(json_response['message'].first['user'].count).to eq 1
     end
 
     it 'has correct keys in the response for the user of the message' do
-      expect(json_response['message'][0]['user']).to include('nickname')
+      expect(json_response['message'].first['user']).to include('nickname')
     end
 
     it 'has URL in image response if image is attached' do
-      expect(json_response['message'][1]['image'].include?('http://localhost:3007/rails/active_storage/blobs'))
+      expect(json_response['message'].second['image'].include?('http://localhost:3007/rails/active_storage/blobs'))
     end
 
     it 'has correct filename in image response if image is attached' do
-      expect(json_response['message'][1]['image'].include?('attachment_amazon_s3.jpg'))
+      expect(json_response['message'].second['image'].include?('attachment_amazon_s3.jpg'))
     end
   end
 

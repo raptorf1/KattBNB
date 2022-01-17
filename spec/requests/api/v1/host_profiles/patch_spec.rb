@@ -28,6 +28,7 @@ RSpec.describe 'PATCH /api/v1/host_profiles/id', type: :request do
       patch_request(host_profile_user.id, headers_user)
       host_profile_user.reload
     end
+
     it "with 200 status for associated user's host profile" do
       expect(response.status).to eq 200
     end
@@ -38,24 +39,28 @@ RSpec.describe 'PATCH /api/v1/host_profiles/id', type: :request do
   end
 
   describe 'unsuccessfully' do
-    it "with 422 status for updating another user's host profile" do
-      patch_request(host_profile_user2.id, headers_user)
-      expect(response.status).to eq 422
+    describe "when updating another user's host profile" do
+      before { patch_request(host_profile_user2.id, headers_user) }
+
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
+
+      it 'with relevant error' do
+        expect(json_response['error']).to eq 'You cannot perform this action!'
+      end
     end
 
-    it "with relevant error for updating another user's host profile" do
-      patch_request(host_profile_user2.id, headers_user)
-      expect(json_response['error']).to eq 'You cannot perform this action!'
-    end
+    describe 'if not authenticated' do
+      before { patch_request(host_profile_user.id, headers_no_auth) }
 
-    it 'with relevant error if user is not authenticated' do
-      patch_request(host_profile_user.id, headers_no_auth)
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
-    end
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
 
-    it 'with 401 status if user is not authenticated' do
-      patch_request(host_profile_user.id, headers_no_auth)
-      expect(response.status).to eq 401
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
     end
   end
 end

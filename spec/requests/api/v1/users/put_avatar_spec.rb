@@ -49,14 +49,16 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
   end
 
   describe 'unsuccessfully' do
-    it 'with relevant error cause token/client expired or are invalid' do
-      api_call(user.id, 'kjhfvHTghjjhjbjk', headers)
-      expect(json_response['error']).to eq ['You cannot perform this action!']
-    end
+    describe 'cause token/client expired or are invalid' do
+      before { api_call(user.id, 'kjhfvHTghjjhjbjk', headers) }
 
-    it 'with 422 status cause token/client expired or are invalid' do
-      api_call(user.id, 'kjhfvHTghjjhjbjk', headers)
-      expect(response.status).to eq 422
+      it 'with relevant error' do
+        expect(json_response['error']).to eq ['You cannot perform this action!']
+      end
+
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
     end
 
     it 'with relevant error if user is not signed in' do
@@ -64,14 +66,16 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
       expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
     end
 
-    it "with relevant error if user tries to update someone else's avatar" do
-      api_call(user.id, headers['access-token'], headers2)
-      expect(json_response['error']).to eq ['You cannot perform this action!']
-    end
+    describe "if user tries to update someone else's avatar" do
+      before { api_call(user.id, headers['access-token'], headers2) }
 
-    it "with 422 status if user tries to update someone else's avatar" do
-      api_call(user.id, headers['access-token'], headers2)
-      expect(response.status).to eq 422
+      it 'with relevant error' do
+        expect(json_response['error']).to eq ['You cannot perform this action!']
+      end
+
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
     end
   end
 end

@@ -39,24 +39,28 @@ RSpec.describe 'GET /api/v1/reviews', type: :request do
   end
 
   describe 'unsuccessfully' do
-    it 'with relevant error message if not logged in' do
-      get "/api/v1/reviews/#{review1.id}", headers: not_headers
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+    describe 'if not logged in' do
+      before { get "/api/v1/reviews/#{review1.id}", headers: not_headers }
+
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
+
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
     end
 
-    it 'with 401 status if not logged in' do
-      get "/api/v1/reviews/#{review1.id}", headers: not_headers
-      expect(response.status).to eq 401
-    end
+    describe 'if not part of the review' do
+      before { get "/api/v1/reviews/#{review1.id}", headers: headers2 }
 
-    it 'with relevant error message if not part of the review' do
-      get "/api/v1/reviews/#{review1.id}", headers: headers2
-      expect(json_response['error']).to eq ['You cannot perform this action!']
-    end
+      it 'with relevant error' do
+        expect(json_response['error']).to eq ['You cannot perform this action!']
+      end
 
-    it 'with 422 status if not part of the review' do
-      get "/api/v1/reviews/#{review1.id}", headers: headers2
-      expect(response.status).to eq 422
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
     end
   end
 end

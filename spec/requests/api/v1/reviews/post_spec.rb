@@ -72,14 +72,16 @@ RSpec.describe 'POST /api/v1/review', type: :request do
   end
 
   describe 'unsuccessfully' do
-    it 'with relevant error if not all fields are filled in' do
-      post_request('', '', past_booking_1.id)
-      expect(json_response['error']).to eq ["Score can't be blank", 'Score is not a number', "Body can't be blank"]
-    end
+    describe 'if not all fields are filled in' do
+      before { post_request('', '', past_booking_1.id) }
 
-    it 'with 422 status if not all fields are filled in' do
-      post_request('', '', past_booking_1.id)
-      expect(response.status).to eq 422
+      it 'with relevant error' do
+        expect(json_response['error']).to eq ["Score can't be blank", 'Score is not a number', "Body can't be blank"]
+      end
+
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
     end
 
     it 'with relevant error if body is more than 1000 characters in length' do
