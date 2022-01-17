@@ -15,18 +15,18 @@ RSpec.describe 'PUT /api/v1/auth/password', type: :request do
             client: auth_token['client']
           },
           headers: headers
+      user.reload
     end
 
-    it 'is expected to return a success message' do
+    it 'with relevant success message' do
       expect(json_response['success']).to eq true
     end
 
-    it 'is expected to return a 200 response status' do
+    it 'with 200 status' do
       expect(response.status).to eq 200
     end
 
-    it 'is expected update password' do
-      user.reload
+    it 'updates password' do
       expect(user.valid_password?('123456')).to eq true
     end
   end
@@ -46,15 +46,15 @@ RSpec.describe 'PUT /api/v1/auth/password', type: :request do
             headers: headers
       end
 
-      it 'is expected to return a false success message' do
+      it 'with false success message' do
         expect(json_response['success']).to eq false
       end
 
-      it 'is expected to return a 422 response status' do
+      it 'with 422 status' do
         expect(response.status).to eq 422
       end
 
-      it 'is expected to return an error message' do
+      it 'with relevant error' do
         expect(json_response['errors']['full_messages']).to eq ['Current password is invalid']
       end
     end
@@ -73,15 +73,15 @@ RSpec.describe 'PUT /api/v1/auth/password', type: :request do
             headers: headers
       end
 
-      it 'is expected to return a false success message' do
+      it 'with false success message' do
         expect(json_response['success']).to eq false
       end
 
-      it 'is expected to return a 422 response status' do
+      it 'with 422 status' do
         expect(response.status).to eq 422
       end
 
-      it 'is expected to return an error message' do
+      it 'with relevant error' do
         expect(json_response['errors']['full_messages']).to eq ["Password confirmation doesn't match Password"]
       end
     end

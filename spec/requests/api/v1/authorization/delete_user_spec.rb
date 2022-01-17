@@ -14,15 +14,15 @@ RSpec.describe 'DELETE /api/v1/auth', type: :request do
              headers: headers
     end
 
-    it 'is expected to return a success message' do
+    it 'with relevant success message' do
       expect(json_response['status']).to eq 'success'
     end
 
-    it 'is expected to return a 200 response status' do
+    it 'with 200 status' do
       expect(response.status).to eq 200
     end
 
-    it 'is expected to delete user' do
+    it 'deletes user' do
       expect(User.all.length).to eq 0
     end
   end

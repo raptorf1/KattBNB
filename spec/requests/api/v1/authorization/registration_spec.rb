@@ -16,11 +16,11 @@ RSpec.describe 'POST /api/v1/auth', type: :request do
            headers: headers
     end
 
-    it 'is expected to return a success message' do
+    it 'with relevant success message' do
       expect(json_response['status']).to eq 'success'
     end
 
-    it 'is expected to return a 200 response status' do
+    it 'with 200 status' do
       expect(response.status).to eq 200
     end
   end
@@ -41,11 +41,11 @@ RSpec.describe 'POST /api/v1/auth', type: :request do
              headers: headers
       end
 
-      it 'is expected to return a 422 response status' do
+      it 'with 422 status' do
         expect(response.status).to eq 422
       end
 
-      it 'is expected to return an error message' do
+      it 'with relevant error' do
         expect(json_response['errors']['password_confirmation']).to eq ["doesn't match Password"]
       end
     end
@@ -65,11 +65,11 @@ RSpec.describe 'POST /api/v1/auth', type: :request do
              headers: headers
       end
 
-      it 'is expected to return a 422 response status' do
+      it 'with 422 status' do
         expect(response.status).to eq 422
       end
 
-      it 'is expected to return an error message' do
+      it 'with relevant error' do
         expect(json_response['errors']['email']).to eq ['is invalid']
       end
     end
@@ -77,7 +77,6 @@ RSpec.describe 'POST /api/v1/auth', type: :request do
     describe 'with an already registered email address' do
       before do
         FactoryBot.create(:user, email: 'carla@craft.se')
-
         post '/api/v1/auth',
              params: {
                email: 'carla@craft.se',
@@ -91,11 +90,11 @@ RSpec.describe 'POST /api/v1/auth', type: :request do
              headers: headers
       end
 
-      it 'is expected to return a 422 response status' do
+      it 'with 422 status' do
         expect(response.status).to eq 422
       end
 
-      it 'is expected to return an error message' do
+      it 'with relevant error' do
         expect(json_response['errors']['email']).to eq ['has already been taken']
       end
     end
@@ -103,7 +102,6 @@ RSpec.describe 'POST /api/v1/auth', type: :request do
     describe 'with an already registered username' do
       before do
         FactoryBot.create(:user, nickname: 'KattenFelix')
-
         post '/api/v1/auth',
              params: {
                email: 'pontus@craft.se',
@@ -117,11 +115,11 @@ RSpec.describe 'POST /api/v1/auth', type: :request do
              headers: headers
       end
 
-      it 'is expected to return a 422 response status' do
+      it 'with 422 status' do
         expect(response.status).to eq 422
       end
 
-      it 'is expected to return an error message' do
+      it 'with relevant error' do
         expect(json_response['errors']['nickname']).to eq ['has already been taken']
       end
     end

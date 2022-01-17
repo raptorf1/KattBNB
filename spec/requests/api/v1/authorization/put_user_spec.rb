@@ -3,7 +3,7 @@ RSpec.describe 'PUT /api/v1/auth', type: :request do
   let(:user) { FactoryBot.create(:user, lang_pref: 'sv-SE', location: 'Tokyo', message_notification: true) }
   let(:auth_token) { user.create_new_auth_token }
 
-  describe 'update language preference' do
+  describe 'update language preference successfully' do
     before do
       put '/api/v1/auth',
           params: {
@@ -15,11 +15,11 @@ RSpec.describe 'PUT /api/v1/auth', type: :request do
           headers: headers
     end
 
-    it 'is expected to return a success message' do
+    it 'with relevant success message' do
       expect(json_response['status']).to eq 'success'
     end
 
-    it 'is expected to return a 200 response status' do
+    it 'with 200 status' do
       expect(response.status).to eq 200
     end
 
@@ -28,7 +28,7 @@ RSpec.describe 'PUT /api/v1/auth', type: :request do
     end
   end
 
-  describe 'update location' do
+  describe 'update location successfully' do
     before do
       put '/api/v1/auth',
           params: {
@@ -40,11 +40,11 @@ RSpec.describe 'PUT /api/v1/auth', type: :request do
           headers: headers
     end
 
-    it 'is expected to return a success message' do
+    it 'with relevant success message' do
       expect(json_response['status']).to eq 'success'
     end
 
-    it 'is expected to return a 200 response status' do
+    it 'with 200 status' do
       expect(response.status).to eq 200
     end
 
@@ -53,7 +53,7 @@ RSpec.describe 'PUT /api/v1/auth', type: :request do
     end
   end
 
-  describe 'update message notification' do
+  describe 'update message notification successfully' do
     before do
       put '/api/v1/auth',
           params: {
@@ -65,11 +65,11 @@ RSpec.describe 'PUT /api/v1/auth', type: :request do
           headers: headers
     end
 
-    it 'is expected to return a success message' do
+    it 'with relevant success message' do
       expect(json_response['status']).to eq 'success'
     end
 
-    it 'is expected to return a 200 response status' do
+    it 'with 200 status' do
       expect(response.status).to eq 200
     end
 
