@@ -25,10 +25,6 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
         headers: call_headers
   end
 
-  it 'avatar is not present before tha api call' do
-    expect(user.profile_avatar.attached?).to eq false
-  end
-
   describe 'succesfully' do
     before do
       api_call(user.id, headers['access-token'], headers)
@@ -61,9 +57,16 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
       end
     end
 
-    it 'with relevant error if user is not signed in' do
-      api_call(user.id, headers['access-token'], not_headers)
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+    describe 'if user is not signed in' do
+      before { api_call(user.id, headers['access-token'], not_headers) }
+
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
+
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
     end
 
     describe "if user tries to update someone else's avatar" do

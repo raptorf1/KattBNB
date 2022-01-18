@@ -5,6 +5,10 @@ RSpec.describe User, type: :model do
 
   # test removing of whitespace on nickname
 
+  # it 'avatar is not present before tha api call' do
+  #   expect(user.profile_avatar.attached?).to eq false
+  # end
+
   describe 'Database table' do
     it { is_expected.to have_db_column :id }
     it { is_expected.to have_db_column :provider }
