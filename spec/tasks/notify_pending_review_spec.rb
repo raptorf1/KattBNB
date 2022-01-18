@@ -4,6 +4,7 @@ describe 'rake reviews:notify_pending_review', type: :task do
 
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
+  let(:second_host) { FactoryBot.create(:user, email: 'neutral_in@thestreets.com', nickname: 'Robin') }
 
   let!(:booking_1_day) do
     FactoryBot.create(
@@ -45,6 +46,18 @@ describe 'rake reviews:notify_pending_review', type: :task do
     )
   end
 
+  let(:reviewed_booking) do
+    FactoryBot.create(
+      :booking,
+      status: 'accepted',
+      user_id: user.id,
+      host_nickname: second_host.nickname,
+      dates: [now_epoch_javascript - 86_400_000 * 3]
+    )
+  end
+
+  let!(:review) { FactoryBot.create(:review, booking_id: reviewed_booking.id) }
+
   it 'successfully preloads the Rails environment' do
     expect(task.prerequisites).to include 'environment'
   end
@@ -62,6 +75,10 @@ describe 'rake reviews:notify_pending_review', type: :task do
 
     it 'runs with no errors' do
       expect { @subject }.not_to raise_error
+    end
+
+    it 'excludes already reviewed booking' do
+      Delayed::Job.all.each { |email| expect(email.handler[second_host.nickname.to_s]).to eq nil }
     end
 
     it 'logs to stdout' do
