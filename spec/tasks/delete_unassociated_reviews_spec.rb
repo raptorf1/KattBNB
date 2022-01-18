@@ -7,8 +7,7 @@ describe 'rake reviews:delete_unassociated_reviews', type: :task do
   let(:booking) { FactoryBot.create(:booking, status: 'accepted', user_id: user.id, host_nickname: host.nickname) }
   let!(:review) { FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id) }
 
-  let(:booking2) { FactoryBot.create(:booking, status: 'accepted', user_id: user.id, host_nickname: host.nickname) }
-  let!(:review2) { FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking2.id) }
+  let!(:review2) { FactoryBot.create(:review) }
 
   it 'successfully preloads the Rails environment' do
     expect(task.prerequisites).to include 'environment'
