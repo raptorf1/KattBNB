@@ -1,20 +1,35 @@
-RSpec.describe 'User can fill contact us form in the front-end and API', type: :request do
-  it 'responds with 200 if email is valid' do
-    get '/api/v1/contactus?name=Access Token&email=test@hotmail.com&message=Can I order pizza from your website???'
-    expect(json_response['message']).to eq 'Success!!!'
-    expect(response.status).to eq 200
+RSpec.describe 'GET /api/v1/contactus', type: :request do
+  describe 'succesfully' do
+    before do
+      get '/api/v1/contactus?name=Access Token&email=test@hotmail.com&message=Can I order pizza from your website???'
+    end
+
+    it 'with 200 status' do
+      expect(response.status).to eq 200
+    end
+
+    it 'with relevant message' do
+      expect(json_response['message']).to eq 'Success!!!'
+    end
+
+    it 'sends an email to website admin' do
+      expect(Delayed::Job.all.count).to eq 1
+    end
   end
 
-  it 'sends an email' do
-    get '/api/v1/contactus?name=Access Token&email=test@hotmail.com&message=Can I order pizza from your website???'
-    expect(Delayed::Job.all.count).to eq 1
-  end
+  describe 'unsuccessfully if email is invalid' do
+    before do
+      get '/api/v1/contactus?name=Access Token&email=tefgdgst@hotjgjmail.com&message=Can I order pizza from your website???'
+    end
 
-  it 'responds with 422 if email is invalid' do
-    get '/api/v1/contactus?name=Access Token&email=tefgdgst@hotjgjmail.com&message=Can I order pizza from your website???'
-    expect(json_response['error']).to eq [
-         "There was a problem validating your email! Are you sure it's the right one? You can always find us by following our social media links below."
-       ]
-    expect(response.status).to eq 422
+    it 'with 422 status' do
+      expect(response.status).to eq 422
+    end
+
+    it 'with relevant error' do
+      expect(json_response['error']).to eq [
+           "There was a problem validating your email! Are you sure it's the right one? You can always find us by following our social media links below."
+         ]
+    end
   end
 end
