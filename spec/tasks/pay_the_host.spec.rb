@@ -2,8 +2,6 @@ describe 'rake bookings:pay_the_host', type: :task do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
 
-  let!(:profile) { FactoryBot.create(:host_profile, user_id: host.id, stripe_account_id: 'acct_1Hywpk2HucmOr4dd') }
-
   let!(:unpaid_accepted_booking_past) do
     FactoryBot.create(
       :booking,
@@ -43,6 +41,8 @@ describe 'rake bookings:pay_the_host', type: :task do
   end
 
   describe 'succesfully' do
+    let!(:profile) { FactoryBot.create(:host_profile, user_id: host.id, stripe_account_id: 'acct_1Hywpk2HucmOr4dd') }
+
     before do
       @subject = task.execute
       unpaid_accepted_booking_past.reload
@@ -72,8 +72,9 @@ describe 'rake bookings:pay_the_host', type: :task do
   end
 
   describe 'unsuccessfully' do
+    let!(:profile) { FactoryBot.create(:host_profile, user_id: host.id, stripe_account_id: 'acct_madeupaccountid') }
+
     before do
-      profile.update_attribute(:stripe_account_id, 'acct_1kdhfsjdhfsfkljsd')
       @subject = task.execute
       @jobs = Delayed::Job.all
     end
