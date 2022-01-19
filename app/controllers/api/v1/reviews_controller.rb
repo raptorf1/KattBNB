@@ -1,6 +1,5 @@
 class Api::V1::ReviewsController < ApplicationController
   before_action :authenticate_api_v1_user!, only: %i[show create update]
-  rescue_from NoMethodError, with: :no_method_error
 
   def index
     params[:host_profile_id] ? reviews = Review.where(host_profile_id: params[:host_profile_id]) : reviews = []
@@ -9,12 +8,13 @@ class Api::V1::ReviewsController < ApplicationController
 
   def show
     review = Review.find(params[:id])
-
     if current_api_v1_user.id == review.user_id || current_api_v1_user.host_profile.id == review.host_profile_id
-      (render json: review, serializer: Reviews::Serializer)
+      render json: review, serializer: Reviews::Serializer
     else
-      (render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422)
+      render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422
     end
+  rescue NoMethodError
+    render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422
   end
 
   def create
@@ -54,9 +54,5 @@ class Api::V1::ReviewsController < ApplicationController
 
   def review_params
     params.permit(:score, :body, :host_nickname, :user_id, :booking_id, :host_profile_id)
-  end
-
-  def no_method_error
-    (render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422)
   end
 end
