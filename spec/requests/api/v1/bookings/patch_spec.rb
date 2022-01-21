@@ -56,21 +56,32 @@ RSpec.describe 'PATCH /api/v1/bookings/id', type: :request do
           headers: book_headers
   end
 
-  describe 'successfully (cannot test Stripe flow here unfortunately)' do
-    before { patch_request(booking.id, 'accepted', 'accepted by host', headers_host1) }
-
-    it 'with 555 status' do
-      expect(response.status).to eq 555
-    end
-
-    it 'with relevant error' do
-      expect(
-        json_response['error']
-      ).to eq 'There was a problem connecting to our payments infrastructure provider. Please try again later.'
-    end
-  end
-
   describe 'unsuccessfully' do
+    describe 'cause of Stripe error when capturing the money' do
+      before do
+        patch_request(booking.id, 'accepted', 'accepted by host', headers_host1)
+        booking.reload
+      end
+
+      it 'with 555 status' do
+        expect(response.status).to eq 555
+      end
+
+      it 'with relevant error' do
+        expect(
+          json_response['error']
+        ).to eq 'There was a problem connecting to our payments infrastructure provider. Please try again later.'
+      end
+
+      it 'with correct booking status' do
+        expect(booking.status).to eq 'pending'
+      end
+
+      it 'with correct booking host_message' do
+        expect(booking.host_message).to eq nil
+      end
+    end
+
     describe 'if another booking has already been accepted on the same date range' do
       before do
         patch_request(booking3.id, 'accepted', 'glad to be of assistance!', headers_host1)
