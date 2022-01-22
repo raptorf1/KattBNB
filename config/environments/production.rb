@@ -70,7 +70,7 @@ Rails.application.configure do
         Rails.application.credentials.GMAIL_PASSWORD_DEV
       end
   }
-  config.action_mailer.default_options = { from: 'KattBNB meow-reply' }
+  config.action_mailer.default_options = { from: ENV['OFFICIAL'] == 'yes' ? 'meow-reply@kattbnb.se' : 'KattBNB meow-reply' }
   config.action_mailer.default_url_options = { host: ENV['API_ENDPOINT'] }
 
   config.action_mailer.perform_caching = false
