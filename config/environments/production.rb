@@ -57,20 +57,20 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
+    address: ENV['OFFICIAL'] == 'yes' ? 'smtp.office365.com' : 'smtp.gmail.com',
     port: '587',
-    domain: 'gmail.com',
-    authentication: :plain,
+    domain: ENV['OFFICIAL'] == 'yes' ? 'office365.com' : 'gmail.com',
+    authentication: ENV['OFFICIAL'] == 'yes' ? :login : :plain,
     enable_starttls_auto: true,
     user_name: ENV['OFFICIAL'] == 'yes' ? 'meow-reply@kattbnb.se' : 'kattbnb@gmail.com',
     password:
       if ENV['OFFICIAL'] == 'yes'
-        Rails.application.credentials.GMAIL_PASSWORD_PROD
+        Rails.application.credentials.MS365_PASSWORD_PROD
       else
         Rails.application.credentials.GMAIL_PASSWORD_DEV
       end
   }
-  config.action_mailer.default_options = { from: 'KattBNB meow-reply' }
+  config.action_mailer.default_options = { from: 'meow-reply@kattbnb.se' }
   config.action_mailer.default_url_options = { host: ENV['API_ENDPOINT'] }
 
   config.action_mailer.perform_caching = false
