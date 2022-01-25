@@ -12,8 +12,8 @@ RSpec.describe 'POST /api/v1/auth/sign_in', type: :request do
 
   describe 'unsuccessfully' do
     describe 'if they have not confirmed their email' do
+      let(:unconfirmed_user) { FactoryBot.create(:user, confirmed_at: nil) }
       before do
-        unconfirmed_user = FactoryBot.create(:user, confirmed_at: nil)
         post '/api/v1/auth/sign_in',
              params: {
                email: unconfirmed_user.email,
@@ -28,7 +28,7 @@ RSpec.describe 'POST /api/v1/auth/sign_in', type: :request do
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq [
-             'A confirmation email was sent to your account at kattbnb@fgreat.com. You must follow the instructions in the email before your account can be activated.'
+             "A confirmation email was sent to your account at #{unconfirmed_user.email}. You must follow the instructions in the email before your account can be activated."
            ]
       end
 

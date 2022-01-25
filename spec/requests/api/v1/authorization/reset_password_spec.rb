@@ -16,7 +16,7 @@ RSpec.describe 'POST /api/v1/auth/password', type: :request do
     it 'with relevant message about confirmation email' do
       expect(
         json_response['message']
-      ).to eq 'An email has been sent to kattbnb@fgreat.com containing instructions for resetting your password.'
+      ).to eq "An email has been sent to #{user.email} containing instructions for resetting your password."
     end
   end
 

@@ -1,39 +1,17 @@
 RSpec.describe 'GET /api/v1/reviews', type: :request do
-  let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens') }
-  let(:profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
-  let(:booking) { FactoryBot.create(:booking, user_id: user.id) }
-
-  let(:another_user) { FactoryBot.create(:user, email: 'felix@craft.com', nickname: 'Planner', location: 'Crete') }
-  let(:profile_another_user) { FactoryBot.create(:host_profile, user_id: another_user.id) }
-  let(:booking2) { FactoryBot.create(:booking, user_id: another_user.id) }
-
-  let!(:review) do
-    FactoryBot.create(:review, user_id: user.id, booking_id: booking.id, host_profile_id: profile_another_user.id)
-  end
-
-  let!(:review2) do
-    FactoryBot.create(:review, user_id: another_user.id, booking_id: booking2.id, host_profile_id: profile_user.id)
-  end
+  let(:host_profile) { FactoryBot.create(:host_profile) }
+  let!(:reviews) { 10.times { FactoryBot.create(:review, host_profile_id: host_profile.id) } }
 
   describe 'successfully' do
-    it 'returns an empty array if no params are passed' do
-      get '/api/v1/reviews'
-      expect(json_response.count).to eq 0
-    end
-
     describe 'according to params passed' do
-      before { get "/api/v1/reviews?host_profile_id=#{profile_another_user.id}" }
+      before { get "/api/v1/reviews?host_profile_id=#{host_profile.id}" }
 
       it 'returns correct number of reviews' do
-        expect(json_response.count).to eq 1
+        expect(json_response.count).to eq 10
       end
 
       it 'returns 200 status' do
         expect(response.status).to eq 200
-      end
-
-      it 'returns correct review' do
-        expect(json_response.first['id']).to eq review.id
       end
 
       it 'returns correct number of keys in the response' do
@@ -50,6 +28,16 @@ RSpec.describe 'GET /api/v1/reviews', type: :request do
           'host_avatar',
           'user'
         )
+      end
+    end
+  end
+
+  describe 'unsuccessfully' do
+    describe 'if no params are passed' do
+      before { get '/api/v1/reviews' }
+
+      it 'is expected to return an empty array ' do
+        expect(json_response.count).to eq 0
       end
     end
   end
