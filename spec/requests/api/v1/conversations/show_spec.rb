@@ -1,29 +1,25 @@
 RSpec.describe 'GET /api/v1/conversations/id', type: :request do
-  let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:credentials1) { user1.create_new_auth_token }
-  let(:headers1) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials1) }
+  let(:messenger) { FactoryBot.create(:user) }
+  let(:credentials) { messenger.create_new_auth_token }
+  let(:headers) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials) }
 
-  let(:user2) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'Harley Quinn') }
-  let(:credentials2) { user2.create_new_auth_token }
-  let(:headers2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials2) }
+  let(:random_user) { FactoryBot.create(:user) }
+  let(:random_user_credentials) { random_user.create_new_auth_token }
+  let(:random_user_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(random_user_credentials) }
 
-  let(:user3) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
-
-  let(:conversation1) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
-  let(:conversation2) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user3.id) }
+  let(:conversation) { FactoryBot.create(:conversation, user1_id: messenger.id) }
+  let!(:message) { 2.times { FactoryBot.create(:message, user_id: messenger.id, conversation_id: conversation.id) } }
 
   describe 'successfully' do
     before do
-      FactoryBot.create(:message, user_id: user1.id, conversation_id: conversation1.id, body: 'Hello, Harley!')
-      FactoryBot.create(:message, user_id: user2.id, conversation_id: conversation1.id, body: 'Hello, Joker!')
       Message.last.image.attach(
         io: File.open('spec/fixtures/greece.jpg'),
         filename: 'attachment_amazon_s3.jpg',
         content_type: 'image/jpg'
       )
-      get "/api/v1/conversations/#{conversation1.id}", headers: headers1
+      get "/api/v1/conversations/#{conversation.id}", headers: headers
     end
 
     it 'with 200 status' do
@@ -31,7 +27,7 @@ RSpec.describe 'GET /api/v1/conversations/id', type: :request do
     end
 
     it 'returns correct conversation' do
-      expect(json_response['id']).to eq conversation1.id
+      expect(json_response['id']).to eq conversation.id
     end
 
     it 'returns correct number of messages within the conversation' do
@@ -73,7 +69,7 @@ RSpec.describe 'GET /api/v1/conversations/id', type: :request do
 
   describe 'unsuccessfully' do
     describe 'if not authenticated' do
-      before { get "/api/v1/conversations/#{conversation1.id}", headers: not_headers }
+      before { get "/api/v1/conversations/#{conversation.id}", headers: unauthenticated_headers }
 
       it 'with 401 status' do
         expect(response.status).to eq 401
@@ -85,7 +81,7 @@ RSpec.describe 'GET /api/v1/conversations/id', type: :request do
     end
 
     describe 'if not part of the conversation' do
-      before { get "/api/v1/conversations/#{conversation2.id}", headers: headers2 }
+      before { get "/api/v1/conversations/#{conversation.id}", headers: random_user_headers }
 
       it 'with 422 status' do
         expect(response.status).to eq 422
