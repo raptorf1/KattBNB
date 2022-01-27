@@ -4,12 +4,12 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials) }
 
-  let(:user2) { FactoryBot.create(:user, email: 'felix@mail.com', nickname: 'MacOS') }
-  let(:profile_user2) { FactoryBot.create(:host_profile, user_id: user2.id, stripe_account_id: 'acct_wTfAyD65545$mf') }
-  let(:credentials2) { user2.create_new_auth_token }
-  let(:headers2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials2) }
+  let(:random_user) { FactoryBot.create(:user, email: 'felix@mail.com', nickname: 'MacOS') }
+  let(:random_profile_user) { FactoryBot.create(:host_profile, user_id: random_user.id, stripe_account_id: 'incorrect_id') }
+  let(:random_credentials) { random_user.create_new_auth_token }
+  let(:random_user_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(random_credentials) }
 
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   describe 'successfully' do
     describe 'no stripe account on retrieve request' do
@@ -39,7 +39,7 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
 
   describe 'unsuccesfully' do
     describe 'for request of stripe profile details of another user' do
-      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: headers2 }
+      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: random_user_headers }
 
       it 'with relevant error' do
         expect(json_response['error']).to eq 'You cannot perform this action!'
@@ -51,7 +51,7 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
     end
 
     describe 'if not authenticated and requests own stripe profile details' do
-      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: not_headers }
+      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: unauthenticated_headers }
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
@@ -63,7 +63,7 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
     end
 
     describe 'if user tries to request stripe dashboard link of another user' do
-      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=login_link", headers: headers2 }
+      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=login_link", headers: random_user_headers }
 
       it 'with relevant error' do
         expect(json_response['error']).to eq 'You cannot perform this action!'
@@ -75,7 +75,7 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
     end
 
     describe 'if not authenticated and requests stripe dashboard link' do
-      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=login_link", headers: not_headers }
+      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=login_link", headers: unauthenticated_headers }
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
@@ -87,7 +87,7 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
     end
 
     describe 'if not authenticated and creates a stripe payment intent' do
-      before { get '/api/v1/stripe?occasion=create_payment_intent', headers: not_headers }
+      before { get '/api/v1/stripe?occasion=create_payment_intent', headers: unauthenticated_headers }
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
@@ -99,7 +99,7 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
     end
 
     describe 'if not authenticated and updates a stripe payment intent' do
-      before { get '/api/v1/stripe?occasion=update_payment_intent', headers: not_headers }
+      before { get '/api/v1/stripe?occasion=update_payment_intent', headers: unauthenticated_headers }
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
@@ -111,7 +111,7 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
     end
 
     describe 'if not authenticated and requests stripe account deletion' do
-      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: not_headers }
+      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: unauthenticated_headers }
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
@@ -123,7 +123,7 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
     end
 
     describe 'if user tries to request stripe account deletion of another user' do
-      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: headers2 }
+      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: random_user_headers }
 
       it 'with relevant error' do
         expect(json_response['error']).to eq 'You cannot perform this action!'
@@ -135,7 +135,7 @@ RSpec.describe 'GET /api/v1/stripe', type: :request do
     end
 
     describe 'if user tries to request stripe account deletion of account that does not exist' do
-      before { get "/api/v1/stripe?host_profile_id=#{profile_user2.id}&occasion=delete_account", headers: headers2 }
+      before { get "/api/v1/stripe?host_profile_id=#{random_profile_user.id}&occasion=delete_account", headers: random_user_headers }
 
       it 'with relevant custom error' do
         expect(
