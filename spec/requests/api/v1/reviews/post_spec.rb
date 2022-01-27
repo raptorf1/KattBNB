@@ -19,11 +19,10 @@ RSpec.describe 'POST /api/v1/review', type: :request do
     )
   end
 
-  let(:host) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:host_profile) { FactoryBot.create(:host_profile, user_id: host.id, score: 0) }
-  let(:random_booking) { FactoryBot.create(:booking, user_id: host.id, status: 'accepted') }
+  let(:host_profile) { FactoryBot.create(:host_profile, score: 0) }
+  let(:random_booking) { FactoryBot.create(:booking, user_id: host_profile.user.id, status: 'accepted') }
 
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   def post_request(req_score, req_body, req_booking)
     post '/api/v1/reviews',
@@ -94,7 +93,7 @@ RSpec.describe 'POST /api/v1/review', type: :request do
     end
 
     it 'with relevant error if user is not logged in' do
-      post '/api/v1/reviews', headers: not_headers
+      post '/api/v1/reviews', headers: unauthenticated_headers
       expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
     end
   end

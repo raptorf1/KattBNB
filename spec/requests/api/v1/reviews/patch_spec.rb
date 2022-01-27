@@ -4,7 +4,7 @@ RSpec.describe 'PATCH /api/v1/reviews/id', type: :request do
   let(:host_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(host_credentials) }
   let(:host_profile) { FactoryBot.create(:host_profile, user_id: host.id) }
 
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   let(:review) do
     FactoryBot.create(
@@ -18,7 +18,6 @@ RSpec.describe 'PATCH /api/v1/reviews/id', type: :request do
   let(:random_review) do
     FactoryBot.create(
       :review,
-      host_nickname: 'Batman',
     )
   end
 
@@ -55,7 +54,7 @@ RSpec.describe 'PATCH /api/v1/reviews/id', type: :request do
 
   describe 'unsuccessfully' do
     describe 'if host is not logged in' do
-      before { patch "/api/v1/reviews/#{review.id}", params: { host_reply: 'Thanks a lot!' }, headers: not_headers }
+      before { patch "/api/v1/reviews/#{review.id}", params: { host_reply: 'Thanks a lot!' }, headers: unauthenticated_headers }
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']

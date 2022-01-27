@@ -1,12 +1,11 @@
 RSpec.describe 'GET /api/v1/reviews', type: :request do
   let(:reviewer) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:r_credentials) { reviewer.create_new_auth_token }
-  let(:reviewer_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(r_credentials) }
+  let(:reviewer_credentials) { reviewer.create_new_auth_token }
+  let(:reviewer_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(reviewer_credentials) }
 
-  let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let(:host_profile) { FactoryBot.create(:host_profile, user_id: host.id) }
-  let(:h_credentials) { host.create_new_auth_token }
-  let(:host_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(h_credentials) }
+  let(:host_profile) { FactoryBot.create(:host_profile) }
+  let(:host_credentials) { host_profile.user.create_new_auth_token }
+  let(:host_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(host_credentials) }
 
   let(:booking) { FactoryBot.create(:booking, user_id: reviewer.id) }
   let(:review) do
