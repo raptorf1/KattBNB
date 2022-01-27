@@ -1,15 +1,8 @@
 RSpec.describe 'PATCH /api/v1/reviews/id', type: :request do
-  let(:customer) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:booking) { FactoryBot.create(:booking, user_id: customer.id) }
-
   let(:host) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'Harley Quinn') }
   let(:host_credentials) { host.create_new_auth_token }
   let(:host_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(host_credentials) }
   let(:host_profile) { FactoryBot.create(:host_profile, user_id: host.id) }
-
-  let(:random_user) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let(:random_profile) { FactoryBot.create(:host_profile, user_id: random_user.id) }
-  let(:random_booking) { FactoryBot.create(:booking, user_id: host.id) }
 
   let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
 
@@ -18,9 +11,7 @@ RSpec.describe 'PATCH /api/v1/reviews/id', type: :request do
       :review,
       host_nickname: 'Harley Quinn',
       host_reply: nil,
-      user_id: customer.id,
       host_profile_id: host_profile.id,
-      booking_id: booking.id
     )
   end
 
@@ -28,10 +19,6 @@ RSpec.describe 'PATCH /api/v1/reviews/id', type: :request do
     FactoryBot.create(
       :review,
       host_nickname: 'Batman',
-      host_reply: nil,
-      user_id: host.id,
-      host_profile_id: random_profile.id,
-      booking_id: random_booking.id
     )
   end
 
