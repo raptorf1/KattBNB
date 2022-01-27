@@ -3,11 +3,11 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials) }
 
-  let(:user2) { FactoryBot.create(:user, email: 'a@a.com', nickname: 'Rails is king!') }
-  let(:credentials2) { user2.create_new_auth_token }
-  let(:headers2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials2) }
+  let(:random_user) { FactoryBot.create(:user, email: 'a@a.com', nickname: 'Rails is king!') }
+  let(:random_credentials) { random_user.create_new_auth_token }
+  let(:random_user_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(random_credentials) }
 
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   def api_call(user_id, token, call_headers)
     put "/api/v1/users/#{user_id}",
@@ -58,7 +58,7 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
     end
 
     describe 'if user is not signed in' do
-      before { api_call(user.id, headers['access-token'], not_headers) }
+      before { api_call(user.id, headers['access-token'], unauthenticated_headers) }
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
@@ -70,7 +70,7 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
     end
 
     describe "if user tries to update someone else's avatar" do
-      before { api_call(user.id, headers['access-token'], headers2) }
+      before { api_call(user.id, headers['access-token'], random_user_headers) }
 
       it 'with relevant error' do
         expect(json_response['error']).to eq ['You cannot perform this action!']
