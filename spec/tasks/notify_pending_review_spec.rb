@@ -1,56 +1,26 @@
 describe 'rake reviews:notify_pending_review', type: :task do
   now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
   now_epoch_javascript = (now.to_f * 1000).to_i
+  let(:second_host) { FactoryBot.create(:user) }
 
-  let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let(:second_host) { FactoryBot.create(:user, email: 'neutral_in@thestreets.com', nickname: 'Robin') }
-
-  let!(:booking_1_day) do
-    FactoryBot.create(
-      :booking,
-      status: 'accepted',
-      user_id: user.id,
-      host_nickname: host.nickname,
-      dates: [now_epoch_javascript - 86_400_000]
-    )
-  end
+  let!(:booking_1_day) { FactoryBot.create(:booking, status: 'accepted', dates: [now_epoch_javascript - 86_400_000]) }
 
   let!(:booking_3_days) do
-    FactoryBot.create(
-      :booking,
-      status: 'accepted',
-      user_id: user.id,
-      host_nickname: host.nickname,
-      dates: [now_epoch_javascript - 86_400_000 * 3]
-    )
+    FactoryBot.create(:booking, status: 'accepted', dates: [now_epoch_javascript - 86_400_000 * 3])
   end
 
   let!(:booking_10_days) do
-    FactoryBot.create(
-      :booking,
-      status: 'accepted',
-      user_id: user.id,
-      host_nickname: host.nickname,
-      dates: [now_epoch_javascript - 86_400_000 * 10]
-    )
+    FactoryBot.create(:booking, status: 'accepted', dates: [now_epoch_javascript - 86_400_000 * 10])
   end
 
   let!(:booking_15_days) do
-    FactoryBot.create(
-      :booking,
-      status: 'accepted',
-      user_id: user.id,
-      host_nickname: host.nickname,
-      dates: [now_epoch_javascript - 86_400_000 * 15]
-    )
+    FactoryBot.create(:booking, status: 'accepted', dates: [now_epoch_javascript - 86_400_000 * 15])
   end
 
   let(:reviewed_booking) do
     FactoryBot.create(
       :booking,
       status: 'accepted',
-      user_id: user.id,
       host_nickname: second_host.nickname,
       dates: [now_epoch_javascript - 86_400_000 * 3]
     )

@@ -1,6 +1,6 @@
 describe 'rake bookings:cancel_after_3_days', type: :task do
-  let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
+  let(:user) { FactoryBot.create(:user) }
+  let(:host) { FactoryBot.create(:user) }
 
   let!(:cancelled_booking) do
     FactoryBot.create(

@@ -7,19 +7,10 @@ RSpec.describe 'PATCH /api/v1/reviews/id', type: :request do
   let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   let(:review) do
-    FactoryBot.create(
-      :review,
-      host_nickname: 'Harley Quinn',
-      host_reply: nil,
-      host_profile_id: host_profile.id,
-    )
+    FactoryBot.create(:review, host_nickname: 'Harley Quinn', host_reply: nil, host_profile_id: host_profile.id)
   end
 
-  let(:random_review) do
-    FactoryBot.create(
-      :review,
-    )
-  end
+  let(:random_review) { FactoryBot.create(:review) }
 
   describe 'successfully ' do
     describe 'when user and host exist' do
@@ -54,7 +45,9 @@ RSpec.describe 'PATCH /api/v1/reviews/id', type: :request do
 
   describe 'unsuccessfully' do
     describe 'if host is not logged in' do
-      before { patch "/api/v1/reviews/#{review.id}", params: { host_reply: 'Thanks a lot!' }, headers: unauthenticated_headers }
+      before do
+        patch "/api/v1/reviews/#{review.id}", params: { host_reply: 'Thanks a lot!' }, headers: unauthenticated_headers
+      end
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']

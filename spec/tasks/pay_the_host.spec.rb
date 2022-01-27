@@ -1,11 +1,9 @@
 describe 'rake bookings:pay_the_host', type: :task do
-  let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
+  let(:host) { FactoryBot.create(:user) }
 
   let!(:unpaid_accepted_booking_past) do
     FactoryBot.create(
       :booking,
-      user_id: user.id,
       host_nickname: host.nickname,
       status: 'accepted',
       dates: [123, 456],
@@ -17,7 +15,6 @@ describe 'rake bookings:pay_the_host', type: :task do
   let!(:unpaid_accepted_booking_future) do
     FactoryBot.create(
       :booking,
-      user_id: user.id,
       host_nickname: host.nickname,
       status: 'accepted',
       dates: [123, 456, 9_563_148_800_000],
@@ -26,14 +23,7 @@ describe 'rake bookings:pay_the_host', type: :task do
   end
 
   let!(:paid_accepted_booking) do
-    FactoryBot.create(
-      :booking,
-      user_id: user.id,
-      host_nickname: host.nickname,
-      status: 'accepted',
-      dates: [123, 456],
-      paid: true
-    )
+    FactoryBot.create(:booking, host_nickname: host.nickname, status: 'accepted', dates: [123, 456], paid: true)
   end
 
   it 'preloads the Rails environment' do

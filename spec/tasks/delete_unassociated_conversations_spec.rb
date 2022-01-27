@@ -1,27 +1,18 @@
 describe 'rake conversations:delete_unassociated_conversations', type: :task do
-  let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let(:user3) { FactoryBot.create(:user, email: 'cat@woman.com', nickname: 'Catwoman') }
-  let(:user4) { FactoryBot.create(:user, email: 'dead@pool.com', nickname: 'Deadpool') }
+  let(:user_1) { FactoryBot.create(:user) }
+  let(:user_2) { FactoryBot.create(:user) }
+  let(:user_3) { FactoryBot.create(:user) }
+  let(:user_4) { FactoryBot.create(:user) }
 
-  let(:conversation1) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
-  let(:conversation2) { FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id) }
+  let(:conversation_1) { FactoryBot.create(:conversation, user1_id: user_1.id, user2_id: user_2.id) }
+  let(:conversation_2) { FactoryBot.create(:conversation, user1_id: user_1.id, user2_id: user_2.id) }
   let!(:hidden_conversation) do
-    FactoryBot.create(:conversation, user1_id: user3.id, user2_id: user4.id, hidden: user3.id)
+    FactoryBot.create(:conversation, user1_id: user_3.id, user2_id: user_4.id, hidden: user_3.id)
   end
 
-  let!(:message1) do
-    FactoryBot.create(:message, conversation_id: conversation1.id, user_id: user1.id, body: 'Sweet child of mine!!!!')
-  end
+  let!(:message_1) { FactoryBot.create(:message, conversation_id: conversation_1.id, user_id: user_1.id) }
 
-  let!(:message2) do
-    FactoryBot.create(
-      :message,
-      conversation_id: conversation2.id,
-      user_id: user2.id,
-      body: 'Who wants to live forever???'
-    )
-  end
+  let!(:message_2) { FactoryBot.create(:message, conversation_id: conversation_2.id, user_id: user_2.id) }
 
   it 'successfully preloads the Rails environment' do
     expect(task.prerequisites).to include 'environment'
@@ -29,7 +20,7 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
 
   describe 'successfully for hidden conversation' do
     before do
-      user4.destroy
+      user_4.destroy
       hidden_conversation.reload
       @subject = task.execute
     end
@@ -49,10 +40,10 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
 
   describe 'successfully for unassociated conversations' do
     before do
-      user1.destroy
-      user2.destroy
-      conversation1.reload
-      conversation2.reload
+      user_1.destroy
+      user_2.destroy
+      conversation_1.reload
+      conversation_2.reload
       @subject = task.execute
     end
 
