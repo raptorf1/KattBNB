@@ -3,7 +3,7 @@ RSpec.describe 'POST /api/v1/host_profile', type: :request do
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials) }
 
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   def post_request(desc)
     post '/api/v1/host_profiles',
@@ -46,21 +46,24 @@ RSpec.describe 'POST /api/v1/host_profile', type: :request do
   end
 
   describe 'unsuccessfully' do
-    before { post_request('') }
+    describe 'when all fields are not filled in' do
+      before { post_request('') }
 
-    it 'with 422 status cause not all fields are filled in' do
-      expect(response.status).to eq 422
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
+
+      it 'with relevant error' do
+        expect(json_response['error']).to eq ["Description can't be blank"]
+      end
     end
 
-    it 'with relevant message cause not all fields are filled in' do
-      expect(json_response['error']).to eq ["Description can't be blank"]
-    end
-  end
+    describe 'when user is not logged in' do
+      before { post '/api/v1/host_profiles', headers: unauthenticated_headers }
 
-  describe 'unsuccessfully' do
-    it 'with relevant error cause user is not logged in' do
-      post '/api/v1/host_profiles', headers: not_headers
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
     end
   end
 end

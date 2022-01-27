@@ -1,15 +1,11 @@
 RSpec.describe 'PATCH /api/v1/host_profiles/id', type: :request do
-  let(:user) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
-  let(:credentials_user) { user.create_new_auth_token }
-  let(:headers_user) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials_user) }
-  let(:host_profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
+  let(:host_profile) { FactoryBot.create(:host_profile) }
+  let(:host_credentials) { host_profile.user.create_new_auth_token }
+  let(:host_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(host_credentials) }
 
-  let(:user2) { FactoryBot.create(:user, email: 'noel@craft.com', nickname: 'MacOS') }
-  let(:credentials_user2) { user2.create_new_auth_token }
-  let(:headers_user2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials_user2) }
-  let(:host_profile_user2) { FactoryBot.create(:host_profile, user_id: user2.id) }
+  let(:random_host_profile) { FactoryBot.create(:host_profile) }
 
-  let(:headers_no_auth) { { HTTP_ACCEPT: 'application/json' } }
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   def patch_request(id, headers)
     patch "/api/v1/host_profiles/#{id}",
@@ -24,10 +20,7 @@ RSpec.describe 'PATCH /api/v1/host_profiles/id', type: :request do
   end
 
   describe 'succesfully' do
-    before do
-      patch_request(host_profile_user.id, headers_user)
-      host_profile_user.reload
-    end
+    before { patch_request(host_profile.id, host_headers) }
 
     it "with 200 status for associated user's host profile" do
       expect(response.status).to eq 200
@@ -40,7 +33,7 @@ RSpec.describe 'PATCH /api/v1/host_profiles/id', type: :request do
 
   describe 'unsuccessfully' do
     describe "when updating another user's host profile" do
-      before { patch_request(host_profile_user2.id, headers_user) }
+      before { patch_request(random_host_profile.id, host_headers) }
 
       it 'with 422 status' do
         expect(response.status).to eq 422
@@ -52,7 +45,7 @@ RSpec.describe 'PATCH /api/v1/host_profiles/id', type: :request do
     end
 
     describe 'if not authenticated' do
-      before { patch_request(host_profile_user.id, headers_no_auth) }
+      before { patch_request(host_profile.id, unauthenticated_headers) }
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
