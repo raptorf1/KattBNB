@@ -1,5 +1,6 @@
 class Api::V1::ContactusController < ApplicationController
   def index
+    # perhaps add more validators here #name and #message, with length etc
     if Truemail.valid?(params[:email])
       ContactusMailer
         .delay(queue: 'contact_form_email_notifications')

@@ -2,6 +2,7 @@ class Api::V1::ConversationsController < ApplicationController
   before_action :authenticate_api_v1_user!, only: %i[create index show update]
 
   def index
+    # pehaps send off something other then 200 on unassociated request
     if params[:user_id].to_i == current_api_v1_user.id
       conversations = Conversation.where(user1_id: params[:user_id]).or(Conversation.where(user2_id: params[:user_id]))
     else

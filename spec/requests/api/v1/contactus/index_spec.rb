@@ -1,7 +1,12 @@
 RSpec.describe 'GET /api/v1/contactus', type: :request do
   describe 'succesfully' do
     before do
-      get '/api/v1/contactus?name=Access Token&email=test@hotmail.com&message=Can I order pizza from your website???'
+      get '/api/v1/contactus',
+          params: {
+            name: 'John Doe',
+            email: 'test@hotmail.com',
+            message: 'Can I order pizza from your website???'
+          }
     end
 
     it 'with 200 status' do
@@ -19,7 +24,12 @@ RSpec.describe 'GET /api/v1/contactus', type: :request do
 
   describe 'unsuccessfully if email is invalid' do
     before do
-      get '/api/v1/contactus?name=Access Token&email=tefgdgst@hotjgjmail.com&message=Can I order pizza from your website???'
+      get '/api/v1/contactus',
+          params: {
+            name: 'John Doe',
+            email: 'test@fakeeeeeemail.com',
+            message: 'Can I order pizza from your website???'
+          }
     end
 
     it 'with 422 status' do
