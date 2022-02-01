@@ -3,28 +3,9 @@ RSpec.describe 'POST /api/v1/booking', type: :request do
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials) }
 
-  let(:user2) do
-    FactoryBot.create(
-      :user,
-      email: 'chaos@thestreets.com',
-      nickname: 'Joker',
-      location: 'Athens',
-      avatar: 'This is my avatar!!!'
-    )
-  end
-  let!(:profile2) do
+  let!(:host_profile) do
     FactoryBot.create(
       :host_profile,
-      user_id: user2.id,
-      availability: [1_562_803_200_000, 1_562_889_600_000, 1_562_976_000_000, 1_563_062_400_000, 1_563_148_800_000]
-    )
-  end
-
-  let(:user3) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'JJoker', location: 'Athens') }
-  let!(:profile3) do
-    FactoryBot.create(
-      :host_profile,
-      user_id: user3.id,
       availability: [1_562_803_200_000, 1_562_889_600_000, 1_562_976_000_000, 1_563_062_400_000, 1_563_148_800_000]
     )
   end
@@ -32,14 +13,13 @@ RSpec.describe 'POST /api/v1/booking', type: :request do
   let!(:booking) do
     FactoryBot.create(
       :booking,
-      host_nickname: user3.nickname,
-      user_id: user.id,
+      host_nickname: host_profile.user.nickname,
       status: 'accepted',
       dates: [1_563_188_800_000, 2_562_889_600_000]
     )
   end
 
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
   def post_request(req_message, req_host, req_dates)
     post '/api/v1/bookings',
@@ -57,7 +37,7 @@ RSpec.describe 'POST /api/v1/booking', type: :request do
   end
 
   describe 'successfully' do
-    before { post_request('Take my cat, pls!', 'Joker', [1_562_976_000_000, 1_563_062_400_000]) }
+    before { post_request('Take my cat, pls!', host_profile.user.nickname, [1_562_976_000_000, 1_563_062_400_000]) }
 
     it 'with 200 status' do
       expect(response.status).to eq 200
@@ -77,7 +57,7 @@ RSpec.describe 'POST /api/v1/booking', type: :request do
       before do
         post_request(
           '',
-          'George',
+          host_profile.user.nickname,
           [1_562_803_200_000, 1_562_889_600_000, 1_562_976_000_000, 1_563_062_400_000, 1_563_148_800_000]
         )
       end
@@ -102,8 +82,8 @@ RSpec.describe 'POST /api/v1/booking', type: :request do
     describe 'if message length is over 400 characters' do
       before do
         post_request(
-          "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-          'George',
+          'Lorem Ipsum is simply' * 101,
+          host_profile.user.nickname,
           [1_562_803_200_000, 1_562_889_600_000, 1_562_976_000_000, 1_563_062_400_000, 1_563_148_800_000]
         )
       end
@@ -118,7 +98,13 @@ RSpec.describe 'POST /api/v1/booking', type: :request do
     end
 
     describe "if host already accepted someone else's booking request with similar dates" do
-      before { post_request('Lorem Ipsum is simply dummy text.', 'JJoker', [1_563_168_800_000, 1_563_188_800_000]) }
+      before do
+        post_request(
+          'Lorem Ipsum is simply dummy text.',
+          host_profile.user.nickname,
+          [1_563_168_800_000, 1_563_188_800_000]
+        )
+      end
 
       it 'with 422 status' do
         expect(response.status).to eq 422
@@ -130,7 +116,7 @@ RSpec.describe 'POST /api/v1/booking', type: :request do
     end
 
     describe 'if host deletes their account in the proccess' do
-      before { post_request('Lorem Ipsum is simply dummy text.', 'Batman', [1_562_803_200_000, 1_562_889_600_000]) }
+      before { post_request('Lorem Ipsum is simply dummy text.', 'John Doe', [1_562_803_200_000, 1_562_889_600_000]) }
 
       it 'with 422 status' do
         expect(response.status).to eq 422
@@ -144,7 +130,7 @@ RSpec.describe 'POST /api/v1/booking', type: :request do
     end
 
     describe 'if user is not logged in' do
-      before { post '/api/v1/bookings', headers: not_headers }
+      before { post '/api/v1/bookings', headers: unauthenticated_headers }
 
       it 'with 401 status' do
         expect(response.status).to eq 401
