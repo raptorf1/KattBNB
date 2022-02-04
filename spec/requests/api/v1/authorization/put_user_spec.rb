@@ -1,6 +1,6 @@
 RSpec.describe 'PUT /api/v1/auth', type: :request do
   let(:headers) { { HTTP_ACCEPT: 'application/json' } }
-  let(:user) { FactoryBot.create(:user, lang_pref: 'sv-SE', location: 'Tokyo', message_notification: true) }
+  let(:user) { FactoryBot.create(:user, lang_pref: 'sv-SE', location: 'Tokyo') }
   let(:auth_token) { user.create_new_auth_token }
 
   describe 'update language preference successfully' do
