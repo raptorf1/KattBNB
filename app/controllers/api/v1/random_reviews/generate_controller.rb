@@ -1,4 +1,5 @@
 class Api::V1::RandomReviews::GenerateController < ApplicationController
+
   def index
     high_score_reviews = Review.where(score: 5)
     if high_score_reviews.length > 2
@@ -7,4 +8,5 @@ class Api::V1::RandomReviews::GenerateController < ApplicationController
       render json: { error: 'Not enough 5 paw reviews!' }, status: 404
     end
   end
+
 end
