@@ -1,8 +1,11 @@
 RSpec.describe 'GET /api/v1/random_reviews/generate', type: :request do
   describe 'successfully: when more than 2 reviews exist' do
     before do
-      5.times { FactoryBot.create(:review, score: 5) }
+      3.times { FactoryBot.create(:review, score: 5) }
       $low_score_review = FactoryBot.create(:review)
+      $deleted_host_review = FactoryBot.create(:review)
+      $deleted_host_review.update_attribute(:host_profile_id, nil)
+      $deleted_host_review.reload
       get '/api/v1/random_reviews/generate'
     end
 
@@ -16,6 +19,10 @@ RSpec.describe 'GET /api/v1/random_reviews/generate', type: :request do
 
     it 'with only 5 paw reviews' do
       json_response.each { |review| expect(review['id']).not_to eq $low_score_review.id }
+    end
+
+    it 'without reviews where host is deleted' do
+      json_response.each { |review| expect(review['id']).not_to eq $deleted_host_review.id }
     end
   end
 
