@@ -18,6 +18,10 @@ Rails
           resources :conversations, only: %i[create index show update]
           resources :reviews, only: %i[index show create update]
           resources :stripe, only: %i[index create]
+
+          namespace :random_reviews do
+            resources :generate, only: [:index]
+          end
         end
       end
     end
