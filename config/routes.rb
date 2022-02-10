@@ -20,7 +20,7 @@ Rails
           resources :stripe, only: %i[index create]
 
           namespace :random_reviews do
-            resources :generate, only: [:index]
+            resources :reviews, only: [:index]
           end
         end
       end

@@ -179,12 +179,7 @@ RSpec.describe 'PATCH /api/v1/bookings/id', type: :request do
 
     describe 'if host_message is over 200 characters' do
       before do
-        patch_request(
-          booking.id,
-          'accepted',
-          'accepted by host' * 15 ,
-          headers_host
-        )
+        patch_request(booking.id, 'accepted', 'accepted by host' * 15, headers_host)
         booking.reload
       end
 

@@ -14,4 +14,12 @@ class Review < ApplicationRecord
     average_score = profile.review.sum(&:score) / profile.review.count.to_f
     profile.update_column(:score, average_score)
   end
+
+  def self.get_high_score_reviews
+    high_score_reviews = Review.where(score: 5)
+    reviews_to_send = []
+    high_score_reviews.each { |review| review.host_profile_id != nil && reviews_to_send.push(review) }
+
+    reviews_to_send
+  end
 end
