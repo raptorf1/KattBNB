@@ -114,7 +114,8 @@ class Api::V1::BookingsController < ApplicationController
       case
       when booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'accepted'
         if (booking.dates - find_host_bookings(profile[0].user.nickname, booking.id)) == booking.dates
-          if Rails.env.test?
+          begin
+            Rails.env.test? != true && Stripe::PaymentIntent.capture(booking.payment_intent_id)
             render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
             booking.update(
               host_description: profile[0].description,
@@ -127,25 +128,9 @@ class Api::V1::BookingsController < ApplicationController
             BookingsMailer
               .delay(queue: 'bookings_email_notifications')
               .notify_user_accepted_booking(host[0], booking, user[0])
-          else
-            begin
-              Stripe::PaymentIntent.capture(booking.payment_intent_id)
-              render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
-              booking.update(
-                host_description: profile[0].description,
-                host_full_address: profile[0].full_address,
-                host_real_lat: profile[0].latitude,
-                host_real_long: profile[0].longitude
-              )
-              new_availability = profile[0].availability - booking.dates
-              profile.update(availability: new_availability)
-              BookingsMailer
-                .delay(queue: 'bookings_email_notifications')
-                .notify_user_accepted_booking(host[0], booking, user[0])
-            rescue Stripe::StripeError
-              booking.update(status: 'pending', host_message: nil)
-              render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
-            end
+          rescue Stripe::StripeError
+            booking.update(status: 'pending', host_message: nil)
+            render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
           end
         else
           render json: { error: I18n.t('controllers.bookings.update_error_same_dates') }, status: 427

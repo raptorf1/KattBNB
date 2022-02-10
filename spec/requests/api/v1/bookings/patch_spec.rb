@@ -182,7 +182,7 @@ RSpec.describe 'PATCH /api/v1/bookings/id', type: :request do
         patch_request(
           booking.id,
           'accepted',
-          'accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host accepted by host',
+          'accepted by host' * 15 ,
           headers_host
         )
         booking.reload
