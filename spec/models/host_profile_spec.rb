@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe HostProfile, type: :model do
   it 'should have valid Factory' do
     expect(create(:host_profile)).to be_valid
@@ -54,13 +52,6 @@ RSpec.describe HostProfile, type: :model do
       expect(User.all.length).to eq 0
     end
 
-    it 'performance stats for user deletion with host profile' do
-      FactoryBot.create(:host_profile)
-      user = HostProfile.last.user
-      expect { user.destroy }.to perform_under(150).ms.sample(20).times
-      expect { user.destroy }.to perform_at_least(100).ips
-    end
-
     it 'user is not deleted when associated profile is deleted from the database' do
       FactoryBot.create(:host_profile)
       expect(HostProfile.all.length).to eq 1
@@ -68,12 +59,6 @@ RSpec.describe HostProfile, type: :model do
       HostProfile.last.destroy
       expect(HostProfile.all.length).to eq 0
       expect(User.all.length).to eq 1
-    end
-
-    it 'performance stats of host profile deletion' do
-      profile = FactoryBot.create(:host_profile)
-      expect { profile.destroy }.to perform_under(100).ms.sample(20).times
-      expect { profile.destroy }.to perform_at_least(300).ips
     end
 
     it 'review is nullified when associated host profile is deleted' do
@@ -92,23 +77,6 @@ RSpec.describe HostProfile, type: :model do
       profile.destroy
       review.reload
       expect(review.host_profile_id).to eq nil
-    end
-
-    it 'performance stats for review is nullified when associated host profile is deleted' do
-      user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
-      host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
-      profile = FactoryBot.create(:host_profile, user_id: host.id)
-      booking =
-        FactoryBot.create(
-          :booking,
-          host_nickname: host.nickname,
-          user_id: user.id,
-          status: 'accepted',
-          dates: [1_462_889_600_000, 1_462_976_000_000]
-        )
-      review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
-      expect { profile.destroy }.to perform_under(100).ms.sample(20).times
-      expect { profile.destroy }.to perform_at_least(300).ips
     end
   end
 end

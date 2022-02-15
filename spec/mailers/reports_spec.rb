@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe ReportsMailer, type: :mailer do
   let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
@@ -32,14 +30,6 @@ RSpec.describe ReportsMailer, type: :mailer do
       expect(new_report_mail.body.encoded).to match("Host nickname: #{host.nickname}")
       expect(new_report_mail.body.encoded).to match("Booking length: #{booking.dates.length}")
       expect(new_report_mail.body.encoded).to match("Host got paid: #{booking.price_total}")
-    end
-
-    it 'is performed under 1000ms' do
-      expect { new_report_mail }.to perform_under(1000).ms.sample(20).times
-    end
-
-    it 'performs at least 500K iterations per second' do
-      expect { new_report_mail }.to perform_at_least(500_000).ips
     end
   end
 end

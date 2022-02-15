@@ -115,7 +115,7 @@ class Api::V1::BookingsController < ApplicationController
       when booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'accepted'
         if (booking.dates - find_host_bookings(profile[0].user.nickname, booking.id)) == booking.dates
           begin
-            Stripe::PaymentIntent.capture(booking.payment_intent_id)
+            !Rails.env.test? && Stripe::PaymentIntent.capture(booking.payment_intent_id)
             render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
             booking.update(
               host_description: profile[0].description,

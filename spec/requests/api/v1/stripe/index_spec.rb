@@ -1,81 +1,167 @@
-RSpec.describe Api::V1::StripeController, type: :request do
+RSpec.describe 'GET /api/v1/stripe', type: :request do
   let(:user) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
-  let!(:profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
+  let(:profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials) }
-  let(:user2) { FactoryBot.create(:user, email: 'felix@mail.com', nickname: 'MacOS') }
-  let!(:profile_user2) { FactoryBot.create(:host_profile, user_id: user2.id, stripe_account_id: 'acct_wTfAyD65545$mf') }
-  let(:credentials2) { user2.create_new_auth_token }
-  let(:headers2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials2) }
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
 
-  describe 'GET /api/v1/stripe' do
-    it 'returns error if user tries to request stripe profile details of another user' do
-      get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: headers2
-      expect(response.status).to eq 422
-      expect(json_response['error']).to eq 'You cannot perform this action!'
+  let(:random_user) { FactoryBot.create(:user, email: 'felix@mail.com', nickname: 'MacOS') }
+  let(:random_profile_user) do
+    FactoryBot.create(:host_profile, user_id: random_user.id, stripe_account_id: 'incorrect_id')
+  end
+  let(:random_credentials) { random_user.create_new_auth_token }
+  let(:random_user_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(random_credentials) }
+
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
+
+  describe 'successfully' do
+    describe 'no stripe account on retrieve request' do
+      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: headers }
+
+      it 'with relevant message' do
+        expect(json_response['message']).to eq 'No account'
+      end
+
+      it 'with 200 status' do
+        expect(response.status).to eq 200
+      end
     end
 
-    it 'requires user to be authenticated to request stripe profile details' do
-      get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: not_headers
-      expect(response.status).to eq 401
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+    describe 'no stripe account on delete request' do
+      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: headers }
+
+      it 'with relevant message' do
+        expect(json_response['message']).to eq 'No account'
+      end
+
+      it 'with 200 status' do
+        expect(response.status).to eq 200
+      end
+    end
+  end
+
+  describe 'unsuccesfully' do
+    describe 'for request of stripe profile details of another user' do
+      before { get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: random_user_headers }
+
+      it 'with relevant error' do
+        expect(json_response['error']).to eq 'You cannot perform this action!'
+      end
+
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
     end
 
-    it 'returns a relevant message if no Stripe account is found' do
-      get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: headers
-      expect(response.status).to eq 200
-      expect(json_response['message']).to eq 'No account'
+    describe 'if not authenticated and requests own stripe profile details' do
+      before do
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=retrieve", headers: unauthenticated_headers
+      end
+
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
+
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
     end
 
-    it 'returns error if user tries to request stripe dashboard link of another user' do
-      get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=login_link", headers: headers2
-      expect(response.status).to eq 422
-      expect(json_response['error']).to eq 'You cannot perform this action!'
+    describe 'if user tries to request stripe dashboard link of another user' do
+      before do
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=login_link", headers: random_user_headers
+      end
+
+      it 'with relevant error' do
+        expect(json_response['error']).to eq 'You cannot perform this action!'
+      end
+
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
     end
 
-    it 'requires user to be authenticated to request stripe dashboard link' do
-      get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=login_link", headers: not_headers
-      expect(response.status).to eq 401
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+    describe 'if not authenticated and requests stripe dashboard link' do
+      before do
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=login_link", headers: unauthenticated_headers
+      end
+
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
+
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
     end
 
-    it 'requires user to be authenticated to create a stripe payment intent' do
-      get '/api/v1/stripe?occasion=create_payment_intent', headers: not_headers
-      expect(response.status).to eq 401
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+    describe 'if not authenticated and creates a stripe payment intent' do
+      before { get '/api/v1/stripe?occasion=create_payment_intent', headers: unauthenticated_headers }
+
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
+
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
     end
 
-    it 'requires user to be authenticated to update a stripe payment intent' do
-      get '/api/v1/stripe?occasion=update_payment_intent', headers: not_headers
-      expect(response.status).to eq 401
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+    describe 'if not authenticated and updates a stripe payment intent' do
+      before { get '/api/v1/stripe?occasion=update_payment_intent', headers: unauthenticated_headers }
+
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
+
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
     end
 
-    it 'requires user to be authenticated to request stripe account deletion' do
-      get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: not_headers
-      expect(response.status).to eq 401
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+    describe 'if not authenticated and requests stripe account deletion' do
+      before do
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account",
+            headers: unauthenticated_headers
+      end
+
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
+
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
     end
 
-    it 'returns error if user tries to request stripe account deletion of another user' do
-      get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: headers2
-      expect(response.status).to eq 422
-      expect(json_response['error']).to eq 'You cannot perform this action!'
+    describe 'if user tries to request stripe account deletion of another user' do
+      before do
+        get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: random_user_headers
+      end
+
+      it 'with relevant error' do
+        expect(json_response['error']).to eq 'You cannot perform this action!'
+      end
+
+      it 'with 422 status' do
+        expect(response.status).to eq 422
+      end
     end
 
-    it 'returns a relevant message if no Stripe account is found when requesting a Stripe account deletion' do
-      get "/api/v1/stripe?host_profile_id=#{profile_user.id}&occasion=delete_account", headers: headers
-      expect(response.status).to eq 200
-      expect(json_response['message']).to eq 'No account'
-    end
+    describe 'if user tries to request stripe account deletion of account that does not exist' do
+      before do
+        get "/api/v1/stripe?host_profile_id=#{random_profile_user.id}&occasion=delete_account",
+            headers: random_user_headers
+      end
 
-    it 'returns custom generic error if user tries to request stripe account deletion of account that does not exist' do
-      get "/api/v1/stripe?host_profile_id=#{profile_user2.id}&occasion=delete_account", headers: headers2
-      expect(response.status).to eq 555
-      expect(
-        json_response['error']
-      ).to eq 'There was a problem connecting to our payments infrastructure provider. Please try again later.'
+      it 'with relevant custom error' do
+        expect(
+          json_response['error']
+        ).to eq 'There was a problem connecting to our payments infrastructure provider. Please try again later.'
+      end
+
+      it 'with 555 custom status' do
+        expect(response.status).to eq 555
+      end
     end
   end
 end

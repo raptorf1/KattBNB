@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe Booking, type: :model do
   it 'should have valid Factory' do
     expect(create(:booking)).to be_valid
@@ -65,13 +63,6 @@ RSpec.describe Booking, type: :model do
       expect(User.all.length).to eq 0
     end
 
-    it 'performance stats for deletion of user with canceled booking' do
-      FactoryBot.create(:booking, status: 'canceled')
-      user = Booking.last.user
-      expect { user.destroy }.to perform_under(90).ms.sample(20).times
-      expect { user.destroy }.to perform_at_least(100).ips
-    end
-
     it 'user is not deleted when associated declined booking is deleted from the database' do
       FactoryBot.create(:booking, status: 'declined')
       expect(Booking.all.length).to eq 1
@@ -79,28 +70,6 @@ RSpec.describe Booking, type: :model do
       Booking.last.destroy
       expect(Booking.all.length).to eq 0
       expect(User.all.length).to eq 1
-    end
-
-    it 'performance stats for declined booking deletion' do
-      booking = FactoryBot.create(:booking, status: 'declined')
-      expect { booking.destroy }.to perform_under(150).ms.sample(20).times
-      expect { booking.destroy }.to perform_at_least(700).ips
-    end
-
-    it 'performance stats for deletion of user with pending booking and host profile availability update' do
-      user1 = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
-      user2 = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
-      host_profile_user2 = FactoryBot.create(:host_profile, user_id: user2.id, availability: [1, 2, 3, 4, 5])
-      booking =
-        FactoryBot.create(
-          :booking,
-          host_nickname: user2.nickname,
-          user_id: user1.id,
-          status: 'pending',
-          dates: [1_562_889_600_000, 1_562_976_000_000]
-        )
-      expect { user1.destroy }.to perform_under(150).ms.sample(20).times
-      expect { user1.destroy }.to perform_at_least(100).ips
     end
 
     it 'accepted past booking is deleted when associated user is deleted from the database' do
@@ -116,21 +85,6 @@ RSpec.describe Booking, type: :model do
         )
       user1.destroy
       expect(Booking.all.length).to eq 0
-    end
-
-    it 'performance stats for user deletion with accepted past booking' do
-      user1 = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
-      user2 = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
-      booking =
-        FactoryBot.create(
-          :booking,
-          host_nickname: user2.nickname,
-          user_id: user1.id,
-          status: 'accepted',
-          dates: [1_462_889_600_000, 1_462_976_000_000]
-        )
-      expect { user1.destroy }.to perform_under(150).ms.sample(20).times
-      expect { user1.destroy }.to perform_at_least(100).ips
     end
 
     it 'review is nullified when associated booking is deleted' do
@@ -149,23 +103,6 @@ RSpec.describe Booking, type: :model do
       booking.destroy
       review.reload
       expect(review.booking_id).to eq nil
-    end
-
-    it 'performance stats for review is nullified when associated booking is deleted' do
-      user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
-      host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
-      profile = FactoryBot.create(:host_profile, user_id: host.id)
-      booking =
-        FactoryBot.create(
-          :booking,
-          host_nickname: host.nickname,
-          user_id: user.id,
-          status: 'accepted',
-          dates: [1_462_889_600_000, 1_462_976_000_000]
-        )
-      review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
-      expect { booking.destroy }.to perform_under(100).ms.sample(20).times
-      expect { booking.destroy }.to perform_at_least(100).ips
     end
   end
 end

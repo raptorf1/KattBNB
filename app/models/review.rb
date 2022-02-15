@@ -14,4 +14,10 @@ class Review < ApplicationRecord
     average_score = profile.review.sum(&:score) / profile.review.count.to_f
     profile.update_column(:score, average_score)
   end
+
+  def self.get_high_score_reviews
+    reviews = Review.where(score: 5)
+    high_score_reviews = reviews.reject { |review| review.host_profile_id == nil }
+    high_score_reviews.uniq(&:host_profile_id)
+  end
 end

@@ -33,7 +33,6 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'coveralls', require: false
   gem 'action-cable-testing'
-  gem 'rspec-benchmark'
 end
 
 group :development do

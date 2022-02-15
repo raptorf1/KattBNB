@@ -1,142 +1,225 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
+RSpec.describe 'GET /api/v1/bookings', type: :request do
+  let(:customer) { FactoryBot.create(:user, location: 'Athens') }
+  let(:customer_credentials) { customer.create_new_auth_token }
+  let(:customer_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(customer_credentials) }
 
-RSpec.describe Api::V1::BookingsController, type: :request do
-  let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens') }
-  let(:credentials1) { user1.create_new_auth_token }
-  let(:headers1) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials1) }
-  let(:user2) { FactoryBot.create(:user, email: 'felix@craft.com', nickname: 'Planner', location: 'Crete') }
-  let(:profile2) { FactoryBot.create(:host_profile, user_id: user2.id) }
-  let(:credentials2) { user2.create_new_auth_token }
-  let(:headers2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials2) }
-  let(:user3) { FactoryBot.create(:user, email: 'carla@craft.com', nickname: 'Carla', location: 'Stockholm') }
-  let(:credentials3) { user3.create_new_auth_token }
-  let(:headers3) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials3) }
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
+  let(:host_profile) { FactoryBot.create(:host_profile) }
+  let(:host_credentials) { host_profile.user.create_new_auth_token }
+  let(:host_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(host_credentials) }
 
-  describe 'GET /api/v1/bookings' do
-    before do
-      booking =
-        FactoryBot.create(
-          :booking,
-          user_id: user1.id,
-          host_nickname: user2.nickname,
-          status: 'accepted',
-          dates: [1, 2, 3, 2_562_889_600_000]
+  let(:random_user) { FactoryBot.create(:user, location: 'Stockholm') }
+  let(:random_user_credentials) { random_user.create_new_auth_token }
+  let(:random_user_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(random_user_credentials) }
+
+  let!(:booking) do
+    FactoryBot.create(
+      :booking,
+      user_id: customer.id,
+      host_nickname: host_profile.user.nickname,
+      status: 'accepted',
+      dates: [1, 2, 3, 2_562_889_600_000]
+    )
+  end
+
+  let!(:random_booking) do
+    FactoryBot.create(
+      :booking,
+      host_nickname: host_profile.user.nickname,
+      status: 'accepted',
+      dates: [4, 5, 6, 2_462_889_600_000]
+    )
+  end
+
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
+
+  describe 'successfully' do
+    describe 'when stats are asked for' do
+      describe 'and appropriate params are passed' do
+        describe 'with relevant stats for the host' do
+          before do
+            get '/api/v1/bookings',
+                params: {
+                  stats: 'yes',
+                  host_nickname: host_profile.user.nickname,
+                  user_id: host_profile.user.id
+                },
+                headers: host_headers
+          end
+
+          it 'is expected to return 200 response status' do
+            expect(response.status).to eq 200
+          end
+
+          it 'is expected to return correct booking stats' do
+            expect(
+              json_response['stats'].to_json
+            ).to eq "{\"in_requests\":\"0\",\"in_upcoming\":\"2\",\"in_history\":\"0\",\"in_unpaid\":\"2\",\"out_requests\":\"0\",\"out_upcoming\":\"0\",\"out_history\":\"0\",\"out_unpaid\":\"0\"}"
+          end
+        end
+
+        describe 'with relevant stats for the customer' do
+          before do
+            get '/api/v1/bookings',
+                params: {
+                  stats: 'yes',
+                  host_nickname: customer.nickname,
+                  user_id: customer.id
+                },
+                headers: customer_headers
+          end
+
+          it 'is expected to return 200 response status' do
+            expect(response.status).to eq 200
+          end
+
+          it 'is expected to return correct booking stats' do
+            expect(
+              json_response['stats'].to_json
+            ).to eq "{\"in_requests\":\"0\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"in_unpaid\":\"0\",\"out_requests\":\"0\",\"out_upcoming\":\"1\",\"out_history\":\"0\",\"out_unpaid\":\"1\"}"
+          end
+        end
+      end
+
+      describe 'and no params are passed' do
+        before { get '/api/v1/bookings', headers: customer_headers }
+
+        it 'is expected to return empty collection of bookings' do
+          expect(json_response.count).to eq 0
+        end
+
+        it 'is expected to return 200 response status' do
+          expect(response.status).to eq 200
+        end
+      end
+    end
+
+    describe 'when host asks for' do
+      describe 'bookings dates only' do
+        before do
+          get '/api/v1/bookings',
+              params: {
+                stats: 'no',
+                host_nickname: host_profile.user.nickname,
+                dates: 'only'
+              },
+              headers: host_headers
+        end
+
+        it 'is expected to return 200 response status' do
+          expect(response.status).to eq 200
+        end
+
+        it 'is expected to return sorted array of booking dates' do
+          expect(json_response).to eq [1, 2, 3, 4, 5, 6, 2_462_889_600_000, 2_562_889_600_000]
+        end
+      end
+
+      describe 'all of their bookings' do
+        before do
+          get '/api/v1/bookings',
+              params: {
+                stats: 'no',
+                host_nickname: host_profile.user.nickname
+              },
+              headers: host_headers
+        end
+
+        it 'is expected to return 200 response status' do
+          expect(response.status).to eq 200
+        end
+
+        it 'is expected to return correct amount of bookings' do
+          expect(json_response.count).to eq 2
+        end
+      end
+    end
+
+    describe 'when customer asks for all their bookings' do
+      before { get '/api/v1/bookings', params: { stats: 'no', user_id: customer.id }, headers: customer_headers }
+
+      it 'with correct number of bookings' do
+        expect(json_response.count).to eq 1
+      end
+
+      it 'with correct booking' do
+        expect(json_response.first['id']).to eq booking.id
+      end
+
+      it 'with correct number of keys in the response' do
+        expect(json_response.first.count).to eq 22
+      end
+
+      it 'with correct keys in the response' do
+        expect(json_response.first).to include(
+          'id',
+          'number_of_cats',
+          'dates',
+          'status',
+          'message',
+          'host_nickname',
+          'price_total',
+          'user_id',
+          'host_id',
+          'host_profile_id',
+          'user',
+          'host_message',
+          'host_description',
+          'host_full_address',
+          'host_location',
+          'host_real_lat',
+          'host_real_long',
+          'host_avatar',
+          'review_id',
+          'host_profile_score'
         )
-      booking2 =
-        FactoryBot.create(
-          :booking,
-          user_id: user3.id,
-          host_nickname: user2.nickname,
-          status: 'accepted',
-          dates: [4, 5, 6, 2_462_889_600_000]
-        )
-      review = FactoryBot.create(:review, user_id: user1.id, host_profile_id: profile2.id, booking_id: booking.id)
+      end
+    end
+  end
+
+  describe 'unsuccessfully' do
+    describe 'if user is not logged in' do
+      before { get '/api/v1/bookings/', headers: unauthenticated_headers }
+
+      it 'with 401 status' do
+        expect(response.status).to eq 401
+      end
+
+      it 'with relevant error' do
+        expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
+      end
     end
 
-    it 'returns 401 response if user not logged in' do
-      get '/api/v1/bookings/', headers: not_headers
-      expect(response.status).to eq 401
-      expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
-    end
+    describe 'if they try to see bookings they are unassociated with' do
+      describe 'for customers' do
+        before { get '/api/v1/bookings', params: { stats: 'no', user_id: customer.id }, headers: random_user_headers }
 
-    it 'returns an empty collection of bookings if no params are passed' do
-      get '/api/v1/bookings', headers: headers1
-      expect(json_response.count).to eq 0
-      expect(Booking.all.length).to eq 2
-    end
+        it 'with 200 status' do
+          expect(response.status).to eq 200
+        end
 
-    it 'returns 200 response' do
-      get '/api/v1/bookings', headers: headers1
-      expect(response.status).to eq 200
-    end
+        it 'with an empty array' do
+          expect(json_response.count).to eq 0
+        end
+      end
 
-    it 'returns relevant stats for host if appropriate params are passed' do
-      get "/api/v1/bookings?stats=yes&host_nickname=#{user2.nickname}&user_id=#{user2.id}", headers: headers2
-      expect(
-        json_response['stats'].to_json
-      ).to eq "{\"in_requests\":\"0\",\"in_upcoming\":\"2\",\"in_history\":\"0\",\"in_unpaid\":\"2\",\"out_requests\":\"0\",\"out_upcoming\":\"0\",\"out_history\":\"0\",\"out_unpaid\":\"0\"}"
-    end
+      describe 'for hosts' do
+        before do
+          get '/api/v1/bookings',
+              params: {
+                stats: 'no',
+                host_nickname: host_profile.user.nickname
+              },
+              headers: random_user_headers
+        end
 
-    it 'returns relevant stats for user if appropriate params are passed' do
-      get "/api/v1/bookings?stats=yes&host_nickname=#{user1.nickname}&user_id=#{user1.id}", headers: headers1
-      expect(
-        json_response['stats'].to_json
-      ).to eq "{\"in_requests\":\"0\",\"in_upcoming\":\"0\",\"in_history\":\"0\",\"in_unpaid\":\"0\",\"out_requests\":\"0\",\"out_upcoming\":\"1\",\"out_history\":\"0\",\"out_unpaid\":\"1\"}"
-    end
+        it 'with 200 status' do
+          expect(response.status).to eq 200
+        end
 
-    it 'performance stats for stat returning' do
-      get_request =
-        get "/api/v1/bookings?stats=yes&host_nickname=#{user1.nickname}&user_id=#{user1.id}", headers: headers1
-      expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(2_000_000).ips
-    end
-
-    it 'returns a booking by host nickname to the involved host' do
-      get "/api/v1/bookings?stats=no&host_nickname=#{user2.nickname}", headers: headers2
-      expect(json_response[0]['host_nickname']).to eq user2.nickname
-      expect(json_response[1]['host_nickname']).to eq user2.nickname
-      expect(json_response.count).to eq 2
-    end
-
-    it 'returns only dates sorted to 1 array of all booking dates to the involved host' do
-      get "/api/v1/bookings?dates=only&stats=no&host_nickname=#{user2.nickname}", headers: headers2
-      expect(json_response).to eq [1, 2, 3, 4, 5, 6, 2_462_889_600_000, 2_562_889_600_000]
-    end
-
-    it 'returns a booking by host nickname in under 1 ms and with iteration rate of 2000000 per second' do
-      get_request = get '/api/v1/bookings', params: { stats: 'no', host_nickname: user2.nickname }, headers: headers2
-      expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(2_000_000).ips
-    end
-
-    it 'returns a booking by user id to the involved user' do
-      get '/api/v1/bookings', params: { stats: 'no', user_id: user1.id }, headers: headers1
-      expect(json_response[0]['user_id']).to eq user1.id
-      expect(json_response.count).to eq 1
-    end
-
-    it 'returns a booking by user id in under 1 ms and with iteration rate of 3000000 per second' do
-      get_request = get '/api/v1/bookings', params: { stats: 'no', user_id: user1.id }, headers: headers1
-      expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(3_000_000).ips
-    end
-
-    it 'has correct keys in the response' do
-      get '/api/v1/bookings', params: { stats: 'no', user_id: user1.id }, headers: headers1
-      expect(json_response[0]).to include('id')
-      expect(json_response[0]).to include('number_of_cats')
-      expect(json_response[0]).to include('dates')
-      expect(json_response[0]).to include('status')
-      expect(json_response[0]).to include('message')
-      expect(json_response[0]).to include('host_nickname')
-      expect(json_response[0]).to include('price_total')
-      expect(json_response[0]).to include('user_id')
-      expect(json_response[0]).to include('host_id')
-      expect(json_response[0]).to include('host_profile_id')
-      expect(json_response[0]).to include('user')
-      expect(json_response[0]).to include('created_at')
-      expect(json_response[0]).to include('updated_at')
-      expect(json_response[0]).to include('host_message')
-      expect(json_response[0]).to include('host_description')
-      expect(json_response[0]).to include('host_full_address')
-      expect(json_response[0]).to include('host_location')
-      expect(json_response[0]).to include('host_real_lat')
-      expect(json_response[0]).to include('host_real_long')
-      expect(json_response[0]).to include('host_avatar')
-      expect(json_response[0]).to include('review_id')
-      expect(json_response[0]).to include('host_profile_score')
-      expect(json_response[0].count).to eq 22
-    end
-
-    it 'does not return a booking to an uninvolved user with host_nickname param' do
-      get '/api/v1/bookings', params: { stats: 'no', host_nickname: user2.nickname }, headers: headers3
-      expect(json_response.count).to eq 0
-    end
-
-    it 'does not return a booking to an uninvolved user with user_id param' do
-      get '/api/v1/bookings', params: { stats: 'no', user_id: user1.id }, headers: headers3
-      expect(json_response.count).to eq 0
+        it 'with an empty array' do
+          expect(json_response.count).to eq 0
+        end
+      end
     end
   end
 end

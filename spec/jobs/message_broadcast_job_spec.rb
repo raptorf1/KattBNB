@@ -1,5 +1,3 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
-
 RSpec.describe MessageBroadcastJob, type: :job do
   let!(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
   let!(:user2) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
@@ -25,16 +23,6 @@ RSpec.describe MessageBroadcastJob, type: :job do
       ActiveJob::Base.queue_adapter = :test
       expect(MessageBroadcastJob.perform_later(message.id).arguments).to eq [message.id]
     end
-
-    it 'performs under 5ms' do
-      ActiveJob::Base.queue_adapter = :test
-      expect { MessageBroadcastJob.perform_later(message.id) }.to perform_under(5).ms.sample(20).times
-    end
-
-    it 'performs at least 3000 iterations per second' do
-      ActiveJob::Base.queue_adapter = :test
-      expect { MessageBroadcastJob.perform_later(message.id) }.to perform_at_least(3000).ips
-    end
   end
 
   describe 'perform_now' do
@@ -47,16 +35,6 @@ RSpec.describe MessageBroadcastJob, type: :job do
       ActiveJob::Base.queue_adapter = :test
       expect(MessageBroadcastJob.perform_now(message.id).inspect).to include 'PGRES_COMMAND_OK'
       expect(MessageBroadcastJob.perform_now(message.id).result_status).to eq 1
-    end
-
-    it 'performs under 50ms' do
-      ActiveJob::Base.queue_adapter = :test
-      expect { MessageBroadcastJob.perform_now(message.id) }.to perform_under(50).ms.sample(20).times
-    end
-
-    it 'performs at least 100 iterations per second' do
-      ActiveJob::Base.queue_adapter = :test
-      expect { MessageBroadcastJob.perform_now(message.id) }.to perform_at_least(100).ips
     end
   end
 end

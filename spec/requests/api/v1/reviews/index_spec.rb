@@ -1,60 +1,44 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
+RSpec.describe 'GET /api/v1/reviews', type: :request do
+  let(:host_profile) { FactoryBot.create(:host_profile) }
+  let!(:reviews) { 10.times { FactoryBot.create(:review, host_profile_id: host_profile.id) } }
 
-RSpec.describe Api::V1::ReviewsController, type: :request do
-  let!(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker', location: 'Athens') }
-  let!(:another_user) { FactoryBot.create(:user, email: 'felix@craft.com', nickname: 'Planner', location: 'Crete') }
-  let!(:booking) { FactoryBot.create(:booking, user_id: user.id) }
-  let!(:booking2) { FactoryBot.create(:booking, user_id: user.id) }
-  let!(:booking3) { FactoryBot.create(:booking, user_id: another_user.id) }
-  let!(:profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
-  let!(:profile_another_user) { FactoryBot.create(:host_profile, user_id: another_user.id) }
-  let!(:review) do
-    FactoryBot.create(:review, user_id: user.id, booking_id: booking.id, host_profile_id: profile_another_user.id)
+  describe 'successfully' do
+    describe 'according to params passed' do
+      before { get "/api/v1/reviews?host_profile_id=#{host_profile.id}" }
+
+      it 'returns correct number of reviews' do
+        expect(json_response.count).to eq 10
+      end
+
+      it 'returns 200 status' do
+        expect(response.status).to eq 200
+      end
+
+      it 'returns correct number of keys in the response' do
+        expect(json_response.first.count).to eq 9
+      end
+
+      it 'returns correct key names in the response' do
+        expect(json_response.first).to include(
+          'id',
+          'score',
+          'body',
+          'host_reply',
+          'host_nickname',
+          'host_avatar',
+          'user'
+        )
+      end
+    end
   end
-  let!(:review2) do
-    FactoryBot.create(:review, user_id: user.id, booking_id: booking2.id, host_profile_id: profile_another_user.id)
-  end
-  let!(:review3) do
-    FactoryBot.create(:review, user_id: another_user.id, booking_id: booking3.id, host_profile_id: profile_user.id)
-  end
 
-  describe 'GET /api/v1/reviews' do
-    it 'returns an empty array if no params are passed' do
-      get '/api/v1/reviews'
-      expect(json_response.count).to eq 0
-      expect(Review.all.length).to eq 3
-    end
+  describe 'unsuccessfully' do
+    describe 'if no params are passed' do
+      before { get '/api/v1/reviews' }
 
-    it 'returns a collection of reviews if correct host profile params are passed' do
-      get "/api/v1/reviews?host_profile_id=#{profile_another_user.id}"
-      expect(response.status).to eq 200
-      expect(json_response.count).to eq 2
-    end
-
-    it 'returns a collection of reviews if correct host profile params are passed' do
-      get "/api/v1/reviews?host_profile_id=#{profile_user.id}"
-      expect(response.status).to eq 200
-      expect(json_response.count).to eq 1
-    end
-
-    it 'has correct keys in the response' do
-      get "/api/v1/reviews?host_profile_id=#{profile_another_user.id}"
-      expect(json_response[0]).to include('id')
-      expect(json_response[0]).to include('score')
-      expect(json_response[0]).to include('body')
-      expect(json_response[0]).to include('host_reply')
-      expect(json_response[0]).to include('host_nickname')
-      expect(json_response[0]).to include('host_avatar')
-      expect(json_response[0]).to include('created_at')
-      expect(json_response[0]).to include('updated_at')
-      expect(json_response[0]).to include('user')
-      expect(json_response[0].count).to eq 9
-    end
-
-    it 'fetches collection of reviews in under 1 ms and with iteration rate of at least 1000000 per second' do
-      get_request = get "/api/v1/reviews?host_profile_id=#{profile_another_user.id}"
-      expect { get_request }.to perform_under(1).ms.sample(20).times
-      expect { get_request }.to perform_at_least(1_000_000).ips
+      it 'is expected to return an empty array ' do
+        expect(json_response.count).to eq 0
+      end
     end
   end
 end

@@ -8,11 +8,13 @@ class Api::V1::ReviewsController < ApplicationController
 
   def show
     review = Review.find(params[:id])
-    if current_api_v1_user.id == review.user_id || current_api_v1_user.nickname == review.host_nickname
-      (render json: review, serializer: Reviews::Serializer)
+    if current_api_v1_user.id == review.user_id || current_api_v1_user.host_profile.id == review.host_profile_id
+      render json: review, serializer: Reviews::Serializer
     else
-      (render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422)
+      render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422
     end
+  rescue NoMethodError
+    render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422
   end
 
   def create

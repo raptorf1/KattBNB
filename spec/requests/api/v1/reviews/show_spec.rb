@@ -1,63 +1,86 @@
-RSpec::Benchmark.configure { |config| config.run_in_subprocess = true }
+RSpec.describe 'GET /api/v1/reviews', type: :request do
+  let(:reviewer) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
+  let(:reviewer_credentials) { reviewer.create_new_auth_token }
+  let(:reviewer_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(reviewer_credentials) }
 
-RSpec.describe Api::V1::ReviewsController, type: :request do
-  let(:user1) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:user2) { FactoryBot.create(:user, email: 'morechaos@thestreets.com', nickname: 'Harley Quinn') }
-  let(:user3) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let!(:profile1) { FactoryBot.create(:host_profile, user_id: user2.id) }
-  let!(:profile2) { FactoryBot.create(:host_profile, user_id: user3.id) }
-  let!(:booking1) { FactoryBot.create(:booking, user_id: user1.id) }
-  let!(:booking2) { FactoryBot.create(:booking, user_id: user2.id) }
-  let(:review1) { FactoryBot.create(:review, user_id: user1.id, host_profile_id: profile1.id, booking_id: booking1.id) }
-  let(:review2) { FactoryBot.create(:review, user_id: user2.id, host_profile_id: profile2.id, booking_id: booking2.id) }
-  let(:credentials1) { user1.create_new_auth_token }
-  let(:credentials2) { user2.create_new_auth_token }
-  let(:headers1) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials1) }
-  let(:headers2) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials2) }
-  let(:not_headers) { { HTTP_ACCEPT: 'application/json' } }
+  let(:host_profile) { FactoryBot.create(:host_profile) }
+  let(:host_credentials) { host_profile.user.create_new_auth_token }
+  let(:host_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(host_credentials) }
 
-  describe 'GET /api/v1/reviews' do
-    describe 'successfully' do
-      before { get "/api/v1/reviews/#{review1.id}", headers: headers1 }
+  let(:booking) { FactoryBot.create(:booking, user_id: reviewer.id) }
+  let(:review) do
+    FactoryBot.create(:review, host_profile_id: host_profile.id, user_id: reviewer.id, booking_id: booking.id)
+  end
 
-      it 'views a specific review' do
-        expect(json_response['id']).to eq review1.id
+  let(:other_credentials) { FactoryBot.create(:user).create_new_auth_token }
+  let(:other_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(other_credentials) }
+
+  let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
+
+  describe 'successfully' do
+    describe 'for reviewer' do
+      before { get "/api/v1/reviews/#{review.id}", headers: reviewer_headers }
+
+      it 'with 200 status' do
         expect(response.status).to eq 200
       end
 
-      it 'has correct keys in the response' do
-        expect(json_response).to include('id')
-        expect(json_response).to include('score')
-        expect(json_response).to include('body')
-        expect(json_response).to include('host_reply')
-        expect(json_response).to include('host_nickname')
-        expect(json_response).to include('host_avatar')
-        expect(json_response).to include('created_at')
-        expect(json_response).to include('updated_at')
-        expect(json_response).to include('user')
+      it 'with correct review id in the response' do
+        expect(json_response['id']).to eq review.id
+      end
+
+      it 'with correct number of keys in the response' do
         expect(json_response.count).to eq 9
+      end
+
+      it 'with correct keys in the response' do
+        expect(json_response).to include('id', 'score', 'body', 'host_reply', 'host_nickname', 'host_avatar', 'user')
       end
     end
 
-    describe 'unsuccessfully' do
-      it 'cannot see review if not logged in' do
-        get "/api/v1/reviews/#{review1.id}", headers: not_headers
-        expect(response.status).to eq 401
+    describe 'for host' do
+      before { get "/api/v1/reviews/#{review.id}", headers: host_headers }
+
+      it 'with 200 status' do
+        expect(response.status).to eq 200
+      end
+
+      it 'with correct review id in the response' do
+        expect(json_response['id']).to eq review.id
+      end
+
+      it 'with correct number of keys in the response' do
+        expect(json_response.count).to eq 9
+      end
+
+      it 'with correct keys in the response' do
+        expect(json_response).to include('id', 'score', 'body', 'host_reply', 'host_nickname', 'host_avatar', 'user')
+      end
+    end
+  end
+
+  describe 'unsuccessfully' do
+    describe 'if not logged in' do
+      before { get "/api/v1/reviews/#{review.id}", headers: unauthenticated_headers }
+
+      it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
       end
 
-      it 'cannot see review that she is not a part of' do
-        get "/api/v1/reviews/#{review1.id}", headers: headers2
-        expect(response.status).to eq 422
-        expect(json_response['error']).to eq ['You cannot perform this action!']
+      it 'with 401 status' do
+        expect(response.status).to eq 401
       end
     end
 
-    describe 'performance wise' do
-      it 'fetches specific review in under 1 ms and with iteration rate of 3000000 per second' do
-        get_request = get "/api/v1/reviews/#{review1.id}", headers: headers1
-        expect { get_request }.to perform_under(1).ms.sample(20).times
-        expect { get_request }.to perform_at_least(3_000_000).ips
+    describe 'if not part of the review' do
+      before { get "/api/v1/reviews/#{review.id}", headers: other_headers }
+
+      it 'with relevant error' do
+        expect(json_response['error']).to eq ['You cannot perform this action!']
+      end
+
+      it 'with 422 status' do
+        expect(response.status).to eq 422
       end
     end
   end

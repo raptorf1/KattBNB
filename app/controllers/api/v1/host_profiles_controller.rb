@@ -4,6 +4,7 @@ class Api::V1::HostProfilesController < ApplicationController
   before_action :authenticate_api_v1_user!, only: %i[show create update]
 
   def index
+    #look at this in the future (namespace each param - different route - find a way to shorten the renders)
     if params[:user_id]
       profiles = HostProfile.where(user_id: params[:user_id])
       render json: profiles, each_serializer: HostProfiles::IndexSerializer
