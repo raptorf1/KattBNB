@@ -16,10 +16,8 @@ class Review < ApplicationRecord
   end
 
   def self.get_high_score_reviews
-    high_score_reviews = Review.where(score: 5)
-    reviews_to_send = []
-    high_score_reviews.each { |review| review.host_profile_id != nil && reviews_to_send.push(review) }
-
-    reviews_to_send
+    reviews = Review.where(score: 5)
+    high_score_reviews = reviews.reject { |review| review.host_profile_id == nil }
+    high_score_reviews.uniq(&:host_profile_id)
   end
 end

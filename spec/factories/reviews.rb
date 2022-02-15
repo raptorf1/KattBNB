@@ -3,7 +3,7 @@ FactoryBot.define do
     score { 1 }
     body { 'MyText' }
     host_reply { 'MyText' }
-    host_nickname { 'MyString' }
+    sequence(:host_nickname) { |n| "host_nickname_#{n}" }
     association :user
     association :booking
     association :host_profile

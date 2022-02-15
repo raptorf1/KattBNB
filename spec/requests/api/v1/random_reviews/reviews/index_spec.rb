@@ -1,13 +1,15 @@
 RSpec.describe 'GET /api/v1/random_reviews/reviews', type: :request do
   describe 'successfully: when more than 2 reviews exist' do
+    let(:host_profile) { FactoryBot.create(:host_profile) }
+    let!(:host_profile_reviews) { 2.times { FactoryBot.create(:review, score: 5, host_profile_id: host_profile.id) } }
+
     let!(:high_scoring_reviews) { 3.times { FactoryBot.create(:review, score: 5) } }
-    let(:low_score_review) { FactoryBot.create(:review) }
-    let(:deleted_host_review) { FactoryBot.create(:review) }
+    let!(:low_score_review) { FactoryBot.create(:review) }
+    let!(:deleted_host_review) { FactoryBot.create(:review, score: 5) }
 
     before do
       deleted_host_review.update_attribute(:host_profile_id, nil)
       deleted_host_review.reload
-
       get '/api/v1/random_reviews/reviews'
     end
 
@@ -25,6 +27,12 @@ RSpec.describe 'GET /api/v1/random_reviews/reviews', type: :request do
 
     it 'without reviews where host is deleted' do
       json_response.each { |review| expect(review['id']).not_to eq deleted_host_review.id }
+    end
+
+    it 'with only reviews towards unique host profiles' do
+      nicknames = []
+      json_response.each { |review| nicknames.push(review['host_nickname']) }
+      expect(nicknames.uniq.length).to eq 3
     end
   end
 
