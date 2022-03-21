@@ -24,6 +24,8 @@ gem 'delayed_job_active_record'
 gem 'stripe', '~> 5.23', '>= 5.23.1'
 gem 'prettier'
 gem 'truemail', '~> 2.3'
+gem 'dalli'
+gem 'connection_pool'
 
 group :development, :test do
   gem 'pry-rails'

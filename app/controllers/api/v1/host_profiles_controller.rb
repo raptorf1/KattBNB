@@ -9,7 +9,7 @@ class Api::V1::HostProfilesController < ApplicationController
       profiles = HostProfile.where(user_id: params[:user_id])
       render json: profiles, each_serializer: HostProfiles::IndexSerializer
     elsif params[:location]
-      profiles = HostProfile.joins(:user).where(users: { location: params[:location] })
+      profiles = HostProfile.location_cached(params[:location])
       render json: {
                with:
                  ActiveModel::Serializer::CollectionSerializer.new(
@@ -23,7 +23,7 @@ class Api::V1::HostProfilesController < ApplicationController
                  )
              }
     else
-      profiles = HostProfile.all
+      profiles = HostProfile.all_cached
       render json: {
                with:
                  ActiveModel::Serializer::CollectionSerializer.new(

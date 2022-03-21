@@ -1,5 +1,6 @@
 class HostProfile < ApplicationRecord
   before_create :assign_stripe_state
+  after_commit :expire_all_cache
 
   belongs_to :user
 
@@ -14,4 +15,27 @@ class HostProfile < ApplicationRecord
   def assign_stripe_state
     self.stripe_state = SecureRandom.hex + self.user.nickname
   end
+
+  def self.location_cached(location)
+    if Rails.cache.fetch("host_profiles_#{location}").nil?
+      Rails.cache.fetch("host_profiles_#{location}") { HostProfile.joins(:user).where(users: { location: location }) }
+      HostProfile.joins(:user).where(users: { location: location })
+    else
+      Rails.cache.fetch("host_profiles_#{location}")
+    end
+  end
+
+  def self.all_cached
+    if Rails.cache.fetch('host_profiles_all').nil?
+      Rails.cache.fetch('host_profiles_all') { HostProfile.all }
+      HostProfile.all
+    else
+      Rails.cache.fetch('host_profiles_all')
+    end
+  end
+
+  def expire_all_cache
+    Rails.cache.delete_matched('host_profiles')
+  end
+
 end
