@@ -37,5 +37,4 @@ class HostProfile < ApplicationRecord
   def expire_all_cache
     Rails.cache.delete_matched('host_profiles')
   end
-
 end
