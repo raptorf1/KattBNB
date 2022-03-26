@@ -13,12 +13,7 @@ class HostProfiles::IndexSerializer < ActiveModel::Serializer
   belongs_to :user, serializer: Users::Serializer
 
   def reviews_count
-    reviews = 0
-    if ENV['OFFICIAL'] == 'yes'
-      reviews = Review.get_host_profile_reviews_length(object.id).to_i
-    else
-      reviews = Review.where(host_profile_id: object.id).length.to_i
-    end    
+    reviews = Review.get_cached_host_profile_reviews_length(object.id).to_i
     return reviews unless reviews == 0
   end
 end
