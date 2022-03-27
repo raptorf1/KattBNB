@@ -58,7 +58,7 @@ class Api::V1::BookingsController < ApplicationController
       if params.has_key?('dates')
         host = User.where(nickname: params[:host_nickname])
         profile = HostProfile.where(user_id: host[0].id)
-        render json: find_host_bookings(profile.id, 0)
+        render json: find_host_bookings(profile[0].id, 0)
       else
         bookings = Booking.where(host_nickname: params[:host_nickname])
         render json: bookings, each_serializer: Bookings::IndexSerializer

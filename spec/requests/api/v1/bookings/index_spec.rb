@@ -16,6 +16,7 @@ RSpec.describe 'GET /api/v1/bookings', type: :request do
       :booking,
       user_id: customer.id,
       host_nickname: host_profile.user.nickname,
+      host_profile_id: host_profile.id,
       status: 'accepted',
       dates: [1, 2, 3, 2_562_889_600_000]
     )
@@ -25,6 +26,7 @@ RSpec.describe 'GET /api/v1/bookings', type: :request do
     FactoryBot.create(
       :booking,
       host_nickname: host_profile.user.nickname,
+      host_profile_id: host_profile.id,
       status: 'accepted',
       dates: [4, 5, 6, 2_462_889_600_000]
     )
