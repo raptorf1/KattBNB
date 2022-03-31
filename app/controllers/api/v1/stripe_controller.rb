@@ -60,6 +60,11 @@ class Api::V1::StripeController < ApplicationController
       end
     elsif params[:occasion] == 'update_payment_intent'
       payment_intent_id = params[:payment_intent_id].split('_secret')[0]
+      stripe_500_limit_dates = []
+      if params[:dates].length >= 490
+        dates_to_array = params[:dates].split(',').map(&:to_i)
+        stripe_500_limit_dates.push(dates_to_array.first, dates_to_array.last)
+      end
       begin
         Stripe::PaymentIntent.update(
           payment_intent_id,
@@ -67,7 +72,7 @@ class Api::V1::StripeController < ApplicationController
             metadata: {
               number_of_cats: params[:number_of_cats],
               message: params[:message],
-              dates: params[:dates],
+              dates: stripe_500_limit_dates.length > 0 ? stripe_500_limit_dates.join(',') : params[:dates],
               host_nickname: params[:host_nickname],
               price_per_day: params[:price_per_day],
               price_total: params[:price_total],
