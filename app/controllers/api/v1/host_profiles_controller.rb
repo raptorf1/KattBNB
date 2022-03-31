@@ -123,7 +123,7 @@ class Api::V1::HostProfilesController < ApplicationController
       if profile.max_cats_accepted >= cats.to_i
         if booking_dates - profile.availability == []
           profiles_to_send['with'].push(profile)
-        elsif booking_dates - find_host_bookings(profile.user.nickname, 0) == booking_dates
+        elsif booking_dates - find_host_bookings(profile.id, 0) == booking_dates
           profiles_to_send['without'].push(profile)
         end
       end

@@ -6,19 +6,18 @@ module BookingsConcern
     helper_method :cancel_payment_intent
   end
 
-  def find_host_bookings(nickname, id_number)
+  def find_host_bookings(host_profile_id, id_number)
     now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
     now_epoch_javascript = (now.to_f * 1000).to_i
     host_booked_dates = []
-    host_bookings = Booking.where(host_nickname: nickname)
+    host_bookings = Booking.cached_by_host_profile_id(host_profile_id)
     host_bookings.each do |host_booking|
       if id_number > 0
-        if host_booking.id != id_number &&
-             (host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript)
+        if host_booking.id != id_number && host_booking.dates.last > now_epoch_javascript
           host_booked_dates.push(host_booking.dates)
         end
       else
-        next unless host_booking.status == 'accepted' && host_booking.dates.last > now_epoch_javascript
+        next unless host_booking.dates.last > now_epoch_javascript
         host_booked_dates.push(host_booking.dates)
       end
     end

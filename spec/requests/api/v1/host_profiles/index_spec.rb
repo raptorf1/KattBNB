@@ -14,6 +14,7 @@ RSpec.describe 'GET /api/v1/host_profiles', type: :request do
       :booking,
       user_id: user.id,
       host_nickname: a_fourth_user.nickname,
+      host_profile_id: profile_fourth_user.id,
       status: 'accepted',
       dates: [1_588_204_800_000, 2_588_204_800_000]
     )

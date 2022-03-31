@@ -27,6 +27,7 @@ RSpec.describe 'PATCH /api/v1/bookings/id', type: :request do
     FactoryBot.create(
       :booking,
       host_nickname: host.nickname,
+      host_profile_id: host_profile.id,
       user_id: cat_owner.id,
       status: 'accepted',
       dates: [1_662_976_000_000, 2_662_976_000_000]

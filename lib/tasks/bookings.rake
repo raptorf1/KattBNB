@@ -74,4 +74,21 @@ namespace :bookings do
       end
     end
   end
+
+  # When we reach this point on refactoring the code, we can delete this task completely.
+  # It was run once when we migrated the database, adding the host_profile_id field in the Booking model.
+  # 'host-profiles-caching' branch and PR.
+
+  desc 'Apply host profile id to accepted bookings'
+  task apply_host_profile_id: :environment do
+    accepted_bookings = Booking.where(status: 'accepted')
+    accepted_bookings.each do |accepted_booking|
+      host = User.where(nickname: accepted_booking.host_nickname)
+      if host.length == 1
+        profile = HostProfile.where(user_id: host[0].id)
+        accepted_booking.update(host_profile_id: profile[0].id)
+        puts "Accepted booking with id #{accepted_booking.id} successfully updated"
+      end
+    end
+  end
 end

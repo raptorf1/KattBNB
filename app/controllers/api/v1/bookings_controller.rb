@@ -56,7 +56,9 @@ class Api::V1::BookingsController < ApplicationController
              status: 200
     when params[:stats] == 'no' && params[:host_nickname] == current_api_v1_user.nickname
       if params.has_key?('dates')
-        render json: find_host_bookings(params[:host_nickname], 0)
+        host = User.where(nickname: params[:host_nickname])
+        profile = HostProfile.where(user_id: host[0].id)
+        render json: find_host_bookings(profile[0].id, 0)
       else
         bookings = Booking.where(host_nickname: params[:host_nickname])
         render json: bookings, each_serializer: Bookings::IndexSerializer
@@ -77,7 +79,7 @@ class Api::V1::BookingsController < ApplicationController
       if host.length == 1
         profile = HostProfile.where(user_id: host[0].id)
         user = User.where(id: booking.user_id)
-        if (booking.dates - find_host_bookings(profile[0].user.nickname, booking.id)) == booking.dates
+        if (booking.dates - find_host_bookings(profile[0].id, booking.id)) == booking.dates
           render json: { message: I18n.t('controllers.reusable.create_success') }, status: 200
           BookingsMailer
             .delay(queue: 'bookings_email_notifications')
@@ -113,7 +115,7 @@ class Api::V1::BookingsController < ApplicationController
       booking.update(status: params[:status], host_message: params[:host_message])
       case
       when booking.persisted? == true && booking.host_message.length < 201 && booking.status == 'accepted'
-        if (booking.dates - find_host_bookings(profile[0].user.nickname, booking.id)) == booking.dates
+        if (booking.dates - find_host_bookings(profile[0].id, booking.id)) == booking.dates
           begin
             !Rails.env.test? && Stripe::PaymentIntent.capture(booking.payment_intent_id)
             render json: { message: I18n.t('controllers.bookings.update_success') }, status: 200
@@ -121,7 +123,8 @@ class Api::V1::BookingsController < ApplicationController
               host_description: profile[0].description,
               host_full_address: profile[0].full_address,
               host_real_lat: profile[0].latitude,
-              host_real_long: profile[0].longitude
+              host_real_long: profile[0].longitude,
+              host_profile_id: profile[0].id
             )
             new_availability = profile[0].availability - booking.dates
             profile.update(availability: new_availability)
