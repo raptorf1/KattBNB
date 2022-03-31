@@ -56,10 +56,13 @@ class Api::V1::BookingsController < ApplicationController
              status: 200
     when params[:stats] == 'no' && params[:host_nickname] == current_api_v1_user.nickname
       if params.has_key?('dates')
+        bookings = []
         host = User.where(nickname: params[:host_nickname])
         profile = HostProfile.where(user_id: host[0].id)
         if profile.length == 1
           render json: find_host_bookings(profile[0].id, 0)
+        else
+          render json: bookings
         end
       else
         bookings = Booking.where(host_nickname: params[:host_nickname])
