@@ -122,11 +122,21 @@ class Api::V1::StripeController < ApplicationController
     begin
       event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
       if event.type == 'charge.succeeded'
+        dates_string = params['data']['object']['metadata']['dates']
+        dates_to_array = dates_string.split(',').map(&:to_i)
+        booking_dates_stripe_500_limit = []
+        if dates_to_array.length == 2 && (dates_to_array.last - dates_to_array.first) != 86_400_000
+          start_date = dates_to_array.first.to_i
+          stop_date = dates_to_array.last.to_i
+          current_date = start_date
+          while (current_date <= stop_date)
+            booking_dates_stripe_500_limit.push(current_date)
+            current_date = current_date + 86_400_000
+          end
+        end
         payment_intent = params['data']['object']['payment_intent']
         number_of_cats = params['data']['object']['metadata']['number_of_cats']
         message = params['data']['object']['metadata']['message']
-        dates_string = params['data']['object']['metadata']['dates']
-        dates = dates_string.split(',').map(&:to_i)
         host_nickname = params['data']['object']['metadata']['host_nickname']
         price_per_day = params['data']['object']['metadata']['price_per_day']
         price_total = params['data']['object']['metadata']['price_total']
@@ -135,7 +145,7 @@ class Api::V1::StripeController < ApplicationController
                                payment_intent,
                                number_of_cats,
                                message,
-                               dates,
+                               booking_dates_stripe_500_limit.length > 0 ? booking_dates_stripe_500_limit : dates_to_array,
                                host_nickname,
                                price_per_day,
                                price_total,
