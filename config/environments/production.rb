@@ -48,7 +48,7 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   # Use a different cache store in production.
-  if ENV['OFFICIAL'] == 'yes'
+#  if ENV['OFFICIAL'] == 'yes'
     config.cache_store =
       :mem_cache_store,
       (ENV['MEMCACHIER_SERVERS'] || '').split(','),
@@ -61,7 +61,7 @@ Rails.application.configure do
         down_retry_delay: 60,
         pool_size: 5
       }
-  end
+#  end
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
