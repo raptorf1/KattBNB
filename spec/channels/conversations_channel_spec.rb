@@ -7,9 +7,7 @@ RSpec.describe ConversationsChannel, type: :channel do
   let(:conversation3) { FactoryBot.create(:conversation, user1_id: user2.id, user2_id: user3.id, hidden: user2.id) }
 
   describe 'unsuccessfully' do
-    before do
-      stub_connection
-    end
+    before { stub_connection }
 
     it 'rejects when no conversation id is passed' do
       subscribe
@@ -57,9 +55,7 @@ RSpec.describe ConversationsChannel, type: :channel do
   end
 
   describe 'successfully' do
-    before do
-      stub_connection
-    end
+    before { stub_connection }
 
     it 'subscribes to a stream when a valid conversation id is provided' do
       subscribe(conversations_id: conversation.id)
