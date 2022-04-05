@@ -1,5 +1,6 @@
 RSpec.describe Message, type: :model do
   it 'should have a valid Factory' do
+    User.destroy_all
     expect(create(:message)).to be_valid
   end
 
@@ -7,10 +8,12 @@ RSpec.describe Message, type: :model do
     it { is_expected.to have_db_column :conversation_id }
     it { is_expected.to have_db_column :user_id }
     it { is_expected.to have_db_column :body }
+    it { is_expected.to have_db_column :created_at }
+    it { is_expected.to have_db_column :updated_at }
   end
 
   describe 'Validations' do
-    it { is_expected.to validate_length_of :body }
+    it { is_expected.to validate_length_of(:body).is_at_most(1000) }
   end
 
   describe 'Associations' do
@@ -27,37 +30,6 @@ RSpec.describe Message, type: :model do
         content_type: 'image/jpg'
       )
       expect(subject.image).to be_attached
-    end
-  end
-
-  describe 'Delete dependent setting' do
-    it 'message is deleted when associated conversation is deleted from the database' do
-      user1 = FactoryBot.create(:user, email: 'george@cyprus.com', nickname: 'george')
-      user2 = FactoryBot.create(:user, email: 'zane@sweden.com', nickname: 'zane')
-      FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id)
-      FactoryBot.create(:message, conversation_id: Conversation.last.id, user_id: user1.id)
-      expect(User.all.length).to eq 2
-      expect(Conversation.all.length).to eq 1
-      expect(Message.all.length).to eq 1
-      Conversation.last.destroy
-      expect(User.all.length).to eq 2
-      expect(Conversation.all.length).to eq 0
-      expect(Message.all.length).to eq 0
-    end
-
-    it 'user association of message is nullified when associated user is deleted from the database' do
-      user1 = FactoryBot.create(:user, email: 'george@cyprus.com', nickname: 'george')
-      user2 = FactoryBot.create(:user, email: 'zane@sweden.com', nickname: 'zane')
-      FactoryBot.create(:conversation, user1_id: user1.id, user2_id: user2.id)
-      FactoryBot.create(:message, user_id: user1.id, conversation_id: Conversation.last.id)
-      expect(User.all.length).to eq 2
-      expect(Conversation.all.length).to eq 1
-      expect(Message.all.length).to eq 1
-      user1.destroy
-      expect(User.all.length).to eq 1
-      expect(Conversation.all.length).to eq 1
-      expect(Message.all.length).to eq 1
-      expect(Message.last.user_id).to eq nil
     end
   end
 end
