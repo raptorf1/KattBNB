@@ -1,7 +1,9 @@
 RSpec.describe HostProfile, type: :model do
-  it 'should have valid Factory' do
-    User.destroy_all
-    expect(create(:host_profile)).to be_valid
+  describe 'Factory' do
+    it 'should be valid' do
+      User.destroy_all
+      expect(create(:host_profile)).to be_valid
+    end
   end
 
   describe 'Database table' do
