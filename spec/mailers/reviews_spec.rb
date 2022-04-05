@@ -29,9 +29,9 @@ RSpec.describe ReviewsMailer, type: :mailer do
     end
 
     it 'contains basic review information' do
-      expect(new_review_mail.body.encoded).to match("Hey, #{review.host_profile.user.nickname}!")
-      expect(new_review_mail.body.encoded).to match("#{review.user.nickname}")
-      expect(new_review_mail.body.encoded).to match("#{review.score} out of 5")
+      expect(new_review_mail.body.encoded).to match("Hey, #{review.host_profile.user.nickname}!").and match(
+                                                                "#{review.user.nickname}"
+                                                              ).and match("#{review.score} out of 5")
     end
   end
 
@@ -49,9 +49,9 @@ RSpec.describe ReviewsMailer, type: :mailer do
     end
 
     it 'contains basic information' do
-      expect(pending_review_1_day.body.encoded).to match("Hey, #{review.user.nickname}!")
-      expect(pending_review_1_day.body.encoded).to match("#{review.host_profile.user.nickname}")
-      expect(pending_review_1_day.body.encoded).to match('We would like to encourage you to leave a review')
+      expect(pending_review_1_day.body.encoded).to match("Hey, #{review.user.nickname}!").and match(
+                                                   "#{review.host_profile.user.nickname}"
+                                                 ).and match('We would like to encourage you to leave a review')
     end
   end
 
@@ -69,11 +69,11 @@ RSpec.describe ReviewsMailer, type: :mailer do
     end
 
     it 'contains basic information' do
-      expect(pending_review_3_days.body.encoded).to match("Hey, #{review.user.nickname}!")
-      expect(pending_review_3_days.body.encoded).to match("#{review.host_profile.user.nickname}")
-      expect(pending_review_3_days.body.encoded).to match(
-        "We don't mean to spam you but we really would like to know what you think about your recent booking"
-      )
+      expect(pending_review_3_days.body.encoded).to match("Hey, #{review.user.nickname}!").and match(
+                                                   "#{review.host_profile.user.nickname}"
+                                                 ).and match(
+                                                                                                     "We don't mean to spam you but we really would like to know what you think about your recent booking"
+                                                                                                   )
     end
   end
 
@@ -91,12 +91,13 @@ RSpec.describe ReviewsMailer, type: :mailer do
     end
 
     it 'contains basic information' do
-      expect(pending_review_10_days.body.encoded).to match("Hey, #{review.user.nickname}!")
-      expect(pending_review_10_days.body.encoded).to match("#{review.host_profile.user.nickname}")
-      expect(pending_review_10_days.body.encoded).to match('Positive or negative feedback - we want to hear it!')
-      expect(pending_review_10_days.body.encoded).to match(
-        'If you have feedback you are not comfortable sharing on kattbnb.se you are always welcome to reach out to us via'
-      )
+      expect(pending_review_10_days.body.encoded).to match("Hey, #{review.user.nickname}!").and match(
+                                                   "#{review.host_profile.user.nickname}"
+                                                 ).and match(
+                                                                                                     'Positive or negative feedback - we want to hear it!'
+                                                                                                   ).and match(
+                                                                                                                                                                      'If you have feedback you are not comfortable sharing on kattbnb.se you are always welcome to reach out to us via'
+                                                                                                                                                                    )
     end
   end
 end

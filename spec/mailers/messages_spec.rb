@@ -22,11 +22,11 @@ RSpec.describe MessagesMailer, type: :mailer do
     end
 
     it "contains users' nicknames" do
-      expect(new_message_mail.body.encoded).to match("Hey, #{message.conversation.user2.nickname}!")
-      expect(new_message_mail.body.encoded).to match("#{message.user.nickname}")
-      expect(new_message_mail.body.encoded).to match(
-        'SomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingS...'
-      )
+      expect(new_message_mail.body.encoded).to match("Hey, #{message.conversation.user2.nickname}!").and match(
+                                                                  "#{message.user.nickname}"
+                                                                ).and match(
+                                                                                                        'SomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingSomethingS...'
+                                                                                                      )
     end
   end
 end

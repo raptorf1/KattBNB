@@ -18,10 +18,13 @@ RSpec.describe ReportsMailer, type: :mailer do
     end
 
     it 'contains booking information required' do
-      expect(new_report_mail.body.encoded).to match('Please update the spreadsheet with the information below')
-      expect(new_report_mail.body.encoded).to match("Host nickname: #{booking.host_nickname}")
-      expect(new_report_mail.body.encoded).to match("Booking length: #{booking.dates.length}")
-      expect(new_report_mail.body.encoded).to match("Host got paid: #{booking.price_total}")
+      expect(new_report_mail.body.encoded).to match(
+        'Please update the spreadsheet with the information below'
+      ).and match("Host nickname: #{booking.host_nickname}").and match(
+                                                                                                                                   "Booking length: #{booking.dates.length}"
+                                                                                                                                 ).and match(
+                                                                                                                                                                                        "Host got paid: #{booking.price_total}"
+                                                                                                                                                                                      )
     end
   end
 end
