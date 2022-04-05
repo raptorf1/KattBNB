@@ -1,13 +1,27 @@
 RSpec.describe User, type: :model do
-  it 'should have valid Factory' do
-    expect(create(:user)).to be_valid
+  describe 'Factory' do
+    it 'should be valid' do
+      User.destroy_all
+      expect(create(:user)).to be_valid
+    end
   end
 
-  # test removing of whitespace on nickname
+  describe 'Callbacks' do
+    it 'should have a remove whitespace method in before_create' do
+      expect(
+        User
+          ._create_callbacks
+          .select { |cb| cb.kind.eql?(:before) }
+          .collect(&:filter)
+          .include?(:remove_whitespace_nickname)
+      ).to eq true
+    end
 
-  # it 'avatar is not present before tha api call' do
-  #   expect(user.profile_avatar.attached?).to eq false
-  # end
+    it 'should remove whitespace on nickname' do
+      user = FactoryBot.create(:user, nickname: ' Fernando Alonso   ')
+      expect(user.nickname).to eq 'Fernando Alonso'
+    end
+  end
 
   describe 'Database table' do
     it { is_expected.to have_db_column :id }
@@ -16,6 +30,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_db_column :encrypted_password }
     it { is_expected.to have_db_column :reset_password_token }
     it { is_expected.to have_db_column :reset_password_sent_at }
+    it { is_expected.to have_db_column :allow_password_change }
     it { is_expected.to have_db_column :remember_created_at }
     it { is_expected.to have_db_column :sign_in_count }
     it { is_expected.to have_db_column :current_sign_in_at }
@@ -37,15 +52,6 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_db_column :message_notification }
     it { is_expected.to have_db_column :lang_pref }
   end
-
-  # The error message of the below test proves exactly what we are trying to achieve.
-  # Although ShouldaMatchers are installed, the provided 'case_insensitive' method produces an error.
-  # describe 'Uniqueness validation' do
-  #   before do
-  #     FactoryBot.create(:user)
-  #   end
-  #   it { is_expected.to validate_uniqueness_of :nickname }
-  # end
 
   describe 'Validations' do
     it { is_expected.to validate_presence_of :nickname }
@@ -72,6 +78,12 @@ RSpec.describe User, type: :model do
 
       emails.each { |email| it { is_expected.to allow_value(email).for(:email) } }
     end
+
+    it 'nickname should be case insensitive and unique' do
+      User.destroy_all
+      FactoryBot.create(:user, nickname: 'Mick')
+      expect { FactoryBot.create(:user, nickname: 'MICK') }.to raise_error(ActiveRecord::RecordInvalid)
+    end
   end
 
   describe 'Relations' do
@@ -85,34 +97,54 @@ RSpec.describe User, type: :model do
   end
 
   describe 'Attached image' do
-    it 'is valid' do
-      subject.profile_avatar.attach(
+    before do
+      @user = FactoryBot.create(:user)
+      @user.profile_avatar.attach(
         io: File.open('spec/fixtures/greece.jpg'),
         filename: 'attachment.jpg',
         content_type: 'image/jpg'
       )
-      expect(subject.profile_avatar).to be_attached
+    end
+
+    it 'is successfully attached' do
+      expect(@user.profile_avatar).to be_attached
+    end
+
+    it 'is deleted when relevant user is deleted' do
+      @user.destroy
+      expect(ActiveStorage::Attachment.all.length).to eq 0
     end
   end
 
-  describe 'Delete dependent setting' do
+  describe 'Delete dependent settings' do
+    it 'host profile is deleted when associated user is deleted from the database' do
+      FactoryBot.create(:host_profile)
+      HostProfile.last.user.destroy
+      expect(HostProfile.all.length).to eq 0
+    end
+
+    it 'user association of message is nullified when associated user is deleted from the database' do
+      FactoryBot.create(:message)
+      Message.last.user.destroy
+      expect(Message.last.user_id).to eq nil
+    end
+
+    it 'booking is deleted when associated user is deleted from the database' do
+      FactoryBot.create(:booking)
+      Booking.last.user.destroy
+      expect(Booking.all.length).to eq 0
+    end
+
     it 'review is nullified when associated user is deleted' do
-      user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
-      host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
-      profile = FactoryBot.create(:host_profile, user_id: host.id)
-      booking =
-        FactoryBot.create(
-          :booking,
-          host_nickname: host.nickname,
-          user_id: user.id,
-          status: 'accepted',
-          dates: [1_462_889_600_000, 1_462_976_000_000]
-        )
-      review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
-      user.destroy
-      review.reload
-      expect(review.user_id).to eq nil
-      expect(review.booking_id).to eq nil
+      FactoryBot.create(:review)
+      Review.last.user.destroy
+      expect(Review.last.user_id).to eq nil
+    end
+
+    it 'conversation is nullified when associated user is deleted from the database' do
+      FactoryBot.create(:conversation)
+      Conversation.last.user1.destroy
+      expect(Conversation.last.user1_id).to eq nil
     end
   end
 end

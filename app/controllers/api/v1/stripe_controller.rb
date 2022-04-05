@@ -145,7 +145,11 @@ class Api::V1::StripeController < ApplicationController
                                payment_intent,
                                number_of_cats,
                                message,
-                               booking_dates_stripe_500_limit.length > 0 ? booking_dates_stripe_500_limit : dates_to_array,
+                               if booking_dates_stripe_500_limit.length > 0
+                                 booking_dates_stripe_500_limit
+                               else
+                                 dates_to_array
+                               end,
                                host_nickname,
                                price_per_day,
                                price_total,
