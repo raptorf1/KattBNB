@@ -1,18 +1,10 @@
 RSpec.describe ReportsMailer, type: :mailer do
-  let(:user) { FactoryBot.create(:user, email: 'chaos@thestreets.com', nickname: 'Joker') }
-  let(:host) { FactoryBot.create(:user, email: 'order@thestreets.com', nickname: 'Batman') }
-  let(:booking) do
-    FactoryBot.create(
-      :booking,
-      user_id: user.id,
-      host_nickname: host.nickname,
-      dates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      price_total: 1550.06
-    )
-  end
+  let(:booking) { FactoryBot.create(:booking) }
   let(:new_report_mail) { ReportsMailer.bookings_revenue_and_vat(booking) }
 
   describe 'bookings_revenue_and_vat' do
+    before { User.destroy_all }
+
     it 'renders the subject' do
       expect(new_report_mail.subject).to eql("New paid booking with id #{booking.id}")
     end
@@ -27,7 +19,7 @@ RSpec.describe ReportsMailer, type: :mailer do
 
     it 'contains booking information required' do
       expect(new_report_mail.body.encoded).to match('Please update the spreadsheet with the information below')
-      expect(new_report_mail.body.encoded).to match("Host nickname: #{host.nickname}")
+      expect(new_report_mail.body.encoded).to match("Host nickname: #{booking.host_nickname}")
       expect(new_report_mail.body.encoded).to match("Booking length: #{booking.dates.length}")
       expect(new_report_mail.body.encoded).to match("Host got paid: #{booking.price_total}")
     end
