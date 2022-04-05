@@ -21,13 +21,20 @@ RSpec.describe MessageBroadcastJob, type: :job do
   end
 
   describe 'perform_now' do
-    it 'displays error message if message id is invalid' do
-      expect(MessageBroadcastJob.perform_now(1_000_000)).to eq 'Message with id 1000000 not found'
+    describe 'unsuccessfully' do
+      it 'displays error message if message id is invalid' do
+        expect(MessageBroadcastJob.perform_now(1_000_000)).to eq 'Message with id 1000000 not found'
+      end
     end
 
-    it 'goes in the happy path flow of the job' do
-      expect(MessageBroadcastJob.perform_now(message.id).inspect).to include 'PGRES_COMMAND_OK'
-      expect(MessageBroadcastJob.perform_now(message.id).result_status).to eq 1
+    describe 'successfully' do
+      it 'with correct PG command' do
+        expect(MessageBroadcastJob.perform_now(message.id).inspect).to include 'PGRES_COMMAND_OK'
+      end
+
+      it 'with correct result status' do
+        expect(MessageBroadcastJob.perform_now(message.id).result_status).to eq 1
+      end
     end
   end
 end
