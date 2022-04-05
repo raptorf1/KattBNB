@@ -1,9 +1,11 @@
 RSpec.describe HostProfile, type: :model do
   it 'should have valid Factory' do
+    User.destroy_all
     expect(create(:host_profile)).to be_valid
   end
 
   describe 'Database table' do
+    it { is_expected.to have_db_column :user_id }
     it { is_expected.to have_db_column :description }
     it { is_expected.to have_db_column :full_address }
     it { is_expected.to have_db_column :price_per_day_1_cat }
@@ -17,6 +19,8 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to have_db_column :score }
     it { is_expected.to have_db_column :stripe_state }
     it { is_expected.to have_db_column :stripe_account_id }
+    it { is_expected.to have_db_column :created_at }
+    it { is_expected.to have_db_column :updated_at }
   end
 
   describe 'Validations' do
@@ -43,40 +47,10 @@ RSpec.describe HostProfile, type: :model do
   end
 
   describe 'Delete dependent setting' do
-    it 'profile is deleted when associated user is deleted from the database' do
-      FactoryBot.create(:host_profile)
-      expect(HostProfile.all.length).to eq 1
-      expect(User.all.length).to eq 1
-      User.last.destroy
-      expect(HostProfile.all.length).to eq 0
-      expect(User.all.length).to eq 0
-    end
-
-    it 'user is not deleted when associated profile is deleted from the database' do
-      FactoryBot.create(:host_profile)
-      expect(HostProfile.all.length).to eq 1
-      expect(User.all.length).to eq 1
-      HostProfile.last.destroy
-      expect(HostProfile.all.length).to eq 0
-      expect(User.all.length).to eq 1
-    end
-
     it 'review is nullified when associated host profile is deleted' do
-      user = FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso')
-      host = FactoryBot.create(:user, email: 'zane@mail.com', nickname: 'Kitten')
-      profile = FactoryBot.create(:host_profile, user_id: host.id)
-      booking =
-        FactoryBot.create(
-          :booking,
-          host_nickname: host.nickname,
-          user_id: user.id,
-          status: 'accepted',
-          dates: [1_462_889_600_000, 1_462_976_000_000]
-        )
-      review = FactoryBot.create(:review, user_id: user.id, host_profile_id: profile.id, booking_id: booking.id)
-      profile.destroy
-      review.reload
-      expect(review.host_profile_id).to eq nil
+      FactoryBot.create(:review)
+      Review.last.host_profile.destroy
+      expect(Review.last.host_profile_id).to eq nil
     end
   end
 end
