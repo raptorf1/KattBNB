@@ -1,5 +1,6 @@
 RSpec.describe Review, type: :model do
   it 'should have valid Factory' do
+    User.destroy_all
     expect(create(:review)).to be_valid
   end
 
@@ -8,6 +9,11 @@ RSpec.describe Review, type: :model do
     it { is_expected.to have_db_column :body }
     it { is_expected.to have_db_column :host_reply }
     it { is_expected.to have_db_column :host_nickname }
+    it { is_expected.to have_db_column :user_id }
+    it { is_expected.to have_db_column :host_profile_id }
+    it { is_expected.to have_db_column :booking_id }
+    it { is_expected.to have_db_column :created_at }
+    it { is_expected.to have_db_column :updated_at }
   end
 
   describe 'Validations' do
