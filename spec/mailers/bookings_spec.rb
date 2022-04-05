@@ -8,8 +8,6 @@ RSpec.describe BookingsMailer, type: :mailer do
   let(:cancelled_request_host_mail) { BookingsMailer.notify_host_cancelled_booking(host, booking, booking.user) }
 
   describe 'notify_host_create_booking' do
-    before { User.destroy_all }
-
     it 'renders the subject' do
       expect(new_request_mail.subject).to eql('You have a new booking request!')
     end

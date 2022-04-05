@@ -1,7 +1,6 @@
 RSpec.describe User, type: :model do
   describe 'Factory' do
     it 'should be valid' do
-      User.destroy_all
       expect(create(:user)).to be_valid
     end
   end
@@ -80,7 +79,6 @@ RSpec.describe User, type: :model do
     end
 
     it 'nickname should be case insensitive and unique' do
-      User.destroy_all
       FactoryBot.create(:user, nickname: 'Mick')
       expect { FactoryBot.create(:user, nickname: 'MICK') }.to raise_error(ActiveRecord::RecordInvalid)
     end

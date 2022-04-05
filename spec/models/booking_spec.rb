@@ -1,7 +1,6 @@
 RSpec.describe Booking, type: :model do
   describe 'Factory' do
     it 'should be valid' do
-      User.destroy_all
       expect(create(:booking)).to be_valid
     end
   end

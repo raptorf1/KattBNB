@@ -7,8 +7,6 @@ RSpec.describe MessagesMailer, type: :mailer do
   end
 
   describe 'notify_user_new_message' do
-    before { User.destroy_all }
-
     it 'renders the subject' do
       expect(new_message_mail.subject).to eql("New message from #{message.user.nickname}!")
     end

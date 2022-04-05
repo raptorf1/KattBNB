@@ -14,8 +14,6 @@ RSpec.describe ReviewsMailer, type: :mailer do
   end
 
   describe 'notify_host_create_review' do
-    before { User.destroy_all }
-
     it 'renders the subject' do
       expect(new_review_mail.subject).to eql('You got a new review!')
     end

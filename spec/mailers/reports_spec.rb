@@ -3,8 +3,6 @@ RSpec.describe ReportsMailer, type: :mailer do
   let(:new_report_mail) { ReportsMailer.bookings_revenue_and_vat(booking) }
 
   describe 'bookings_revenue_and_vat' do
-    before { User.destroy_all }
-
     it 'renders the subject' do
       expect(new_report_mail.subject).to eql("New paid booking with id #{booking.id}")
     end

@@ -1,7 +1,6 @@
 RSpec.describe Review, type: :model do
   describe 'Factory' do
     it 'should be valid' do
-      User.destroy_all
       expect(create(:review)).to be_valid
     end
   end

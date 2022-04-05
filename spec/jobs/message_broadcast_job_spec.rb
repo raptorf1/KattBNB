@@ -8,8 +8,6 @@ RSpec.describe MessageBroadcastJob, type: :job do
   end
 
   describe 'perform_later' do
-    before { User.destroy_all }
-
     it 'adds a job to the queue' do
       ActiveJob::Base.queue_adapter = :test
       expect { MessageBroadcastJob.perform_later }.to have_enqueued_job

@@ -8,7 +8,6 @@ RSpec.describe ConversationsChannel, type: :channel do
 
   describe 'unsuccessfully' do
     before do
-      User.destroy_all
       stub_connection
     end
 
@@ -59,7 +58,6 @@ RSpec.describe ConversationsChannel, type: :channel do
 
   describe 'successfully' do
     before do
-      User.destroy_all
       stub_connection
     end
 

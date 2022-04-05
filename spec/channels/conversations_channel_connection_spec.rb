@@ -5,7 +5,6 @@ RSpec.describe ApplicationCable::Connection, type: :channel do
 
   describe 'successfully' do
     it 'connects' do
-      User.destroy_all
       connect "/cable/conversation/5?token=#{headers['access-token']}&uid=#{headers['uid']}&client=#{headers['client']}"
       expect(connection.current_user.id).to eq user.id
     end
