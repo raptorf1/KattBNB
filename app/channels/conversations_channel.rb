@@ -14,7 +14,7 @@ class ConversationsChannel < ApplicationCable::Channel
   end
 
   def receive(data)
-    conversation = Conversation.find_by(id: data['conversation_id'])
+    conversation = Conversation.find(data['conversation_id'])
     if conversation.hidden == nil
       send_actions(data, conversation)
     else
@@ -35,17 +35,17 @@ class ConversationsChannel < ApplicationCable::Channel
     if message.errors.present?
       transmit({ type: 'errors', data: message.errors.full_messages })
     elsif conversation.user1_id == data['user_id'] || conversation.user2_id == data['user_id']
-      user_sending = User.where(id: message.user_id)
+      user_sending = User.find(message.user_id)
       if conversation.user1_id == message.user_id
-        user_receiving = User.where(id: conversation.user2_id)
+        user_receiving = User.find(conversation.user2_id)
       else
-        user_receiving = User.where(id: conversation.user1_id)
+        user_receiving = User.find(conversation.user1_id)
       end
       MessageBroadcastJob.perform_now(message.id)
-      user_receiving[0].message_notification == true &&
+      user_receiving.message_notification == true &&
         MessagesMailer
           .delay(queue: 'messenger_email_notifications')
-          .notify_user_new_message(user_sending[0], user_receiving[0], message.body, message.created_at)
+          .notify_user_new_message(user_sending, user_receiving, message.body, message.created_at)
     else
       message.destroy
       transmit({ type: 'errors', data: I18n.t('channels.conversations.message_error') })
