@@ -34,7 +34,7 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
     end
 
     it 'logs to stdout' do
-      expect(@std_output).to eq("1 unassociated conversation(s) succesfully deleted!\n")
+      expect(@std_output).to eq("Unassociated conversation with id #{hidden_conversation.id} succesfully deleted!")
     end
   end
 
@@ -60,7 +60,9 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
     end
 
     it 'logs to stdout' do
-      expect(@std_output).to eq("2 unassociated conversation(s) succesfully deleted!\n")
+      expect(@std_output).to eq(
+        "Unassociated conversation with id #{conversation_1.id} succesfully deleted!Unassociated conversation with id #{conversation_2.id} succesfully deleted!"
+      )
     end
   end
 end

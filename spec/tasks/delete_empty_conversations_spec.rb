@@ -32,7 +32,7 @@ describe 'rake conversations:delete_empty_conversations', type: :task do
     end
 
     it 'logs to stdout' do
-      expect(@std_output).to eq("1 empty conversation(s) succesfully deleted!\n")
+      expect(@std_output).to eq("Empty conversation with id #{empty_conversation.id} succesfully deleted!")
     end
   end
 end
