@@ -36,8 +36,11 @@ namespace :reviews do
 
   desc 'Delete unassociated reviews'
   task delete_unassociated_reviews: :environment do
-    reviews = Review.where(user_id: nil, booking_id: nil, host_profile_id: nil)
-    reviews.each { |review| review.destroy }
-    puts "#{reviews.length} unassociated review(s) successfully deleted!"
+    Review
+      .where(user_id: nil, booking_id: nil, host_profile_id: nil)
+      .each do |review|
+        print "Unassociated review with id #{review.id} successfully deleted!"
+        review.destroy
+      end
   end
 end

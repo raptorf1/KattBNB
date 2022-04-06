@@ -34,7 +34,7 @@ describe 'rake users:delete_unconfirmed_users', type: :task do
 
     it 'logs to stdout' do
       expect(@std_output).to eq(
-        "Unconfirmed user with name #{unconfirmed_user.nickname} and email #{unconfirmed_user.email} succesfully deleted!\n"
+        "Unconfirmed user with name #{unconfirmed_user.nickname} and email #{unconfirmed_user.email} succesfully deleted!"
       )
     end
   end

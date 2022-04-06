@@ -19,7 +19,7 @@ describe 'rake reviews:delete_unassociated_reviews', type: :task do
     end
 
     it 'logs to stdout' do
-      expect(@std_output).to eq("1 unassociated review(s) successfully deleted!\n")
+      expect(@std_output).to eq("Unassociated review with id #{review.id} successfully deleted!")
     end
   end
 end
