@@ -57,7 +57,9 @@ describe 'rake bookings:pay_the_host', type: :task do
     end
 
     it 'logs to stdout' do
-      expect(@std_output).to eq("A report email was sent!\n")
+      expect(@std_output).to eq(
+        "A report email was sent! Booking with id #{unpaid_accepted_booking_past.id} successfully paid!"
+      )
     end
   end
 

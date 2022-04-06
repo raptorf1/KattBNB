@@ -28,7 +28,7 @@ describe 'rake bookings:cancel_after_3_days', type: :task do
     end
 
     it 'logs to stdout' do
-      expect(@std_output).to eq("1 pending booking(s) succesfully cancelled!\n")
+      expect(@std_output).to eq("Pending booking with id #{cancelled_booking.id} succesfully cancelled!")
     end
 
     it 'changes status of booking to cancelled' do
