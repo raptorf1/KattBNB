@@ -26,41 +26,41 @@ class Bookings::IndexSerializer < ActiveModel::Serializer
   belongs_to :user, serializer: Users::BookingsSerializer
 
   def host_id
-    host = User.where(nickname: object.host_nickname)
-    return host[0].id unless host.length == 0
+    host = User.find_by(nickname: object.host_nickname)
+    return host.id unless host == nil
   end
 
   def host_profile_id
-    host = User.where(nickname: object.host_nickname)
-    unless host.length == 0
-      host_profile = HostProfile.where(user_id: host[0].id)
-      return host_profile[0].id unless host_profile.length == 0
+    host = User.find_by(nickname: object.host_nickname)
+    unless host == nil
+      host_profile = HostProfile.find_by(user_id: host.id)
+      return host_profile.id unless host_profile == nil
     end
   end
 
   def host_profile_score
-    host = User.where(nickname: object.host_nickname)
-    unless host.length == 0
-      host_profile = HostProfile.where(user_id: host[0].id)
-      return host_profile[0].score unless host_profile.length == 0
+    host = User.find_by(nickname: object.host_nickname)
+    unless host == nil
+      host_profile = HostProfile.find_by(user_id: host.id)
+      return host_profile.score unless host_profile == nil
     end
   end
 
   def host_location
-    host = User.where(nickname: object.host_nickname)
-    return host[0].location unless host.length == 0
+    host = User.find_by(nickname: object.host_nickname)
+    return host.location unless host == nil
   end
 
   def host_avatar
-    host = User.where(nickname: object.host_nickname)
-    unless host.length == 0
+    host = User.find_by(nickname: object.host_nickname)
+    unless host == nil
       return(
-        if host[0].profile_avatar.attached?
+        if host.profile_avatar.attached?
           (
             if Rails.env.test?
-              rails_blob_url(host[0].profile_avatar)
+              rails_blob_url(host.profile_avatar)
             else
-              host[0]&.profile_avatar&.service_url(expires_in: 1.hour, disposition: 'inline')
+              host&.profile_avatar&.service_url(expires_in: 1.hour, disposition: 'inline')
             end
           )
         else

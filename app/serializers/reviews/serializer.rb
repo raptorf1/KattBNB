@@ -7,15 +7,15 @@ class Reviews::Serializer < ActiveModel::Serializer
   belongs_to :user, serializer: Users::Serializer
 
   def host_avatar
-    host = User.where(nickname: object.host_nickname)
-    unless host.length == 0
+    host = User.find_by(nickname: object.host_nickname)
+    unless host == nil
       return(
-        if host[0].profile_avatar.attached?
+        if host.profile_avatar.attached?
           (
             if Rails.env.test?
-              rails_blob_url(host[0].profile_avatar)
+              rails_blob_url(host.profile_avatar)
             else
-              host[0]&.profile_avatar&.service_url(expires_in: 1.hour, disposition: 'inline')
+              host&.profile_avatar&.service_url(expires_in: 1.hour, disposition: 'inline')
             end
           )
         else
