@@ -53,7 +53,7 @@ describe 'rake reviews:notify_pending_review', type: :task do
 
     it 'logs to stdout' do
       expect(@std_output).to eq(
-        "1 user(s) notified to leave review after 1 day!\n1 user(s) notified to leave review after 3 days!\n1 user(s) notified to leave review after 10 days!\n"
+        "User #{booking_1_day.user.nickname} notified to leave review after 1 day for booking with id #{booking_1_day.id}!User #{booking_3_days.user.nickname} notified to leave review after 3 days for booking with id #{booking_3_days.id}!User #{booking_10_days.user.nickname} notified to leave review after 10 days for booking with id #{booking_10_days.id}!"
       )
     end
   end
