@@ -4,14 +4,12 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = Time.at(booking.dates[0] / 1000)
-    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+    @start_date = Time.at(booking.dates.first / 1000)
+    @end_date = Time.at(booking.dates.last / 1000)
 
     string_with_2_decimals = sprintf('%.2f', booking.price_total.to_s)
-    if (
-         string_with_2_decimals[string_with_2_decimals.length - 1] == '0' &&
-           string_with_2_decimals[string_with_2_decimals.length - 2] == '0'
-       )
+
+    if string_with_2_decimals.last(2) == '00'
       @total = string_with_2_decimals.to_i
     else
       @total = sprintf('%.2f', string_with_2_decimals)
@@ -27,15 +25,13 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = Time.at(booking.dates[0] / 1000)
-    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+    @start_date = Time.at(booking.dates.first / 1000)
+    @end_date = Time.at(booking.dates.last / 1000)
 
     final_charge = @booking.price_total + (@booking.price_total * 0.17) + ((@booking.price_total * 0.17) * 0.25)
     string_with_2_decimals = sprintf('%.2f', final_charge.to_s)
-    if (
-         string_with_2_decimals[string_with_2_decimals.length - 1] == '0' &&
-           string_with_2_decimals[string_with_2_decimals.length - 2] == '0'
-       )
+
+    if string_with_2_decimals.last(2) == '00'
       total = string_with_2_decimals.to_i
     else
       total = sprintf('%.2f', string_with_2_decimals)
@@ -62,8 +58,8 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = Time.at(booking.dates[0] / 1000)
-    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+    @start_date = Time.at(booking.dates.first / 1000)
+    @end_date = Time.at(booking.dates.last / 1000)
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.bookings.notify_user_declined_booking'))
@@ -75,8 +71,8 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = Time.at(booking.dates[0] / 1000)
-    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+    @start_date = Time.at(booking.dates.first / 1000)
+    @end_date = Time.at(booking.dates.last / 1000)
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.bookings.notify_user_cancelled_booking'))
@@ -88,8 +84,8 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = Time.at(booking.dates[0] / 1000)
-    @end_date = Time.at(booking.dates[booking.dates.length - 1] / 1000)
+    @start_date = Time.at(booking.dates.first / 1000)
+    @end_date = Time.at(booking.dates.last / 1000)
 
     I18n.with_locale(@host.lang_pref) do
       mail(to: @host.email, subject: I18n.t('mailers.bookings.notify_host_cancelled_booking'))
