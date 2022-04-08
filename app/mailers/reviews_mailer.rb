@@ -4,8 +4,8 @@ class ReviewsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = Time.at(booking.dates.first / 1000)
-    @end_date = Time.at(booking.dates.last / 1000)
+    @start_date = MailerService.get_date(booking.dates.first)
+    @end_date = MailerService.get_date(booking.dates.last)
 
     I18n.with_locale(@host.lang_pref) do
       mail(to: @host.email, subject: I18n.t('mailers.reviews.notify_host_create_review'))
@@ -18,8 +18,8 @@ class ReviewsMailer < ApplicationMailer
     @booking = booking
     @profile = HostProfile.find_by(user_id: host.id)
 
-    @start_date = Time.at(booking.dates.first / 1000)
-    @end_date = Time.at(booking.dates.last / 1000)
+    @start_date = MailerService.get_date(booking.dates.first)
+    @end_date = MailerService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
@@ -32,8 +32,8 @@ class ReviewsMailer < ApplicationMailer
     @booking = booking
     @profile = HostProfile.find_by(user_id: host.id)
 
-    @start_date = Time.at(booking.dates.first / 1000)
-    @end_date = Time.at(booking.dates.last / 1000)
+    @start_date = MailerService.get_date(booking.dates.first)
+    @end_date = MailerService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
@@ -46,8 +46,8 @@ class ReviewsMailer < ApplicationMailer
     @booking = booking
     @profile = HostProfile.find_by(user_id: host.id)
 
-    @start_date = Time.at(booking.dates.first / 1000)
-    @end_date = Time.at(booking.dates.last / 1000)
+    @start_date = MailerService.get_date(booking.dates.first)
+    @end_date = MailerService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
