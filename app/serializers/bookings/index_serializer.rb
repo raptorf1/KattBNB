@@ -1,6 +1,4 @@
 class Bookings::IndexSerializer < ActiveModel::Serializer
-  include Rails.application.routes.url_helpers
-
   attributes :id,
              :number_of_cats,
              :dates,
@@ -53,21 +51,7 @@ class Bookings::IndexSerializer < ActiveModel::Serializer
 
   def host_avatar
     host = User.find_by(nickname: object.host_nickname)
-    unless host == nil
-      return(
-        if host.profile_avatar.attached?
-          (
-            if Rails.env.test?
-              rails_blob_url(host.profile_avatar)
-            else
-              host&.profile_avatar&.service_url(expires_in: 1.hour, disposition: 'inline')
-            end
-          )
-        else
-          nil
-        end
-      )
-    end
+    return host.profile_avatar.attached? ? AttachmentService.get_blob_url(host) : nil unless host == nil
   end
 
   def review_id
