@@ -1,12 +1,7 @@
 namespace :bookings do
   desc 'Cancel all pending bookings after 3 days'
   task cancel_after_3_days: :environment do
-    Stripe.api_key =
-      if ENV['OFFICIAL'] == 'yes'
-        Rails.application.credentials.STRIPE_API_KEY_PROD
-      else
-        Rails.application.credentials.STRIPE_API_KEY_DEV
-      end
+    Stripe.api_key = get_stripe_key
     Booking
       .where(status: 'pending')
       .each do |booking|
@@ -31,12 +26,7 @@ namespace :bookings do
 
   desc 'Pay the host'
   task pay_the_host: :environment do
-    Stripe.api_key =
-      if ENV['OFFICIAL'] == 'yes'
-        Rails.application.credentials.STRIPE_API_KEY_PROD
-      else
-        Rails.application.credentials.STRIPE_API_KEY_DEV
-      end
+    Stripe.api_key = get_stripe_key
     now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
     now_epoch_javascript = (now.to_f * 1000).to_i
     Booking
@@ -69,5 +59,15 @@ namespace :bookings do
           end
         end
       end
+  end
+
+  private
+
+  def get_stripe_key()
+    if ENV['OFFICIAL'] == 'yes'
+      Rails.application.credentials.STRIPE_API_KEY_PROD
+    else
+      Rails.application.credentials.STRIPE_API_KEY_DEV
+    end
   end
 end
