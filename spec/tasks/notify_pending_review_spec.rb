@@ -1,20 +1,43 @@
 describe 'rake reviews:notify_pending_review', type: :task do
   now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
   now_epoch_javascript = (now.to_f * 1000).to_i
+  let(:host) { FactoryBot.create(:user) }
   let(:second_host) { FactoryBot.create(:user) }
 
-  let!(:booking_1_day) { FactoryBot.create(:booking, status: 'accepted', dates: [now_epoch_javascript - 86_400_000]) }
+  let!(:booking_1_day) do
+    FactoryBot.create(
+      :booking,
+      status: 'accepted',
+      host_nickname: host.nickname,
+      dates: [now_epoch_javascript - 86_400_000]
+    )
+  end
 
   let!(:booking_3_days) do
-    FactoryBot.create(:booking, status: 'accepted', dates: [now_epoch_javascript - 86_400_000 * 3])
+    FactoryBot.create(
+      :booking,
+      status: 'accepted',
+      host_nickname: host.nickname,
+      dates: [now_epoch_javascript - 86_400_000 * 3]
+    )
   end
 
   let!(:booking_10_days) do
-    FactoryBot.create(:booking, status: 'accepted', dates: [now_epoch_javascript - 86_400_000 * 10])
+    FactoryBot.create(
+      :booking,
+      status: 'accepted',
+      host_nickname: host.nickname,
+      dates: [now_epoch_javascript - 86_400_000 * 10]
+    )
   end
 
   let!(:booking_15_days) do
-    FactoryBot.create(:booking, status: 'accepted', dates: [now_epoch_javascript - 86_400_000 * 15])
+    FactoryBot.create(
+      :booking,
+      status: 'accepted',
+      host_nickname: host.nickname,
+      dates: [now_epoch_javascript - 86_400_000 * 15]
+    )
   end
 
   let(:reviewed_booking) do
@@ -54,6 +77,25 @@ describe 'rake reviews:notify_pending_review', type: :task do
     it 'logs to stdout' do
       expect(@std_output).to eq(
         "User #{booking_1_day.user.nickname} notified to leave review after 1 day for booking with id #{booking_1_day.id}!User #{booking_3_days.user.nickname} notified to leave review after 3 days for booking with id #{booking_3_days.id}!User #{booking_10_days.user.nickname} notified to leave review after 10 days for booking with id #{booking_10_days.id}!"
+      )
+    end
+  end
+
+  describe 'unsuccessfully' do
+    before do
+      booking_1_day.update(host_nickname: 'Deleted user')
+      booking_3_days.update(host_nickname: 'Deleted user')
+      booking_10_days.update(host_nickname: 'Deleted user')
+      @subject = task.execute
+    end
+
+    it 'sends no emails' do
+      expect(Delayed::Job.all.count).to eq 0
+    end
+
+    it 'logs to stdout' do
+      expect(@std_output).to eq(
+        'User or host is deleted. Sending notification mail aborted!User or host is deleted. Sending notification mail aborted!User or host is deleted. Sending notification mail aborted!'
       )
     end
   end
