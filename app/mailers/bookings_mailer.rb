@@ -4,8 +4,8 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = MailerService.get_date(booking.dates.first)
-    @end_date = MailerService.get_date(booking.dates.last)
+    @start_date = DateService.get_date(booking.dates.first)
+    @end_date = DateService.get_date(booking.dates.last)
 
     @total = PriceService.two_decimals_converter(booking.price_total)
 
@@ -19,8 +19,8 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = MailerService.get_date(booking.dates.first)
-    @end_date = MailerService.get_date(booking.dates.last)
+    @start_date = DateService.get_date(booking.dates.first)
+    @end_date = DateService.get_date(booking.dates.last)
 
     final_charge = PriceService.calculate_kattbnb_charge(@booking.price_total)
 
@@ -47,8 +47,8 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = MailerService.get_date(booking.dates.first)
-    @end_date = MailerService.get_date(booking.dates.last)
+    @start_date = DateService.get_date(booking.dates.first)
+    @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.bookings.notify_user_declined_booking'))
@@ -60,8 +60,8 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = MailerService.get_date(booking.dates.first)
-    @end_date = MailerService.get_date(booking.dates.last)
+    @start_date = DateService.get_date(booking.dates.first)
+    @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
       mail(to: @user.email, subject: I18n.t('mailers.bookings.notify_user_cancelled_booking'))
@@ -73,8 +73,8 @@ class BookingsMailer < ApplicationMailer
     @host = host
     @user = user
 
-    @start_date = MailerService.get_date(booking.dates.first)
-    @end_date = MailerService.get_date(booking.dates.last)
+    @start_date = DateService.get_date(booking.dates.first)
+    @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@host.lang_pref) do
       mail(to: @host.email, subject: I18n.t('mailers.bookings.notify_host_cancelled_booking'))
