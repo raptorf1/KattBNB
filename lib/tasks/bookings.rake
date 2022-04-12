@@ -1,7 +1,7 @@
 namespace :bookings do
   desc 'Cancel all pending bookings after 3 days'
   task cancel_after_3_days: :environment do
-    Stripe.api_key = get_stripe_key
+    Stripe.api_key = StripeService.get_api_key
     all_pending_bookings = Booking.where(status: 'pending')
     all_pending_bookings.each do |booking|
       if ((Time.current - booking.created_at) / 1.hour).round > 72
@@ -25,7 +25,7 @@ namespace :bookings do
 
   desc 'Pay the host'
   task pay_the_host: :environment do
-    Stripe.api_key = get_stripe_key
+    Stripe.api_key = StripeService.get_api_key
     now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
     now_epoch_javascript = (now.to_f * 1000).to_i
     unpaid_bookings = Booking.where(status: 'accepted', paid: false)
@@ -56,16 +56,6 @@ namespace :bookings do
             .notify_stripe_webhook_error("Payment to host for booking id #{booking.id} failed")
         end
       end
-    end
-  end
-
-  private
-
-  def get_stripe_key()
-    if ENV['OFFICIAL'] == 'yes'
-      Rails.application.credentials.STRIPE_API_KEY_PROD
-    else
-      Rails.application.credentials.STRIPE_API_KEY_DEV
     end
   end
 end
