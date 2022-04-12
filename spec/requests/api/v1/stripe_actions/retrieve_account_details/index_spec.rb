@@ -1,10 +1,10 @@
 RSpec.describe 'GET /api/v1/stripe_actions/retrieve_account_details', type: :request do
-  let(:user) { FactoryBot.create(:user, email: 'george@mail.com', nickname: 'Alonso') }
+  let(:user) { FactoryBot.create(:user) }
   let(:profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: 'application/json' }.merge!(credentials) }
 
-  let(:random_user) { FactoryBot.create(:user, email: 'felix@mail.com', nickname: 'MacOS') }
+  let(:random_user) { FactoryBot.create(:user) }
   let(:random_credentials) { random_user.create_new_auth_token }
   let(:random_user_headers) { { HTTP_ACCEPT: 'application/json' }.merge!(random_credentials) }
 

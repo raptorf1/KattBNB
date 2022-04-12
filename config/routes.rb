@@ -25,6 +25,7 @@ Rails.application.routes.draw do
           resources :retrieve_account_login_link, only: [:index]
           resources :create_payment_intent, only: [:index]
           resources :update_payment_intent, only: [:index]
+          resources :delete_account, only: [:index]
         end
       end
     end
