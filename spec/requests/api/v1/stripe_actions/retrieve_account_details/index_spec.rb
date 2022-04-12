@@ -40,7 +40,7 @@ RSpec.describe 'GET /api/v1/stripe_actions/retrieve_account_details', type: :req
         expect(json_response).to include('payouts_enabled', 'requirements')
       end
 
-      it 'with 200 status' do
+      it 'with 203 status' do
         expect(response.status).to eq 203
       end
     end
