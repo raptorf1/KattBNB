@@ -19,6 +19,10 @@ Rails.application.routes.draw do
         namespace :random_reviews do
           resources :reviews, only: [:index]
         end
+
+        namespace :stripe_actions do
+          resources :retrieve_account_details, only: [:index]
+        end
       end
     end
   end
