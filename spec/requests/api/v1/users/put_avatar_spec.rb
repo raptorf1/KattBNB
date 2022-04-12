@@ -9,7 +9,7 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
 
   let(:unauthenticated_headers) { { HTTP_ACCEPT: 'application/json' } }
 
-  def api_call(user_id, token, call_headers)
+  def api_call(user_id, call_headers)
     put "/api/v1/users/#{user_id}",
         params: {
           profile_avatar: {
@@ -18,16 +18,14 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
             data:
               'iVBORw0KGgoAAAANSUhEUgAABjAAAAOmCAYAAABFYNwHAAAgAElEQVR4XuzdB3gU1cLG8Te9EEgISQi9I71KFbBXbFixN6zfvSiIjSuKInoVFOyIDcWuiKiIol4Q6SBVOtI7IYSWBkm+58y6yW4a2SS7O4n/eZ7vuWR35pwzvzO76zf',
             extension: 'png'
-          },
-          'access-token': token,
-          client: headers['client']
+          }
         },
         headers: call_headers
   end
 
   describe 'succesfully' do
     before do
-      api_call(user.id, headers['access-token'], headers)
+      api_call(user.id, headers)
       user.reload
     end
 
@@ -45,20 +43,8 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
   end
 
   describe 'unsuccessfully' do
-    describe 'cause token/client expired or are invalid' do
-      before { api_call(user.id, 'kjhfvHTghjjhjbjk', headers) }
-
-      it 'with relevant error' do
-        expect(json_response['error']).to eq ['You cannot perform this action!']
-      end
-
-      it 'with 422 status' do
-        expect(response.status).to eq 422
-      end
-    end
-
     describe 'if user is not signed in' do
-      before { api_call(user.id, headers['access-token'], unauthenticated_headers) }
+      before { api_call(user.id, unauthenticated_headers) }
 
       it 'with relevant error' do
         expect(json_response['errors']).to eq ['You need to sign in or sign up before continuing.']
@@ -70,7 +56,7 @@ RSpec.describe 'PUT /api/v1/users', type: :request do
     end
 
     describe "if user tries to update someone else's avatar" do
-      before { api_call(user.id, headers['access-token'], random_user_headers) }
+      before { api_call(user.id, random_user_headers) }
 
       it 'with relevant error' do
         expect(json_response['error']).to eq ['You cannot perform this action!']
