@@ -22,6 +22,7 @@ Rails.application.routes.draw do
 
         namespace :stripe_actions do
           resources :retrieve_account_details, only: [:index]
+          resources :retrieve_account_login_link, only: [:index]
         end
       end
     end
