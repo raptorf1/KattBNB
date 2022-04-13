@@ -1,8 +1,7 @@
 namespace :reviews do
   desc 'Notify user on pending review'
   task notify_pending_review: :environment do
-    now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
-    now_epoch_javascript = (now.to_f * 1000).to_i
+    now_epoch_javascript = DateService.get_js_epoch
     all_accepted_bookings = Booking.where(status: 'accepted')
     all_accepted_bookings.each do |booking|
       next unless booking.dates.last < now_epoch_javascript && booking.review == nil

@@ -26,8 +26,7 @@ namespace :bookings do
   desc 'Pay the host'
   task pay_the_host: :environment do
     Stripe.api_key = StripeService.get_api_key
-    now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
-    now_epoch_javascript = (now.to_f * 1000).to_i
+    now_epoch_javascript = DateService.get_js_epoch
     unpaid_bookings = Booking.where(status: 'accepted', paid: false)
     unpaid_bookings.each do |booking|
       if booking.dates.last < now_epoch_javascript
