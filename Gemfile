@@ -33,7 +33,7 @@ group :development, :test do
   gem 'rspec-rails', '3.9.1'
   gem 'shoulda-matchers'
   gem 'factory_bot_rails'
-  gem 'coveralls', require: false
+  gem 'simplecov', require: false
   gem 'action-cable-testing'
 end
 

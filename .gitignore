@@ -23,4 +23,6 @@
 /config/master.key
 
 # Ignore coverage metrics
+# Coverage report in MAC ---> open coverage/index.html
+# Coverage report in LINUX ---> xdg-open coverage/index.html
 /coverage
