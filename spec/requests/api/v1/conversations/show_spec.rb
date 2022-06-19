@@ -35,7 +35,7 @@ RSpec.describe 'GET /api/v1/conversations/id', type: :request do
     end
 
     it 'has correct number of keys in the response' do
-      expect(json_response.count).to eq 3
+      expect(json_response.count).to eq 4
     end
 
     it 'has correct keys in the response' do
