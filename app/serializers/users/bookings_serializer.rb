@@ -1,5 +1,5 @@
 class Users::BookingsSerializer < ActiveModel::Serializer
-  attributes :nickname, :location
+  attributes :nickname, :location, :id
   attribute :profile_avatar
 
   def profile_avatar
