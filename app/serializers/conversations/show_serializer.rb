@@ -6,6 +6,6 @@ class Conversations::ShowSerializer < ActiveModel::Serializer
 
   def responder
     resp = object.user1&.id != scope.id ? object.user1 : object.user2
-    return resp.nil? ? nil : Users::BookingsSerializer.new(resp) 
+    return resp.nil? ? nil : Users::BookingsSerializer.new(resp)
   end
 end
