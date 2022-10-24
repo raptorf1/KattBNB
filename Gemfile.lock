@@ -245,7 +245,7 @@ GEM
       sync
     truemail (2.7.1)
       simpleidn (~> 0.2.1)
-    tzinfo (1.2.9)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     unf (0.1.4)
       unf_ext
