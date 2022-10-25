@@ -18,8 +18,9 @@ class HostProfile < ApplicationRecord
 
   def self.location_cached(location)
     if Rails.cache.fetch("host_profiles_#{location}").nil?
-      Rails.cache.fetch("host_profiles_#{location}") { HostProfile.joins(:user).where(users: { location: location }) }
-      HostProfile.joins(:user).where(users: { location: location })
+      response = HostProfile.joins(:user).where(users: { location: location })
+      Rails.cache.fetch("host_profiles_#{location}") { response }
+      response
     else
       Rails.cache.fetch("host_profiles_#{location}")
     end
@@ -27,8 +28,9 @@ class HostProfile < ApplicationRecord
 
   def self.all_cached
     if Rails.cache.fetch('host_profiles_all').nil?
-      Rails.cache.fetch('host_profiles_all') { HostProfile.all }
-      HostProfile.all
+      response = HostProfile.all
+      Rails.cache.fetch('host_profiles_all') { response }
+      response
     else
       Rails.cache.fetch('host_profiles_all')
     end

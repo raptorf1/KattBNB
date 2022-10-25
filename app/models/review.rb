@@ -23,12 +23,9 @@ class Review < ApplicationRecord
 
   def self.get_cached_host_profile_reviews_length(host_profile_id)
     if Rails.cache.fetch("reviews_length_of_host_profile_with_id#{host_profile_id}").nil?
-      Rails
-        .cache
-        .fetch("reviews_length_of_host_profile_with_id#{host_profile_id}") do
-          Review.where(host_profile_id: host_profile_id).length
-        end
-      Review.where(host_profile_id: host_profile_id).length
+      response = Review.where(host_profile_id: host_profile_id).length
+      Rails.cache.fetch("reviews_length_of_host_profile_with_id#{host_profile_id}") { response }
+      response
     else
       Rails.cache.fetch("reviews_length_of_host_profile_with_id#{host_profile_id}")
     end
