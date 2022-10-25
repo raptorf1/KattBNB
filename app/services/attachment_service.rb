@@ -7,10 +7,10 @@ module AttachmentService
         if Rails.env.test?
           rails_blob_url(obj.profile_avatar)
         else
-          obj&.profile_avatar&.service_url(expires_in: 1.hour, disposition: 'inline')
+          obj&.profile_avatar&.service_url(expires_in: 1.hour, disposition: "inline")
         end
       else
-        Rails.env.test? ? rails_blob_url(obj.image) : obj&.image&.service_url(expires_in: 1.hour, disposition: 'inline')
+        Rails.env.test? ? rails_blob_url(obj.image) : obj&.image&.service_url(expires_in: 1.hour, disposition: "inline")
       end
     end
   end

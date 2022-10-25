@@ -1,11 +1,11 @@
 RSpec.describe HostProfile, type: :model do
-  describe 'Factory' do
-    it 'should be valid' do
+  describe "Factory" do
+    it "should be valid" do
       expect(create(:host_profile)).to be_valid
     end
   end
 
-  describe 'Database table' do
+  describe "Database table" do
     it { is_expected.to have_db_column :user_id }
     it { is_expected.to have_db_column :description }
     it { is_expected.to have_db_column :full_address }
@@ -24,7 +24,7 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to have_db_column :updated_at }
   end
 
-  describe 'Validations' do
+  describe "Validations" do
     it { is_expected.to validate_presence_of :description }
     it { is_expected.to validate_presence_of :full_address }
     it { is_expected.to validate_presence_of :price_per_day_1_cat }
@@ -32,23 +32,23 @@ RSpec.describe HostProfile, type: :model do
     it { is_expected.to validate_presence_of :max_cats_accepted }
   end
 
-  describe 'Associations' do
+  describe "Associations" do
     it { is_expected.to belong_to(:user) }
   end
 
-  describe 'Relations' do
+  describe "Relations" do
     it { is_expected.to have_many(:review) }
   end
 
-  describe 'Default values' do
-    it 'returns Array as class for availability field' do
+  describe "Default values" do
+    it "returns Array as class for availability field" do
       FactoryBot.create(:host_profile)
       expect(HostProfile.last.availability.class).to eq Array
     end
   end
 
-  describe 'Delete dependent setting' do
-    it 'review is nullified when associated host profile is deleted' do
+  describe "Delete dependent setting" do
+    it "review is nullified when associated host profile is deleted" do
       FactoryBot.create(:review)
       Review.last.host_profile.destroy
       expect(Review.last.host_profile_id).to eq nil

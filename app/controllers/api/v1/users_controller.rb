@@ -14,9 +14,9 @@ class Api::V1::UsersController < ApplicationController
       pic = params[:profile_avatar]
       DecodeImageService.attach_image(pic, user.profile_avatar)
       user.update(avatar: pic[0])
-      render json: { message: I18n.t('controllers.reusable.update_success') }, status: 200
+      render json: { message: I18n.t("controllers.reusable.update_success") }, status: 200
     else
-      render json: { error: [I18n.t('controllers.reusable.update_error')] }, status: 422
+      render json: { error: [I18n.t("controllers.reusable.update_error")] }, status: 422
     end
   end
 end

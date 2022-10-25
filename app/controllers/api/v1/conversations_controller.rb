@@ -21,25 +21,25 @@ class Api::V1::ConversationsController < ApplicationController
                scope: current_api_v1_user
       )
     else
-      (render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422)
+      (render json: { error: I18n.t("controllers.reusable.update_error") }, status: 422)
     end
   end
 
   def create
     conversation_exists =
-      Conversation
-        .where(user1_id: params[:user1_id], user2_id: params[:user2_id])
-        .or(Conversation.where(user1_id: params[:user2_id], user2_id: params[:user1_id]))
+      Conversation.where(user1_id: params[:user1_id], user2_id: params[:user2_id]).or(
+        Conversation.where(user1_id: params[:user2_id], user2_id: params[:user1_id])
+      )
     if conversation_exists.length == 1
       render json: {
-               message: I18n.t('controllers.conversations.create_exists'),
+               message: I18n.t("controllers.conversations.create_exists"),
                id: conversation_exists[0].id
              },
              status: 200
     else
       conversation = Conversation.create(conversation_params)
       if conversation.persisted?
-        render json: { message: I18n.t('controllers.reusable.create_success'), id: conversation.id }, status: 200
+        render json: { message: I18n.t("controllers.reusable.create_success"), id: conversation.id }, status: 200
       else
         render json: { error: conversation.errors.full_messages }, status: 422
       end
@@ -50,14 +50,14 @@ class Api::V1::ConversationsController < ApplicationController
     conversation = Conversation.find(params[:id])
     if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
       if conversation.hidden == nil
-        conversation.update_attribute('hidden', params[:hidden])
+        conversation.update_attribute("hidden", params[:hidden])
         conversation.persisted? == true &&
-          (render json: { message: I18n.t('controllers.conversations.update_success') }, status: 200)
+          (render json: { message: I18n.t("controllers.conversations.update_success") }, status: 200)
       else
         conversation.destroy
       end
     else
-      render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
+      render json: { error: I18n.t("controllers.reusable.update_error") }, status: 422
     end
   end
 

@@ -1,5 +1,5 @@
 namespace :conversations do
-  desc 'Deletes all empty conversations'
+  desc "Deletes all empty conversations"
   task delete_empty_conversations: :environment do
     all_conversations = Conversation.all
     all_conversations.all.each do |conversation|
@@ -9,7 +9,7 @@ namespace :conversations do
     end
   end
 
-  desc 'Deletes all unassociated conversations'
+  desc "Deletes all unassociated conversations"
   task delete_unassociated_conversations: :environment do
     all_conversations = Conversation.all
     all_conversations.each do |conversation|

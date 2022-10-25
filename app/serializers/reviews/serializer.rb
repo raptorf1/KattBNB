@@ -1,5 +1,5 @@
 class Reviews::Serializer < ActiveModel::Serializer
-  ActiveModelSerializers.config.default_includes = '*.*'
+  ActiveModelSerializers.config.default_includes = "*.*"
 
   attributes :id, :score, :body, :host_reply, :host_nickname, :host_avatar, :created_at, :updated_at
 

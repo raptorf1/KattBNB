@@ -8,7 +8,7 @@ class ReviewsMailer < ApplicationMailer
     @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@host.lang_pref) do
-      mail(to: @host.email, subject: I18n.t('mailers.reviews.notify_host_create_review'))
+      mail(to: @host.email, subject: I18n.t("mailers.reviews.notify_host_create_review"))
     end
   end
 
@@ -22,7 +22,7 @@ class ReviewsMailer < ApplicationMailer
     @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
-      mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
+      mail(to: @user.email, subject: I18n.t("mailers.reviews.notify_user_pending_review", host: @host.nickname))
     end
   end
 
@@ -36,7 +36,7 @@ class ReviewsMailer < ApplicationMailer
     @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
-      mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
+      mail(to: @user.email, subject: I18n.t("mailers.reviews.notify_user_pending_review", host: @host.nickname))
     end
   end
 
@@ -50,7 +50,7 @@ class ReviewsMailer < ApplicationMailer
     @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
-      mail(to: @user.email, subject: I18n.t('mailers.reviews.notify_user_pending_review', host: @host.nickname))
+      mail(to: @user.email, subject: I18n.t("mailers.reviews.notify_user_pending_review", host: @host.nickname))
     end
   end
 end

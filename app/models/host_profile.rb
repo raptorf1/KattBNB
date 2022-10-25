@@ -27,12 +27,12 @@ class HostProfile < ApplicationRecord
   end
 
   def self.all_cached
-    if Rails.cache.fetch('host_profiles_all').nil?
+    if Rails.cache.fetch("host_profiles_all").nil?
       response = HostProfile.all
-      Rails.cache.fetch('host_profiles_all') { response }
+      Rails.cache.fetch("host_profiles_all") { response }
       response
     else
-      Rails.cache.fetch('host_profiles_all')
+      Rails.cache.fetch("host_profiles_all")
     end
   end
 

@@ -11,11 +11,11 @@ class Api::V1::StripeActions::RetrieveAccountLoginLinkController < ApplicationCo
           response = Stripe::Account.create_login_link(stripe_account)
           render json: { url: response.url }, status: 200
         rescue Stripe::StripeError
-          render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
+          render json: { error: I18n.t("controllers.reusable.stripe_error") }, status: 555
         end
       end
     else
-      render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
+      render json: { error: I18n.t("controllers.reusable.update_error") }, status: 422
     end
   end
 end

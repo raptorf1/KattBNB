@@ -9,15 +9,15 @@ class Api::V1::StripeActions::DeleteAccountController < ApplicationController
       if stripe_account.present?
         begin
           Stripe::Account.delete(stripe_account)
-          render json: { message: 'Account deleted!' }, status: 203
+          render json: { message: "Account deleted!" }, status: 203
         rescue Stripe::StripeError
-          render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
+          render json: { error: I18n.t("controllers.reusable.stripe_error") }, status: 555
         end
       else
-        render json: { message: 'No account' }, status: 200
+        render json: { message: "No account" }, status: 200
       end
     else
-      render json: { error: I18n.t('controllers.reusable.update_error') }, status: 422
+      render json: { error: I18n.t("controllers.reusable.update_error") }, status: 422
     end
   end
 end

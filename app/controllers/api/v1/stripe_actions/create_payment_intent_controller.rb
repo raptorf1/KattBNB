@@ -4,7 +4,7 @@ class Api::V1::StripeActions::CreatePaymentIntentController < ApplicationControl
   def index
     Stripe.api_key = StripeService.get_api_key
     api_amount = calculate_price(params[:inDate], params[:outDate], params[:cats], params[:host]).to_f
-    client_amount = ('%.2f' % params[:amount]).to_f
+    client_amount = ("%.2f" % params[:amount]).to_f
     if api_amount - client_amount <= 1 && api_amount - client_amount >= -1
       stripe_amount = calculate_stripe_amount(params[:amount])
       begin
@@ -14,15 +14,15 @@ class Api::V1::StripeActions::CreatePaymentIntentController < ApplicationControl
               amount: stripe_amount,
               currency: params[:currency],
               receipt_email: current_api_v1_user.email,
-              capture_method: 'manual'
+              capture_method: "manual"
             }
           )
         render json: { intent_id: intent.client_secret }, status: 200
       rescue Stripe::StripeError
-        render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
+        render json: { error: I18n.t("controllers.reusable.stripe_error") }, status: 555
       end
     else
-      render json: { error: I18n.t('controllers.reusable.stripe_error') }, status: 555
+      render json: { error: I18n.t("controllers.reusable.stripe_error") }, status: 555
     end
   end
 
@@ -36,20 +36,20 @@ class Api::V1::StripeActions::CreatePaymentIntentController < ApplicationControl
         price = host_profile.price_per_day_1_cat + ((cats.to_i - 1) * host_profile.supplement_price_per_cat_per_day)
         total = price * (((out_date.to_i - in_date.to_i) / 86_400_000) + 1)
         final_charge = PriceService.calculate_kattbnb_charge(total)
-        '%.2f' % final_charge
+        "%.2f" % final_charge
       else
-        '%.2f' % 0
+        "%.2f" % 0
       end
     else
-      '%.2f' % 0
+      "%.2f" % 0
     end
   end
 
   def calculate_stripe_amount(number)
-    if number.include? '.'
-      number.delete '.'
+    if number.include? "."
+      number.delete "."
     else
-      number + '00'
+      number + "00"
     end
   end
 end
