@@ -13,6 +13,7 @@ class Review < ApplicationRecord
     profile = HostProfile.find(self.host_profile_id)
     average_score = profile.review.sum(&:score) / profile.review.count.to_f
     profile.update_column(:score, average_score)
+    Rails.cache.clear
   end
 
   def self.get_high_score_reviews
