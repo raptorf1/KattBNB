@@ -13,7 +13,40 @@ RSpec.describe "GET /api/v1/stripe_actions/delete_account", type: :request do
 
   let(:unauthenticated_headers) { { HTTP_ACCEPT: "application/json" } }
 
+  Stripe.api_key = StripeService.get_api_key
+
   describe "successfully" do
+    describe "with valid stripe account on delete request" do
+      before do
+        created_account =
+          Stripe::Account.create(
+            {
+              type: "custom",
+              country: "US",
+              email: "jenny.rosen@example.com",
+              capabilities: {
+                card_payments: {
+                  requested: true
+                },
+                transfers: {
+                  requested: true
+                }
+              }
+            }
+          )
+        profile_user.update(stripe_account_id: created_account.id)
+        get "/api/v1/stripe_actions/delete_account?host_profile_id=#{profile_user.id}", headers: headers
+      end
+
+      it "with relevant message" do
+        expect(json_response["message"]).to eq "Account deleted!"
+      end
+
+      it "with 203 status" do
+        expect(response.status).to eq 203
+      end
+    end
+
     describe "no stripe account on delete request" do
       before { get "/api/v1/stripe_actions/delete_account?host_profile_id=#{profile_user.id}", headers: headers }
 
