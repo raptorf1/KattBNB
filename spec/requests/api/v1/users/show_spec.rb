@@ -2,13 +2,13 @@ RSpec.describe "GET /api/v1/users/:id", type: :request do
   let(:user) { FactoryBot.create(:user) }
   let(:random_user) { FactoryBot.create(:user) }
 
-  let(:headers) { { HTTP_ACCEPT: 'application/json' } }
+  let(:headers) { { HTTP_ACCEPT: "application/json" } }
 
   def api_call(user_id, call_headers)
     get "/api/v1/users/#{user_id}", params: { id: user_id }, headers: call_headers
   end
 
-  describe 'succesfully' do
+  describe "succesfully" do
     before { api_call(random_user.id, headers) }
 
     it "responds with correct user id" do
@@ -32,8 +32,8 @@ RSpec.describe "GET /api/v1/users/:id", type: :request do
     end
   end
 
-  describe 'unsuccessfully' do
-    describe 'because requested user does not exist in database' do
+  describe "unsuccessfully" do
+    describe "because requested user does not exist in database" do
       before { api_call(1, headers) }
 
       it "with relevant error" do
