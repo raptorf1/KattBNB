@@ -1,18 +1,8 @@
 class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
   def create
     render json: { message: "Success!" }, status: 200
-    Stripe.api_key =
-      if ENV["OFFICIAL"] == "yes"
-        Rails.application.credentials.STRIPE_API_KEY_PROD
-      else
-        Rails.application.credentials.STRIPE_API_KEY_DEV
-      end
-    endpoint_secret =
-      if ENV["OFFICIAL"] == "yes"
-        Rails.application.credentials.STRIPE_WEBHOOK_SIGN_PROD
-      else
-        Rails.application.credentials.STRIPE_WEBHOOK_SIGN_TEST
-      end
+    Stripe.api_key = StripeService.get_api_key
+    endpoint_secret = StripeService.get_webhook_endpoint_secret
     payload = request.body.read
     sig_header = request.env["HTTP_STRIPE_SIGNATURE"]
     event = nil
