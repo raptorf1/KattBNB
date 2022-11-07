@@ -12,18 +12,6 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
         event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
       case event.type
       when "charge.succeeded"
-        dates_string = event.data.object.metadata.dates
-        dates_to_array = dates_string.split(",").map(&:to_i)
-        booking_dates_stripe_500_limit = []
-        if dates_to_array.length == 2 && (dates_to_array.last - dates_to_array.first) != 86_400_000
-          start_date = dates_to_array.first.to_i
-          stop_date = dates_to_array.last.to_i
-          current_date = start_date
-          while (current_date <= stop_date)
-            booking_dates_stripe_500_limit.push(current_date)
-            current_date = current_date + 86_400_000
-          end
-        end
         payment_intent = event.data.object.payment_intent
         number_of_cats = event.data.object.metadata.number_of_cats
         message = event.data.object.metadata.message
@@ -35,11 +23,7 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
                                payment_intent,
                                number_of_cats,
                                message,
-                               if booking_dates_stripe_500_limit.length > 0
-                                 booking_dates_stripe_500_limit
-                               else
-                                 dates_to_array
-                               end,
+                               DateService.handle_dates_in_stripe_webhook(event.data.object.metadata.dates),
                                host_nickname,
                                price_per_day,
                                price_total,
