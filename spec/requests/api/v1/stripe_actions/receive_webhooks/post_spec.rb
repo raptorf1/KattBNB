@@ -4,9 +4,11 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
   describe "successfully" do
     describe "for a charge_succeeded event when all dates are present" do
       before do
-        post "/api/v1/stripe_actions/receive_webhooks",
-             params: File.open("spec/fixtures/stripe_webhook_events/charge_succeeded_full_dates.json"),
-             headers: headers
+        file =
+          FileService.generate_charge_succeeded_stripe_event(
+            "1666915200000,1667001600000,1667088000000,1667174400000,1667260800000,1667347200000,1667433600000"
+          )
+        post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
       end
 
       it "with relevant message" do
@@ -40,9 +42,8 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
 
     describe "for a charge_succeeded event when only 2 dates are present" do
       before do
-        post "/api/v1/stripe_actions/receive_webhooks",
-             params: File.open("spec/fixtures/stripe_webhook_events/charge_succeeded_2_dates.json"),
-             headers: headers
+        file = FileService.generate_charge_succeeded_stripe_event("1666915200000,1667433600000")
+        post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
       end
 
       it "with relevant message" do

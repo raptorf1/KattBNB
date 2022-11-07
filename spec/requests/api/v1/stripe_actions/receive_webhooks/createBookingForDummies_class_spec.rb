@@ -22,9 +22,11 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
 
     describe "when booking already exists" do
       before do
-        post "/api/v1/stripe_actions/receive_webhooks",
-             params: File.open("spec/fixtures/stripe_webhook_events/charge_succeeded_full_dates.json"),
-             headers: headers
+        file =
+          FileService.generate_charge_succeeded_stripe_event(
+            "1666915200000,1667001600000,1667088000000,1667174400000,1667260800000,1667347200000,1667433600000"
+          )
+        post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
       end
 
       it "with correct log message" do
@@ -37,9 +39,8 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
 
       describe "and during creation is not persisted" do
         before do
-          post "/api/v1/stripe_actions/receive_webhooks",
-               params: File.open("spec/fixtures/stripe_webhook_events/charge_succeeded_0_dates.json"),
-               headers: headers
+          file = FileService.generate_charge_succeeded_stripe_event("")
+          post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
         end
 
         it "with correct number of bookings in the database" do
@@ -49,9 +50,8 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
 
       describe "and is created but host does not exist in the database" do
         before do
-          post "/api/v1/stripe_actions/receive_webhooks",
-               params: File.open("spec/fixtures/stripe_webhook_events/charge_succeeded_2_dates.json"),
-               headers: headers
+          file = FileService.generate_charge_succeeded_stripe_event("1666915200000,1667433600000")
+          post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
         end
 
         it "with correct number of bookings in the database" do
