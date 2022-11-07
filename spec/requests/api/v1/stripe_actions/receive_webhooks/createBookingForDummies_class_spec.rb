@@ -41,7 +41,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
                headers: headers
         end
 
-        it "with correct log message" do
+        it "with correct number of bookings in the database" do
           expect(Booking.all.length).to eq 0
         end
       end
