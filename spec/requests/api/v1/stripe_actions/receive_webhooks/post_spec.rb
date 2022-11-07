@@ -2,6 +2,78 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
   let(:headers) { { HTTP_ACCEPT: "application/json" } }
 
   describe "successfully" do
+    describe "for a charge_succeeded event when all dates are present" do
+      before do
+        post "/api/v1/stripe_actions/receive_webhooks",
+             params: File.open("spec/fixtures/stripe_webhook_events/charge_succeeded_full_dates.json"),
+             headers: headers
+      end
+
+      it "with relevant message" do
+        expect(json_response["message"]).to eq "Success!"
+      end
+
+      it "with 200 status" do
+        expect(response.status).to eq 200
+      end
+
+      it "with correct number of jobs scheduled" do
+        expect(Delayed::Job.all.length).to eq 1
+      end
+
+      it "with correct method invoked" do
+        expect(
+          Delayed::Job.first.handler.include?(
+            "Api::V1::StripeActions::ReceiveWebhooksController::CreateBookingForDummies"
+          )
+        ).to eq true
+      end
+
+      it "with correct dates" do
+        expect(
+          Delayed::Job.first.handler.include?(
+            "\n- 1666915200000\n- 1667001600000\n- 1667088000000\n- 1667174400000\n- 1667260800000\n- 1667347200000\n- 1667433600000\n"
+          )
+        ).to eq true
+      end
+    end
+
+    describe "for a charge_succeeded event when only 2 dates are present" do
+      before do
+        post "/api/v1/stripe_actions/receive_webhooks",
+             params: File.open("spec/fixtures/stripe_webhook_events/charge_succeeded_2_dates.json"),
+             headers: headers
+      end
+
+      it "with relevant message" do
+        expect(json_response["message"]).to eq "Success!"
+      end
+
+      it "with 200 status" do
+        expect(response.status).to eq 200
+      end
+
+      it "with correct number of jobs scheduled" do
+        expect(Delayed::Job.all.length).to eq 1
+      end
+
+      it "with correct method invoked" do
+        expect(
+          Delayed::Job.first.handler.include?(
+            "Api::V1::StripeActions::ReceiveWebhooksController::CreateBookingForDummies"
+          )
+        ).to eq true
+      end
+
+      it "with correct dates" do
+        expect(
+          Delayed::Job.first.handler.include?(
+            "\n- 1666915200000\n- 1667001600000\n- 1667088000000\n- 1667174400000\n- 1667260800000\n- 1667347200000\n- 1667433600000\n"
+          )
+        ).to eq true
+      end
+    end
+
     describe "for a charge_dispute_created event" do
       before do
         post "/api/v1/stripe_actions/receive_webhooks",
@@ -17,7 +89,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         expect(response.status).to eq 200
       end
 
-      it "with correct number of e-mails sheduled to be sent" do
+      it "with correct number of e-mail scheduled to be sent" do
         expect(Delayed::Job.all.length).to eq 1
       end
 
@@ -41,7 +113,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         expect(response.status).to eq 200
       end
 
-      it "with correct number of e-mails sheduled to be sent" do
+      it "with correct number of e-mail scheduled to be sent" do
         expect(Delayed::Job.all.length).to eq 1
       end
 
@@ -65,7 +137,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         expect(response.status).to eq 200
       end
 
-      it "with correct number of e-mails sheduled to be sent" do
+      it "with correct number of e-mail scheduled to be sent" do
         expect(Delayed::Job.all.length).to eq 1
       end
 
@@ -113,7 +185,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         expect(response.status).to eq 200
       end
 
-      it "with correct number of e-mails sheduled to be sent" do
+      it "with correct number of e-mail scheduled to be sent" do
         expect(Delayed::Job.all.length).to eq 1
       end
 

@@ -12,7 +12,7 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
         event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
       case event.type
       when "charge.succeeded"
-        dates_string = params["data"]["object"]["metadata"]["dates"]
+        dates_string = event.data.object.metadata.dates
         dates_to_array = dates_string.split(",").map(&:to_i)
         booking_dates_stripe_500_limit = []
         if dates_to_array.length == 2 && (dates_to_array.last - dates_to_array.first) != 86_400_000
@@ -24,13 +24,13 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
             current_date = current_date + 86_400_000
           end
         end
-        payment_intent = params["data"]["object"]["payment_intent"]
-        number_of_cats = params["data"]["object"]["metadata"]["number_of_cats"]
-        message = params["data"]["object"]["metadata"]["message"]
-        host_nickname = params["data"]["object"]["metadata"]["host_nickname"]
-        price_per_day = params["data"]["object"]["metadata"]["price_per_day"]
-        price_total = params["data"]["object"]["metadata"]["price_total"]
-        user_id = params["data"]["object"]["metadata"]["user_id"]
+        payment_intent = event.data.object.payment_intent
+        number_of_cats = event.data.object.metadata.number_of_cats
+        message = event.data.object.metadata.message
+        host_nickname = event.data.object.metadata.host_nickname
+        price_per_day = event.data.object.metadata.price_per_day
+        price_total = event.data.object.metadata.price_total
+        user_id = event.data.object.metadata.user_id
         Delayed::Job.enqueue CreateBookingForDummies.new(
                                payment_intent,
                                number_of_cats,
