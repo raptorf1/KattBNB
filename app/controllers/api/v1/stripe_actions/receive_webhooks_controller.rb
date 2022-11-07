@@ -1,4 +1,4 @@
-class Api::V1::StripeController < ApplicationController
+class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
   def create
     render json: { message: "Success!" }, status: 200
     Stripe.api_key =

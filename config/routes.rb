@@ -14,7 +14,6 @@ Rails.application.routes.draw do
         resources :bookings, only: %i[index create update]
         resources :conversations, only: %i[create index show update]
         resources :reviews, only: %i[index show create update]
-        resources :stripe, only: %i[index create]
 
         namespace :random_reviews do
           resources :reviews, only: [:index]
@@ -26,6 +25,7 @@ Rails.application.routes.draw do
           resources :create_payment_intent, only: [:index]
           resources :update_payment_intent, only: [:index]
           resources :delete_account, only: [:index]
+          resources :receive_webhooks, only: [:create]
         end
       end
     end
