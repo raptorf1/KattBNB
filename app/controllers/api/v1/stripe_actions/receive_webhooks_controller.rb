@@ -48,7 +48,7 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
             event.type == "radar.early_fraud_warning.created"
         StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_dispute_fraud
       else
-        puts "Unhandled event type: #{event.type}. Why are we receiving this again???"
+        print "Unhandled event type: #{event.type}. Why are we receiving this again???"
       end
     rescue JSON::ParserError
       StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error("Webhook JSON Parse Error")
