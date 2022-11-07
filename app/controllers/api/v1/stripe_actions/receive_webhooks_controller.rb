@@ -10,7 +10,8 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
       Rails.env.test? ?
         event = Stripe::Event.construct_from(JSON.parse(payload, symbolize_names: true)) :
         event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
-      if event.type == "charge.succeeded"
+      case event.type
+      when "charge.succeeded"
         dates_string = params["data"]["object"]["metadata"]["dates"]
         dates_to_array = dates_string.split(",").map(&:to_i)
         booking_dates_stripe_500_limit = []
@@ -44,8 +45,7 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
                                price_total,
                                user_id
                              )
-      elsif event.type == "charge.dispute.created" || event.type == "issuing_dispute.created" ||
-            event.type == "radar.early_fraud_warning.created"
+      when "charge.dispute.created", "issuing_dispute.created", "radar.early_fraud_warning.created"
         StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_dispute_fraud
       else
         print "Unhandled event type: #{event.type}. Why are we receiving this again???"
