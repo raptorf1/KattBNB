@@ -96,4 +96,34 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
       end
     end
   end
+
+  describe "unsuccessfully" do
+    describe "for a JSON parse error" do
+      before do
+        post "/api/v1/stripe_actions/receive_webhooks",
+             params: "{\n  \"id\": \"evt_00000000000000000  \}",
+             headers: headers
+      end
+
+      it "with relevant message" do
+        expect(json_response["message"]).to eq "Success!"
+      end
+
+      it "with 200 status" do
+        expect(response.status).to eq 200
+      end
+
+      it "with correct number of e-mails sheduled to be sent" do
+        expect(Delayed::Job.all.length).to eq 1
+      end
+
+      it "with correct e-mail method invoked" do
+        expect(Delayed::Job.first.handler.include?("notify_stripe_webhook_error")).to eq true
+      end
+
+      it "with correct e-mail arguments" do
+        expect(Delayed::Job.first.handler.include?("Webhook JSON Parse Error")).to eq true
+      end
+    end
+  end
 end
