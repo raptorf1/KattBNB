@@ -18,6 +18,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
 
   describe "testing CreateBookingForDummies class" do
     before { Delayed::Worker.delay_jobs = false }
+    after { Delayed::Worker.delay_jobs = true }
 
     describe "when booking already exists" do
       before do
@@ -38,6 +39,18 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         before do
           post "/api/v1/stripe_actions/receive_webhooks",
                params: File.open("spec/fixtures/stripe_webhook_events/charge_succeeded_0_dates.json"),
+               headers: headers
+        end
+
+        it "with correct number of bookings in the database" do
+          expect(Booking.all.length).to eq 0
+        end
+      end
+
+      describe "and is created but host does not exist in the database" do
+        before do
+          post "/api/v1/stripe_actions/receive_webhooks",
+               params: File.open("spec/fixtures/stripe_webhook_events/charge_succeeded_2_dates.json"),
                headers: headers
         end
 
