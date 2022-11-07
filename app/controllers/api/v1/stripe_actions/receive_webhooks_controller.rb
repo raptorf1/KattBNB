@@ -58,13 +58,8 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
     :user_id
   )
     def perform
-      Stripe.api_key =
-        if ENV["OFFICIAL"] == "yes"
-          Rails.application.credentials.STRIPE_API_KEY_PROD
-        else
-          Rails.application.credentials.STRIPE_API_KEY_DEV
-        end
-      sleep(10)
+      Stripe.api_key = StripeService.get_api_key
+      !Rails.env.test? && sleep(10)
       booking_exists = Booking.where(payment_intent_id: payment_intent)
       if booking_exists.length == 0
         booking_to_create =
@@ -129,7 +124,7 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
           end
         end
       else
-        puts "Booking already exists! Show me the moneyyyyy!"
+        print "Booking already exists! Show me the moneyyyyy!"
       end
     end
   end
