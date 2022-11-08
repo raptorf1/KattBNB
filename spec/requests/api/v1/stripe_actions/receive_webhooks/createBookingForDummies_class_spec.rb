@@ -24,7 +24,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
       before do
         file =
           FileService.generate_charge_succeeded_stripe_event(
-            "1666915200000,1667001600000,1667088000000,1667174400000,1667260800000,1667347200000,1667433600000"
+            "1666915200000,1667001600000,1667088000000,1667174400000,1667260800000,1667347200000,1667433600000", "JackTheReaper", 3, booking.payment_intent_id
           )
         post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
       end
@@ -39,7 +39,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
 
       describe "and during creation is not persisted" do
         before do
-          file = FileService.generate_charge_succeeded_stripe_event("")
+          file = FileService.generate_charge_succeeded_stripe_event("", "JackTheReaper", 3, "pi_000000000000000000000001")
           post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
         end
 
@@ -50,7 +50,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
 
       describe "and is created but host does not exist in the database" do
         before do
-          file = FileService.generate_charge_succeeded_stripe_event("1666915200000,1667433600000")
+          file = FileService.generate_charge_succeeded_stripe_event("1666915200000,1667433600000", "JackTheReaper", 3, "pi_000000000000000000000001")
           post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
         end
 

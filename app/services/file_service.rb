@@ -1,5 +1,5 @@
 module FileService
-  def self.generate_charge_succeeded_stripe_event(dates_string)
+  def self.generate_charge_succeeded_stripe_event(dates_string, host_nickname, user_id, payment_intent_id)
     {
       id: "evt_000000000000000000000000",
       object: "event",
@@ -46,12 +46,12 @@ module FileService
           livemode: false,
           metadata: {
             dates: dates_string,
-            number_of_cats: 2,
+            number_of_cats: 1,
             message: "very nice to do have my cat over to you",
-            host_nickname: "JackTheReaper",
+            host_nickname: host_nickname,
             price_per_day: 52.23,
             price_total: 250,
-            user_id: 3
+            user_id: user_id
           },
           on_behalf_of: nil,
           order: nil,
@@ -64,7 +64,7 @@ module FileService
             type: "authorized"
           },
           paid: true,
-          payment_intent: "pi_000000000000000000000000",
+          payment_intent: payment_intent_id,
           payment_method: "pm_000000000000000000000000",
           payment_method_details: {
             card: {
