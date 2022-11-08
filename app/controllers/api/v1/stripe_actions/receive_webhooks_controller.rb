@@ -59,8 +59,8 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
   )
     def perform
       !Rails.env.test? && sleep(10)
-      booking_exists = Booking.where(payment_intent_id: payment_intent)
-      if booking_exists.length == 0
+      booking_exists = Booking.find_by(payment_intent_id: payment_intent)
+      if booking_exists.nil?
         booking_to_create =
           Booking.create(
             payment_intent_id: payment_intent,
@@ -73,14 +73,13 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
             user_id: user_id
           )
         if booking_to_create.persisted?
-          host = User.where(nickname: booking_to_create.host_nickname)
-          if host.length == 1
-            profile = HostProfile.where(user_id: host[0].id)
-            user = User.where(id: booking_to_create.user_id)
-            now = DateTime.new(Time.now.year, Time.now.month, Time.now.day, 0, 0, 0, 0)
-            now_epoch_javascript = (now.to_f * 1000).to_i
+          host = User.find_by(nickname: booking_to_create.host_nickname)
+          if !host.nil?
+            profile = HostProfile.find_by(user_id: host.id)
+            user = User.find(booking_to_create.user_id)
+            now_epoch_javascript = DateService.get_js_epoch
             host_booked_dates = []
-            host_bookings = Booking.where(host_nickname: profile[0].user.nickname)
+            host_bookings = Booking.where(host_nickname: profile.user.nickname)
             host_bookings.each do |host_booking|
               if host_booking.id != booking_to_create.id &&
                    (host_booking.status == "accepted" && host_booking.dates.last > now_epoch_javascript)
@@ -89,9 +88,9 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
             end
             if (booking_to_create.dates - host_booked_dates.flatten.sort) == booking_to_create.dates
               BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_create_booking(
-                host[0],
+                host,
                 booking_to_create,
-                user[0]
+                user
               )
             else
               StripeService.webhook_cancel_payment_intent_and_delete_booking(
