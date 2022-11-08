@@ -30,9 +30,9 @@ class Api::V1::StripeActions::CreatePaymentIntentController < ApplicationControl
 
   def calculate_price(in_date, out_date, cats, host)
     user = User.find_by(nickname: host)
-    if user != nil
+    if !user.nil?
       host_profile = HostProfile.find_by(user_id: user.id)
-      if host_profile != nil
+      if !host_profile.nil?
         price = host_profile.price_per_day_1_cat + ((cats.to_i - 1) * host_profile.supplement_price_per_cat_per_day)
         total = price * (((out_date.to_i - in_date.to_i) / 86_400_000) + 1)
         final_charge = PriceService.calculate_kattbnb_charge(total)

@@ -13,9 +13,9 @@ namespace :conversations do
   task delete_unassociated_conversations: :environment do
     all_conversations = Conversation.all
     all_conversations.each do |conversation|
-      unless (conversation.user1_id == nil && conversation.user2_id == nil) ||
-               (conversation.user1_id == conversation.hidden && conversation.user2_id == nil) ||
-               (conversation.user2_id == conversation.hidden && conversation.user1_id == nil)
+      unless (conversation.user1_id.nil? && conversation.user2_id.nil?) ||
+               (conversation.user1_id == conversation.hidden && conversation.user2_id.nil?) ||
+               (conversation.user2_id == conversation.hidden && conversation.user1_id.nil?)
         next
       end
       print "Unassociated conversation with id #{conversation.id} succesfully deleted!"

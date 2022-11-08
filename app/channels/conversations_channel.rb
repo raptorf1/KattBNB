@@ -1,6 +1,6 @@
 class ConversationsChannel < ApplicationCable::Channel
   def subscribed
-    if params["conversations_id"] && Conversation.find_by(id: params["conversations_id"]) != nil
+    if params["conversations_id"] && !Conversation.find_by(id: params["conversations_id"]).nil?
       stop_all_streams
       stream_from "conversations_#{params["conversations_id"]}_channel"
     else
@@ -15,7 +15,7 @@ class ConversationsChannel < ApplicationCable::Channel
 
   def receive(data)
     conversation = Conversation.find(data["conversation_id"])
-    if conversation.hidden == nil
+    if conversation.hidden.nil?
       send_actions(data, conversation)
     else
       conversation.update_attribute("hidden", nil)

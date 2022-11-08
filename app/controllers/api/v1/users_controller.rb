@@ -10,7 +10,7 @@ class Api::V1::UsersController < ApplicationController
 
   def update
     user = User.find(params[:id])
-    if current_api_v1_user.id == user.id && params[:profile_avatar] != nil
+    if current_api_v1_user.id == user.id && !params[:profile_avatar].nil?
       pic = params[:profile_avatar]
       DecodeImageService.attach_image(pic, user.profile_avatar)
       user.update(avatar: pic[0])

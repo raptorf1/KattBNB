@@ -49,7 +49,7 @@ class Api::V1::ConversationsController < ApplicationController
   def update
     conversation = Conversation.find(params[:id])
     if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
-      if conversation.hidden == nil
+      if conversation.hidden.nil?
         conversation.update_attribute("hidden", params[:hidden])
         conversation.persisted? == true &&
           (render json: { message: I18n.t("controllers.conversations.update_success") }, status: 200)

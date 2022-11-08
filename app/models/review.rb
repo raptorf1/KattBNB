@@ -18,7 +18,7 @@ class Review < ApplicationRecord
 
   def self.get_high_score_reviews
     reviews = Review.where(score: 5)
-    high_score_reviews = reviews.reject { |review| review.host_profile_id == nil }
+    high_score_reviews = reviews.reject { |review| review.host_profile_id.nil? }
     high_score_reviews.uniq(&:host_profile_id)
   end
 

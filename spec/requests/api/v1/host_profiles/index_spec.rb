@@ -116,7 +116,7 @@ RSpec.describe "GET /api/v1/host_profiles", type: :request do
       before do
         get "/api/v1/host_profiles?cats=2&startDate=1588032000000&endDate=1588204800000"
         @with_review = json_response["with"].select { |profile| profile["reviews_count"] == 1 }
-        @no_review = json_response["with"].select { |profile| profile["reviews_count"] == nil }
+        @no_review = json_response["with"].select { |profile| profile["reviews_count"].nil? }
       end
 
       it "with correct number of host profiles with reviews" do
