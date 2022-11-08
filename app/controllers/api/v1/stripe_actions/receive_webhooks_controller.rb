@@ -76,10 +76,10 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
           host = User.find_by(nickname: booking_to_create.host_nickname)
           if !host.nil?
             user = User.find(booking_to_create.user_id)
-            if (
-                 booking_to_create.dates -
-                   BookingService.get_host_upcoming_booking_dates(booking_to_create.host_nickname)
-               ) == booking_to_create.dates
+            if BookingService.validate_booking_creation_for_dates(
+                 booking_to_create.host_nickname,
+                 booking_to_create.dates
+               )
               BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_create_booking(
                 host,
                 booking_to_create,
