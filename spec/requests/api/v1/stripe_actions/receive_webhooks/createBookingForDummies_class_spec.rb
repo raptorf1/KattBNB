@@ -24,7 +24,10 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
       before do
         file =
           FileService.generate_charge_succeeded_stripe_event(
-            "1666915200000,1667001600000,1667088000000,1667174400000,1667260800000,1667347200000,1667433600000", "JackTheReaper", 3, booking.payment_intent_id
+            "1666915200000,1667001600000,1667088000000,1667174400000,1667260800000,1667347200000,1667433600000",
+            "JackTheReaper",
+            cat_owner.id,
+            booking.payment_intent_id
           )
         post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
       end
@@ -35,27 +38,45 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
     end
 
     describe "when booking does not exist" do
-      before { Booking.destroy_all }
-
       describe "and during creation is not persisted" do
         before do
-          file = FileService.generate_charge_succeeded_stripe_event("", "JackTheReaper", 3, "pi_000000000000000000000001")
+          file =
+            FileService.generate_charge_succeeded_stripe_event(
+              "",
+              "JackTheReaper",
+              cat_owner.id,
+              "pi_000000000000000000000001"
+            )
           post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
         end
 
         it "with correct number of bookings in the database" do
-          expect(Booking.all.length).to eq 0
+          expect(Booking.all.length).to eq 1
+        end
+
+        it "with correct booking ID in the database" do
+          expect(Booking.all.first.id).to eq booking.id
         end
       end
 
       describe "and is created but host does not exist in the database" do
         before do
-          file = FileService.generate_charge_succeeded_stripe_event("1666915200000,1667433600000", "JackTheReaper", 3, "pi_000000000000000000000001")
+          file =
+            FileService.generate_charge_succeeded_stripe_event(
+              "1666915200000,1667433600000",
+              "NotExistingHost",
+              cat_owner.id,
+              "pi_000000000000000000000001"
+            )
           post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
         end
 
         it "with correct number of bookings in the database" do
-          expect(Booking.all.length).to eq 0
+          expect(Booking.all.length).to eq 1
+        end
+
+        it "with correct booking ID in the database" do
+          expect(Booking.all.first.id).to eq booking.id
         end
       end
     end
