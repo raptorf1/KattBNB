@@ -39,7 +39,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
     end
 
     describe "when booking does not exist" do
-      describe "and during creation is not persisted" do
+      describe "and during creation is not persisted (no dates provided)" do
         before do
           file =
             FileService.generate_charge_succeeded_stripe_event(
@@ -81,7 +81,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         end
       end
 
-      describe "and is created but host already has an accepted booking in those dates in the database so it gets deleted" do
+      describe "and is created but host already has an accepted upcoming booking in those dates in the database so it gets deleted" do
         before do
           booking.update(dates: booking.dates.push(4_133_973_599_999))
           file =
