@@ -75,18 +75,11 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
         if booking_to_create.persisted?
           host = User.find_by(nickname: booking_to_create.host_nickname)
           if !host.nil?
-            profile = HostProfile.find_by(user_id: host.id)
             user = User.find(booking_to_create.user_id)
-            now_epoch_javascript = DateService.get_js_epoch
-            host_booked_dates = []
-            host_bookings = Booking.where(host_nickname: profile.user.nickname)
-            host_bookings.each do |host_booking|
-              if host_booking.id != booking_to_create.id &&
-                   (host_booking.status == "accepted" && host_booking.dates.last > now_epoch_javascript)
-                host_booked_dates.push(host_booking.dates)
-              end
-            end
-            if (booking_to_create.dates - host_booked_dates.flatten.sort) == booking_to_create.dates
+            if (
+                 booking_to_create.dates -
+                   BookingService.get_host_upcoming_booking_dates(booking_to_create.host_nickname)
+               ) == booking_to_create.dates
               BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_create_booking(
                 host,
                 booking_to_create,
