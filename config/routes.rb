@@ -14,7 +14,7 @@ Rails.application.routes.draw do
         resources :bookings, only: %i[index create update]
         resources :conversations, only: %i[create index show update]
         resources :reviews, only: %i[index show create update]
-        resources :stripe, only: %i[index create]
+        resources :stripe, only: %i[create]
 
         namespace :random_reviews do
           resources :reviews, only: [:index]
