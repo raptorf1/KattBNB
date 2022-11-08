@@ -58,7 +58,6 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
     :user_id
   )
     def perform
-      Stripe.api_key = StripeService.get_api_key
       !Rails.env.test? && sleep(10)
       booking_exists = Booking.where(payment_intent_id: payment_intent)
       if booking_exists.length == 0
@@ -95,33 +94,19 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
                 user[0]
               )
             else
-              begin
-                Stripe::PaymentIntent.cancel(booking_to_create.payment_intent_id)
-              rescue Stripe::StripeError
-                StripeMailer.delay(queue: "stripe_email_notifications").notify_orphan_payment_intent_to_cancel(
-                  booking_to_create.payment_intent_id
-                )
-              end
-              booking_to_create.destroy
-            end
-          else
-            begin
-              Stripe::PaymentIntent.cancel(booking_to_create.payment_intent_id)
-            rescue Stripe::StripeError
-              StripeMailer.delay(queue: "stripe_email_notifications").notify_orphan_payment_intent_to_cancel(
-                booking_to_create.payment_intent_id
+              StripeService.webhook_cancel_payment_intent_and_delete_booking(
+                booking_to_create.payment_intent_id,
+                booking_to_create.id
               )
             end
-            booking_to_create.destroy
-          end
-        else
-          begin
-            Stripe::PaymentIntent.cancel(booking_to_create.payment_intent_id)
-          rescue Stripe::StripeError
-            StripeMailer.delay(queue: "stripe_email_notifications").notify_orphan_payment_intent_to_cancel(
-              booking_to_create.payment_intent_id
+          else
+            StripeService.webhook_cancel_payment_intent_and_delete_booking(
+              booking_to_create.payment_intent_id,
+              booking_to_create.id
             )
           end
+        else
+          StripeService.webhook_cancel_payment_intent_and_delete_booking(booking_to_create.payment_intent_id, nil)
         end
       else
         print "Booking already exists! Show me the moneyyyyy!"
