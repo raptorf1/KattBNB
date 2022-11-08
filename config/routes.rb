@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       namespace :v1 do
         mount_devise_token_auth_for "User", at: "auth", skip: [:omniauth_callbacks]
         mount ActionCable.server => "/cable/conversation(/:conversation_id/)"
+
         resources :users, only: %i[show update]
         resources :contactus, only: [:index]
         resources :host_profiles, only: %i[index show create update]
