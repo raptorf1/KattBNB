@@ -66,7 +66,8 @@ RSpec.describe User, type: :model do
         "test mail@gmail.com",
         "user@mail",
         "foobar@.yo. .yo",
-        "wazzup@.dawg"
+        "wazzup@.dawg",
+        "  wazz up@.daw g     "
       ]
 
       emails.each { |email| it { is_expected.not_to allow_value(email).for(:email) } }
