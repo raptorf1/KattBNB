@@ -73,32 +73,23 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
             user_id: user_id
           )
         if booking_to_create.persisted?
-          host = User.find_by(nickname: booking_to_create.host_nickname)
+          host = User.find_by(nickname: host_nickname)
           if !host.nil?
-            user = User.find(booking_to_create.user_id)
-            if BookingService.validate_booking_creation_for_dates(
-                 booking_to_create.host_nickname,
-                 booking_to_create.dates
-               )
+            user = User.find(user_id)
+            if BookingService.validate_booking_dates_on_creation(host_nickname, dates)
               BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_create_booking(
                 host,
                 booking_to_create,
                 user
               )
             else
-              StripeService.webhook_cancel_payment_intent_and_delete_booking(
-                booking_to_create.payment_intent_id,
-                booking_to_create.id
-              )
+              StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, booking_to_create.id)
             end
           else
-            StripeService.webhook_cancel_payment_intent_and_delete_booking(
-              booking_to_create.payment_intent_id,
-              booking_to_create.id
-            )
+            StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, booking_to_create.id)
           end
         else
-          StripeService.webhook_cancel_payment_intent_and_delete_booking(booking_to_create.payment_intent_id, nil)
+          StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, nil)
         end
       else
         print "Booking already exists! Show me the moneyyyyy!"
