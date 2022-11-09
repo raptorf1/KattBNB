@@ -21,7 +21,9 @@ en-US:
       update_success: "You have successfully updated your host profile!"
       stripe_create_error: "There was a problem creating your account with our payments infrastructure provider. Please try again later."
     contactus:
-      create_error: "There was a problem validating your email! Are you sure it's the right one? You can always find us by following our social media links below."
+      create_error_email: "There was a problem validating your email! Are you sure it's the right one? You can always find us by following our social media links below."
+      create_error_message: "Your message cannot exceed 1000 characters!"
+      create_error_name: "Your name cannot exceed 100 characters!"
   channels:
     conversations:
       sub_error: "No conversation specified or conversation does not exist. Connection rejected!"
