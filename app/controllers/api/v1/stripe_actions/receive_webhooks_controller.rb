@@ -58,7 +58,7 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
     :user_id
   )
     def perform
-      !Rails.env.test? && sleep(10)
+      !Rails.env.test? && sleep(3)
       booking_exists = Booking.find_by(payment_intent_id: payment_intent)
       if booking_exists.nil?
         booking_to_create =
