@@ -37,7 +37,7 @@ RSpec.describe "GET /api/v1/users/:id", type: :request do
       before { api_call(1, headers) }
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq "User with ID 1 not found!"
+        expect(json_response["error"]).to eq ["Record not found in the database!"]
       end
 
       it "with 400 status" do

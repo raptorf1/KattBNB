@@ -4,7 +4,7 @@ class Api::V1::UsersController < ApplicationController
   def show
     user = User.find_by(id: params[:id])
 
-    user.nil? && (render json: { error: "User with ID #{params[:id]} not found!", time: Time.current }, status: 400) and
+    user.nil? && (render json: { error: [I18n.t("controllers.reusable.not_found_error")], time: Time.current }, status: 400) and
       return
 
     render json: user, serializer: Users::Serializer, status: 200
