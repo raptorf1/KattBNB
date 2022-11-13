@@ -25,6 +25,8 @@ en-US:
       create_error: "There was a problem validating your email! Are you sure it's the right one? You can always find us by following our social media links below."
     random_reviews:
       error: "Not enough reviews!"
+    users:
+      no_avatar_error: "No image supplied! Cannot update!"
   channels:
     conversations:
       sub_error: "No conversation specified or conversation does not exist. Connection rejected!"

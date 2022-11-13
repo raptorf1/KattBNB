@@ -25,6 +25,8 @@ sv-SE:
       create_error: "Det uppstod ett problem med att validera din e-post! Är du säker på att den är rätt? Du kan alltid hitta oss genom att följa våra länkar till sociala medier nedan."
     random_reviews:
       error: "Inte tillräckligt med recensioner!"
+    users:
+      no_avatar_error: "Ingen bild medföljer! Kan inte uppdatera!"
   channels:
     conversations:
       sub_error: "Ingen konversation specificerad eller konversation finns inte. Anslutningen avvisades!"
