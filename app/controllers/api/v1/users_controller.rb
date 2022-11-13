@@ -2,10 +2,12 @@ class Api::V1::UsersController < ApplicationController
   before_action :authenticate_api_v1_user!, only: %i[update]
 
   def show
-    user = User.find(params[:id])
-    render json: user, serializer: Users::Serializer
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: "User with ID #{params[:id]} not found" }, status: 404
+    user = User.find_by(id: params[:id])
+
+    user.nil? && (render json: { error: "User with ID #{params[:id]} not found", time: Time.current }, status: 400) and
+      return
+
+    render json: user, serializer: Users::Serializer, status: 200
   end
 
   def update

@@ -40,8 +40,12 @@ RSpec.describe "GET /api/v1/users/:id", type: :request do
         expect(json_response["error"]).to eq "User with ID 1 not found"
       end
 
-      it "with 404 status" do
-        expect(response.status).to eq 404
+      it "with 400 status" do
+        expect(response.status).to eq 400
+      end
+
+      it "with error timestamp" do
+        expect(json_response["time"]).to_not eq nil
       end
     end
   end
