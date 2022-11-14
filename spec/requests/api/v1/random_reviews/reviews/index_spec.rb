@@ -44,7 +44,7 @@ RSpec.describe "GET /api/v1/random_reviews/reviews", type: :request do
     end
 
     it "with relevant error" do
-      expect(json_response["error"]).to eq ["Not enough reviews!"]
+      expect(json_response["errors"]).to eq ["Not enough reviews!"]
     end
   end
 end

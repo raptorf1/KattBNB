@@ -59,7 +59,7 @@ RSpec.describe "PUT /api/v1/users/:id", type: :request do
       before { api_call(1, random_user_headers) }
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["Record not found in the database!"]
+        expect(json_response["errors"]).to eq ["Record not found in the database!"]
       end
 
       it "with 400 status" do
@@ -71,7 +71,7 @@ RSpec.describe "PUT /api/v1/users/:id", type: :request do
       before { api_call(user.id, random_user_headers) }
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["You cannot perform this action!"]
+        expect(json_response["errors"]).to eq ["You cannot perform this action!"]
       end
 
       it "with 400 status" do
@@ -83,7 +83,7 @@ RSpec.describe "PUT /api/v1/users/:id", type: :request do
       before { put "/api/v1/users/#{user.id}", headers: headers }
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["No image supplied! Cannot update!"]
+        expect(json_response["errors"]).to eq ["No image supplied! Cannot update!"]
       end
 
       it "with 400 status" do
