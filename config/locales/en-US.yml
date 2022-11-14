@@ -9,6 +9,8 @@ en-US:
       update_error: "You cannot perform this action!"
       stripe_error: "There was a problem connecting to our payments infrastructure provider. Please try again later."
       not_found_error: "Record not found in the database!"
+      no_host_profile: "User has no host profile!"
+      no_stripe_account: "Host has no Stripe account configured! Nothing to delete."
     bookings:
       create_error_1: "Someone else just requested to book these days with this host!"
       create_error_2: "Booking cannot be created because the host requested an account deletion! Please find another host in the results page."

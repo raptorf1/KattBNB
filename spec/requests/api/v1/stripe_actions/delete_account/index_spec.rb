@@ -1,17 +1,17 @@
 RSpec.describe "GET /api/v1/stripe_actions/delete_account", type: :request do
-  let(:user) { FactoryBot.create(:user) }
-  let(:profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
-  let(:credentials) { user.create_new_auth_token }
-  let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
+  let!(:user) { FactoryBot.create(:user) }
+  let!(:profile_user) { FactoryBot.create(:host_profile, user_id: user.id) }
+  let!(:credentials) { user.create_new_auth_token }
+  let!(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
 
-  let(:random_user) { FactoryBot.create(:user) }
-  let(:random_profile_user) do
+  let!(:random_user) { FactoryBot.create(:user) }
+  let!(:random_profile_user) do
     FactoryBot.create(:host_profile, user_id: random_user.id, stripe_account_id: "incorrect_id")
   end
-  let(:random_credentials) { random_user.create_new_auth_token }
-  let(:random_user_headers) { { HTTP_ACCEPT: "application/json" }.merge!(random_credentials) }
+  let!(:random_credentials) { random_user.create_new_auth_token }
+  let!(:random_user_headers) { { HTTP_ACCEPT: "application/json" }.merge!(random_credentials) }
 
-  let(:unauthenticated_headers) { { HTTP_ACCEPT: "application/json" } }
+  let!(:unauthenticated_headers) { { HTTP_ACCEPT: "application/json" } }
 
   Stripe.api_key = StripeService.get_api_key
 
@@ -35,23 +35,23 @@ RSpec.describe "GET /api/v1/stripe_actions/delete_account", type: :request do
             }
           )
         profile_user.update(stripe_account_id: created_account.id)
-        get "/api/v1/stripe_actions/delete_account?host_profile_id=#{profile_user.id}", headers: headers
+        get "/api/v1/stripe_actions/delete_account", headers: headers
       end
 
       it "with relevant message" do
-        expect(json_response["message"]).to eq "Account deleted!"
+        expect(json_response["message"]).to eq "Success!"
       end
 
-      it "with 203 status" do
-        expect(response.status).to eq 203
+      it "with 200 status" do
+        expect(response.status).to eq 200
       end
     end
 
     describe "no stripe account on delete request" do
-      before { get "/api/v1/stripe_actions/delete_account?host_profile_id=#{profile_user.id}", headers: headers }
+      before { get "/api/v1/stripe_actions/delete_account", headers: headers }
 
       it "with relevant message" do
-        expect(json_response["message"]).to eq "No account"
+        expect(json_response["message"]).to eq "Host has no Stripe account configured! Nothing to delete."
       end
 
       it "with 200 status" do
@@ -62,9 +62,7 @@ RSpec.describe "GET /api/v1/stripe_actions/delete_account", type: :request do
 
   describe "unsuccesfully" do
     describe "if user is not not authenticated and requests stripe account deletion" do
-      before do
-        get "/api/v1/stripe_actions/delete_account?host_profile_id=#{profile_user.id}", headers: unauthenticated_headers
-      end
+      before { get "/api/v1/stripe_actions/delete_account", headers: unauthenticated_headers }
 
       it "with relevant error" do
         expect(json_response["errors"]).to eq ["You need to sign in or sign up before continuing."]
@@ -75,34 +73,30 @@ RSpec.describe "GET /api/v1/stripe_actions/delete_account", type: :request do
       end
     end
 
-    describe "if user tries to request stripe account deletion of another user" do
+    describe "if user has no host profile" do
       before do
-        get "/api/v1/stripe_actions/delete_account?host_profile_id=#{profile_user.id}", headers: random_user_headers
+        profile_user.destroy
+        get "/api/v1/stripe_actions/delete_account", headers: headers
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq "You cannot perform this action!"
+        expect(json_response["errors"]).to eq ["User has no host profile!"]
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
     end
 
-    describe "if user tries to request stripe account deletion of account that does not exist" do
-      before do
-        get "/api/v1/stripe_actions/delete_account?host_profile_id=#{random_profile_user.id}",
-            headers: random_user_headers
-      end
+    describe "if user tries to request stripe account deletion of account that does not exist (stripe server error)" do
+      before { get "/api/v1/stripe_actions/delete_account", headers: random_user_headers }
 
       it "with relevant custom error" do
-        expect(
-          json_response["error"]
-        ).to eq "There was a problem connecting to our payments infrastructure provider. Please try again later."
+        expect(json_response["errors"]).to eq ["account_invalid"]
       end
 
-      it "with 555 custom status" do
-        expect(response.status).to eq 555
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
     end
   end
