@@ -14,7 +14,7 @@ class Api::V1::StripeActions::DeleteAccountController < ApplicationController
       Stripe::Account.delete(current_api_v1_user.host_profile.stripe_account_id)
       render json: { message: I18n.t("controllers.conversations.update_success") }, status: 200
     rescue Stripe::StripeError => error
-      render json: { errors: [error.error.code] }, status: 400
+      render json: { errors: [error.error.message] }, status: 400
     end
   end
 end

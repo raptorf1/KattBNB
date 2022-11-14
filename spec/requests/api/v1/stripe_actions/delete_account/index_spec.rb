@@ -91,8 +91,8 @@ RSpec.describe "GET /api/v1/stripe_actions/delete_account", type: :request do
     describe "if user tries to request stripe account deletion of account that does not exist (stripe server error)" do
       before { get "/api/v1/stripe_actions/delete_account", headers: random_user_headers }
 
-      it "with relevant custom error" do
-        expect(json_response["errors"]).to eq ["account_invalid"]
+      it "with relevant error" do
+        expect(json_response["errors"][0]).to match("or that account does not exist")
       end
 
       it "with 400 status" do
