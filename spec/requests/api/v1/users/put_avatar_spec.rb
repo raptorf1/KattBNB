@@ -65,10 +65,6 @@ RSpec.describe "PUT /api/v1/users/:id", type: :request do
       it "with 400 status" do
         expect(response.status).to eq 400
       end
-
-      it "with error timestamp" do
-        expect(json_response["time"]).to_not eq nil
-      end
     end
 
     describe "if user tries to update someone else's avatar" do
@@ -81,10 +77,6 @@ RSpec.describe "PUT /api/v1/users/:id", type: :request do
       it "with 400 status" do
         expect(response.status).to eq 400
       end
-
-      it "with error timestamp" do
-        expect(json_response["time"]).to_not eq nil
-      end
     end
 
     describe "if no avatar is supplied in the request" do
@@ -96,10 +88,6 @@ RSpec.describe "PUT /api/v1/users/:id", type: :request do
 
       it "with 400 status" do
         expect(response.status).to eq 400
-      end
-
-      it "with error timestamp" do
-        expect(json_response["time"]).to_not eq nil
       end
     end
   end

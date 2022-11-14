@@ -43,10 +43,6 @@ RSpec.describe "GET /api/v1/users/:id", type: :request do
       it "with 400 status" do
         expect(response.status).to eq 400
       end
-
-      it "with error timestamp" do
-        expect(json_response["time"]).to_not eq nil
-      end
     end
   end
 end
