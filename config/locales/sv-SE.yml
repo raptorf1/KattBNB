@@ -27,6 +27,8 @@ sv-SE:
       error: "Inte tillräckligt med recensioner!"
     users:
       no_avatar_error: "Ingen bild medföljer! Kan inte uppdatera!"
+    stripe_actions:
+      create_payment_intent_calculate_amount_error: "Ett fel uppstod vid beräkningen av bokningsbeloppet! Försök igen och om problemet kvarstår, kontakta vår support."
   channels:
     conversations:
       sub_error: "Ingen konversation specificerad eller konversation finns inte. Anslutningen avvisades!"

@@ -27,6 +27,8 @@ en-US:
       error: "Not enough reviews!"
     users:
       no_avatar_error: "No image supplied! Cannot update!"
+    stripe_actions:
+      create_payment_intent_calculate_amount_error: "An error occured calculating the booking amount! Please try again and if the problem persists, contact our support."
   channels:
     conversations:
       sub_error: "No conversation specified or conversation does not exist. Connection rejected!"
