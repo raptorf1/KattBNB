@@ -12,7 +12,7 @@ class Api::V1::StripeActions::UpdatePaymentIntentController < ApplicationControl
           metadata: {
             number_of_cats: params[:number_of_cats],
             message: params[:message],
-            dates: limit_dates_calulator(params[:dates]),
+            dates: limit_dates_calulator(Rails.env.test? ? params[:dates] : params[:dates].join(",")),
             host_nickname: params[:host_nickname],
             price_per_day: params[:price_per_day],
             price_total: params[:price_total],
@@ -29,13 +29,13 @@ class Api::V1::StripeActions::UpdatePaymentIntentController < ApplicationControl
 
   private
 
-  def limit_dates_calulator(date_obj)
-    if date_obj.length >= 490
+  def limit_dates_calulator(date_obj_as_string)
+    if date_obj_as_string.length >= 490
       stripe_500_limit_dates = []
-      dates_to_array = date_obj.split(",").map(&:to_i)
+      dates_to_array = date_obj_as_string.split(",").map(&:to_i)
       stripe_500_limit_dates.push(dates_to_array.first, dates_to_array.last)
       return stripe_500_limit_dates.join(",")
     end
-    date_obj
+    date_obj_as_string
   end
 end
