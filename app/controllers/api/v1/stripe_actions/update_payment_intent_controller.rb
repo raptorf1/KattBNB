@@ -21,7 +21,7 @@ class Api::V1::StripeActions::UpdatePaymentIntentController < ApplicationControl
           }
         }
       )
-      render json: { message: "Payment Intent updated!" }, status: 200
+      render json: { message: I18n.t("controllers.reusable.update_success") }, status: 200
     rescue Stripe::StripeError => error
       render json: { errors: [error.error.message] }, status: 400
     end

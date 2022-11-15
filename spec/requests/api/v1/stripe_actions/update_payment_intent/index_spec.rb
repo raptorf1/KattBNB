@@ -19,7 +19,7 @@ RSpec.describe "GET /api/v1/stripe_actions/update_payment_intent", type: :reques
       end
 
       it "with relevant message" do
-        expect(json_response["message"]).to eq "Payment Intent updated!"
+        expect(json_response["message"]).to eq "Successfully updated!"
       end
 
       it "with 200 status" do
@@ -38,7 +38,7 @@ RSpec.describe "GET /api/v1/stripe_actions/update_payment_intent", type: :reques
       end
 
       it "with relevant message" do
-        expect(json_response["message"]).to eq "Payment Intent updated!"
+        expect(json_response["message"]).to eq "Successfully updated!"
       end
 
       it "with 200 status" do
