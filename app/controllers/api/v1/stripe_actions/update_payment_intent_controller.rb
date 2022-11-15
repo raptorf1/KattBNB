@@ -3,6 +3,7 @@ class Api::V1::StripeActions::UpdatePaymentIntentController < ApplicationControl
 
   def index
     Stripe.api_key = StripeService.get_api_key
+
     payment_intent_id = params[:payment_intent_id].split("_secret")[0]
     begin
       Stripe::PaymentIntent.update(
@@ -21,8 +22,8 @@ class Api::V1::StripeActions::UpdatePaymentIntentController < ApplicationControl
         }
       )
       render json: { message: "Payment Intent updated!" }, status: 200
-    rescue Stripe::StripeError
-      render json: { error: I18n.t("controllers.reusable.stripe_error") }, status: 555
+    rescue Stripe::StripeError => error
+      render json: { errors: [error.error.message] }, status: 400
     end
   end
 
