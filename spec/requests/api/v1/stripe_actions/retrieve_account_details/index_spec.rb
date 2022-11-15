@@ -15,7 +15,7 @@ RSpec.describe "GET /api/v1/stripe_actions/retrieve_account_details", type: :req
       before { get "/api/v1/stripe_actions/retrieve_account_details", headers: headers }
 
       it "with relevant message" do
-        expect(json_response["message"]).to eq "Host has no Stripe account configured! Nothing to delete."
+        expect(json_response["message"]).to eq "Host has no Stripe account configured! Nothing to perform."
       end
 
       it "with 200 status" do
