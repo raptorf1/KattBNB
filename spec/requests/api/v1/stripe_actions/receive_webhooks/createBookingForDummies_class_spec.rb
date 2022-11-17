@@ -69,7 +69,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
           file =
             FileService.generate_charge_succeeded_stripe_event(
               "",
-              "JackTheReaper",
+              host.nickname,
               cat_owner.id,
               "pi_000000000000000000000001"
             )
