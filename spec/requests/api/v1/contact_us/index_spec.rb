@@ -14,7 +14,7 @@ RSpec.describe "GET /api/v1/contact_us", type: :request do
     end
 
     it "with relevant message" do
-      expect(json_response["message"]).to eq "Success!!!"
+      expect(json_response["message"]).to eq "Success!"
     end
 
     it "with correct number of emails sent to website admin" do
@@ -34,12 +34,12 @@ RSpec.describe "GET /api/v1/contact_us", type: :request do
             }
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["Your message cannot exceed 1000 characters!"]
+        expect(json_response["errors"]).to eq ["Your message cannot exceed 1000 characters!"]
       end
     end
 
@@ -54,12 +54,12 @@ RSpec.describe "GET /api/v1/contact_us", type: :request do
             }
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["Your name cannot exceed 100 characters!"]
+        expect(json_response["errors"]).to eq ["Your name cannot exceed 100 characters!"]
       end
     end
 
@@ -73,12 +73,12 @@ RSpec.describe "GET /api/v1/contact_us", type: :request do
             }
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq [
+        expect(json_response["errors"]).to eq [
              "There was a problem validating your email! Are you sure it's the right one? You can always find us by following our social media links below."
            ]
       end
