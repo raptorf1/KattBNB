@@ -1,5 +1,5 @@
 RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
-  let(:headers) { { HTTP_ACCEPT: "application/json" } }
+  let!(:headers) { { HTTP_ACCEPT: "application/json" } }
 
   let!(:host) { FactoryBot.create(:user) }
   let!(:host_profile) { FactoryBot.create(:host_profile, user_id: host.id) }
@@ -39,28 +39,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
     end
 
     describe "when booking does not exist" do
-      describe "and during creation is not persisted (no dates provided)" do
-        before do
-          file =
-            FileService.generate_charge_succeeded_stripe_event(
-              "",
-              "JackTheReaper",
-              cat_owner.id,
-              "pi_000000000000000000000001"
-            )
-          post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
-        end
-
-        it "with correct number of bookings in the database" do
-          expect(Booking.all.length).to eq 1
-        end
-
-        it "with correct booking ID in the database" do
-          expect(Booking.all.first.id).to eq booking.id
-        end
-      end
-
-      describe "and is created but host does not exist in the database so it gets deleted" do
+      describe "and host does not exist in the database" do
         before do
           file =
             FileService.generate_charge_succeeded_stripe_event(
@@ -79,9 +58,38 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         it "with correct booking ID in the database" do
           expect(Booking.all.first.id).to eq booking.id
         end
+
+        it "with correct log message when cancelling the payment intent" do
+          expect(@std_output).to match("No such payment_intent:")
+        end
       end
 
-      describe "and is created but host already has an accepted upcoming booking in those dates in the database so it gets deleted" do
+      describe "and booking is not persisted (no dates provided)" do
+        before do
+          file =
+            FileService.generate_charge_succeeded_stripe_event(
+              "",
+              "JackTheReaper",
+              cat_owner.id,
+              "pi_000000000000000000000001"
+            )
+          post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
+        end
+
+        it "with correct number of bookings in the database" do
+          expect(Booking.all.length).to eq 1
+        end
+
+        it "with correct booking ID in the database" do
+          expect(Booking.all.first.id).to eq booking.id
+        end
+
+        it "with correct log message when cancelling the payment intent" do
+          expect(@std_output).to match("No such payment_intent:")
+        end
+      end
+
+      describe "and booking is created but host already has an accepted upcoming booking in those dates in the database so it gets deleted" do
         before do
           booking.update(dates: booking.dates.push(4_133_973_599_999))
           file =
@@ -101,9 +109,13 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         it "with correct booking ID in the database" do
           expect(Booking.all.first.id).to eq booking.id
         end
+
+        it "with correct log message when cancelling the payment intent" do
+          expect(@std_output).to match("No such payment_intent:")
+        end
       end
 
-      describe "and is successfully created" do
+      describe "and booking is successfully created" do
         before do
           file =
             FileService.generate_charge_succeeded_stripe_event(

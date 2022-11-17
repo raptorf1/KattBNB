@@ -20,7 +20,8 @@ module StripeService
 
     begin
       Stripe::PaymentIntent.cancel(payment_intent_id)
-    rescue Stripe::StripeError
+    rescue Stripe::StripeError => error
+      print error
       StripeMailer.delay(queue: "stripe_email_notifications").notify_orphan_payment_intent_to_cancel(payment_intent_id)
     end
 

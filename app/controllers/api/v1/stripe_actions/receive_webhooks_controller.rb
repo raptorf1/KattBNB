@@ -62,41 +62,46 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
   )
     def perform
       !Rails.env.test? && sleep(3)
+
       booking_exists = Booking.find_by(payment_intent_id: payment_intent)
-      if booking_exists.nil?
-        booking_to_create =
-          Booking.create(
-            payment_intent_id: payment_intent,
-            number_of_cats: number_of_cats,
-            message: message,
-            dates: dates,
-            host_nickname: host_nickname,
-            price_per_day: price_per_day,
-            price_total: price_total,
-            user_id: user_id
-          )
-        if booking_to_create.persisted?
-          host = User.find_by(nickname: host_nickname)
-          if !host.nil?
-            user = User.find(user_id)
-            if BookingService.validate_booking_dates_on_creation(host_nickname, dates)
-              BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_create_booking(
-                host,
-                booking_to_create,
-                user
-              )
-            else
-              StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, booking_to_create.id)
-            end
-          else
-            StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, booking_to_create.id)
-          end
-        else
-          StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, nil)
-        end
-      else
+      if !booking_exists.nil?
         print "Booking already exists! Show me the moneyyyyy!"
+        return
       end
+
+      host = User.find_by(nickname: host_nickname)
+      if host.nil?
+        StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, nil)
+        return
+      end
+
+      booking_to_create =
+        Booking.create(
+          payment_intent_id: payment_intent,
+          number_of_cats: number_of_cats,
+          message: message,
+          dates: dates,
+          host_nickname: host_nickname,
+          price_per_day: price_per_day,
+          price_total: price_total,
+          user_id: user_id
+        )
+      if !booking_to_create.persisted?
+        StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, nil)
+        return
+      end
+
+      if !BookingService.validate_booking_dates_on_creation(host_nickname, dates)
+        StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, booking_to_create.id)
+        return
+      end
+
+      user = User.find(user_id)
+      BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_create_booking(
+        host,
+        booking_to_create,
+        user
+      )
     end
   end
 end
