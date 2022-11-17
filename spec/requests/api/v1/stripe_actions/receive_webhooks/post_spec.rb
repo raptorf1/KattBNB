@@ -195,6 +195,10 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         expect(response.status).to eq 200
       end
 
+      it "with correct log message" do
+        expect(@std_output).to match("unexpected token at")
+      end
+
       it "with correct number of e-mail scheduled to be sent" do
         expect(Delayed::Job.all.length).to eq 1
       end

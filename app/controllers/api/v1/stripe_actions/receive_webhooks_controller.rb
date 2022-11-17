@@ -34,13 +34,16 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
       else
         print "Unhandled event type: #{event.type}. Why are we receiving this again???"
       end
-    rescue JSON::ParserError
+    rescue JSON::ParserError => error
+      print error
       StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error("Webhook JSON Parse Error")
-    rescue Stripe::SignatureVerificationError
+    rescue Stripe::SignatureVerificationError => error
+      print error
       StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error(
         "Webhook Signature Verification Error"
       )
-    rescue Stripe::StripeError
+    rescue Stripe::StripeError => error
+      print error
       StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error(
         "General Stripe Webhook Error"
       )
