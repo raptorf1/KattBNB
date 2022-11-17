@@ -1,9 +1,9 @@
-RSpec.describe "PUT /api/v1/users", type: :request do
+RSpec.describe "PUT /api/v1/users/:id", type: :request do
   let(:user) { FactoryBot.create(:user) }
   let(:credentials) { user.create_new_auth_token }
   let(:headers) { { HTTP_ACCEPT: "application/json" }.merge!(credentials) }
 
-  let(:random_user) { FactoryBot.create(:user, email: "a@a.com", nickname: "Rails is king!") }
+  let(:random_user) { FactoryBot.create(:user) }
   let(:random_credentials) { random_user.create_new_auth_token }
   let(:random_user_headers) { { HTTP_ACCEPT: "application/json" }.merge!(random_credentials) }
 
@@ -55,15 +55,39 @@ RSpec.describe "PUT /api/v1/users", type: :request do
       end
     end
 
+    describe "if provided user in not found in the database" do
+      before { api_call(1, random_user_headers) }
+
+      it "with relevant error" do
+        expect(json_response["errors"]).to eq ["Record not found in the database!"]
+      end
+
+      it "with 400 status" do
+        expect(response.status).to eq 400
+      end
+    end
+
     describe "if user tries to update someone else's avatar" do
       before { api_call(user.id, random_user_headers) }
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["You cannot perform this action!"]
+        expect(json_response["errors"]).to eq ["You cannot perform this action!"]
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
+      end
+    end
+
+    describe "if no avatar is supplied in the request" do
+      before { put "/api/v1/users/#{user.id}", headers: headers }
+
+      it "with relevant error" do
+        expect(json_response["errors"]).to eq ["No image supplied! Cannot update!"]
+      end
+
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
     end
   end

@@ -39,12 +39,12 @@ RSpec.describe "GET /api/v1/random_reviews/reviews", type: :request do
   describe "unsuccessfully: when less than 3 reviews exist" do
     before { get "/api/v1/random_reviews/reviews" }
 
-    it "with 404 status" do
-      expect(response.status).to eq 404
+    it "with 400 status" do
+      expect(response.status).to eq 400
     end
 
     it "with relevant error" do
-      expect(json_response["error"]).to eq "Not enough 5 paw reviews!"
+      expect(json_response["errors"]).to eq ["Not enough reviews!"]
     end
   end
 end

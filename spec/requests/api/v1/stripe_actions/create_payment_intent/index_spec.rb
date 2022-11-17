@@ -9,7 +9,7 @@ RSpec.describe "GET /api/v1/stripe_actions/create_payment_intent", type: :reques
   describe "succesfully" do
     describe "when api and client amounts are correct" do
       before do
-        get "/api/v1/stripe_actions/create_payment_intent?inDate=1587945600000&outDate=1588204800000&cats=2&host=#{user.nickname}&amount=733&currency=sek",
+        get "/api/v1/stripe_actions/create_payment_intent?inDate=1587945600000&outDate=1588204800000&cats=2&host=#{user.nickname}&amount=733",
             headers: headers
       end
 
@@ -31,30 +31,28 @@ RSpec.describe "GET /api/v1/stripe_actions/create_payment_intent", type: :reques
       end
 
       it "with relevant error" do
-        expect(
-          json_response["error"]
-        ).to eq "There was a problem connecting to our payments infrastructure provider. Please try again later."
+        expect(json_response["errors"][0]).to match "Invalid currency: jdhf."
       end
 
-      it "with 555 status" do
-        expect(response.status).to eq 555
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
     end
 
     describe "when api and client amounts do not match" do
       before do
-        get "/api/v1/stripe_actions/create_payment_intent?inDate=1587945600000&outDate=1588204800000&cats=2&host=#{user.nickname}&amount=1733&currency=sek",
+        get "/api/v1/stripe_actions/create_payment_intent?inDate=1587945600000&outDate=1588204800000&cats=2&host=#{user.nickname}&amount=1733",
             headers: headers
       end
 
       it "with relevant error" do
-        expect(
-          json_response["error"]
-        ).to eq "There was a problem connecting to our payments infrastructure provider. Please try again later."
+        expect(json_response["errors"]).to eq [
+             "An error occured calculating the booking amount! Please try again and if the problem persists, contact our support."
+           ]
       end
 
-      it "with 555 status" do
-        expect(response.status).to eq 555
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
     end
 

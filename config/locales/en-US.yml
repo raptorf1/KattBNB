@@ -8,6 +8,9 @@ en-US:
       update_success: "Successfully updated!"
       update_error: "You cannot perform this action!"
       stripe_error: "There was a problem connecting to our payments infrastructure provider. Please try again later."
+      not_found_error: "Record not found in the database!"
+      no_host_profile: "User has no host profile!"
+      no_stripe_account: "Host has no Stripe account configured! Nothing to perform."
     bookings:
       create_error_1: "Someone else just requested to book these days with this host!"
       create_error_2: "Booking cannot be created because the host requested an account deletion! Please find another host in the results page."
@@ -24,6 +27,12 @@ en-US:
       create_error_email: "There was a problem validating your email! Are you sure it's the right one? You can always find us by following our social media links below."
       create_error_message: "Your message cannot exceed 1000 characters!"
       create_error_name: "Your name cannot exceed 100 characters!"
+    random_reviews:
+      error: "Not enough reviews!"
+    users:
+      no_avatar_error: "No image supplied! Cannot update!"
+    stripe_actions:
+      create_payment_intent_calculate_amount_error: "An error occured calculating the booking amount! Please try again and if the problem persists, contact our support."
   channels:
     conversations:
       sub_error: "No conversation specified or conversation does not exist. Connection rejected!"
