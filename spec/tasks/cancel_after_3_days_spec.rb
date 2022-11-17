@@ -28,7 +28,11 @@ describe "rake bookings:cancel_after_3_days", type: :task do
     end
 
     it "logs to stdout" do
-      expect(@std_output).to eq("Pending booking with id #{cancelled_booking.id} succesfully cancelled!")
+      expect(@std_output).to match("Pending booking with id #{cancelled_booking.id} succesfully cancelled!")
+    end
+
+    it "logs to stdout (stripe error)" do
+      expect(@std_output).to match("No such payment_intent:")
     end
 
     it "changes status of booking to cancelled" do

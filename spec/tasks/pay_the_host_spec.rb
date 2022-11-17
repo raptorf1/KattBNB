@@ -82,5 +82,9 @@ describe "rake bookings:pay_the_host", type: :task do
     it "sent email has the correct booking ID as subject" do
       expect(@jobs.first.handler).to match("Payment to host for booking id #{unpaid_accepted_booking_past.id} failed")
     end
+
+    it "logs to stdout (stripe error)" do
+      expect(@std_output).to match("No such destination:")
+    end
   end
 end
