@@ -91,7 +91,7 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
         return
       end
 
-      if !BookingService.validate_booking_dates_on_creation(host_nickname, dates)
+      if !BookingService.validate_dates(host_nickname, dates)
         StripeService.webhook_cancel_payment_intent_and_delete_booking(payment_intent, booking_to_create.id)
         return
       end

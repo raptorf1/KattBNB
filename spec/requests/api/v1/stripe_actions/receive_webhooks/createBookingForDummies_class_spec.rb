@@ -115,7 +115,7 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
         end
       end
 
-      describe "and booking is successfully created" do
+      describe "and booking is successfully created (a booking already exists in the database)" do
         before do
           file =
             FileService.generate_charge_succeeded_stripe_event(
@@ -141,6 +141,28 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
 
         it "with 2 bookings not sharing the same ID" do
           expect(Booking.all.first.id).to_not eq Booking.all.last.id
+        end
+      end
+
+      describe "and booking is successfully created (no booking exists in the database)" do
+        before do
+          Booking.destroy_all
+          file =
+            FileService.generate_charge_succeeded_stripe_event(
+              "1672560000000,1674248400000",
+              host.nickname,
+              cat_owner.id,
+              "pi_000000000000000000000001"
+            )
+          post "/api/v1/stripe_actions/receive_webhooks", params: file, headers: headers
+        end
+
+        it "with correct number of bookings in the database" do
+          expect(Booking.all.length).to eq 1
+        end
+
+        it "with correct booking status in the database for the newly created booking" do
+          expect(Booking.last.status).to eq "pending"
         end
       end
     end
