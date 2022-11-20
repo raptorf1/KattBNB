@@ -1,5 +1,5 @@
 namespace :users do
-  desc 'Deletes all unconfirmed users after 24 hrs'
+  desc "Deletes all unconfirmed users after 24 hrs"
   task delete_unconfirmed_users: :environment do
     unconfirmed_users = User.where(confirmed_at: nil)
     unconfirmed_users.each do |user|

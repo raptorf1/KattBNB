@@ -1,6 +1,3 @@
-[![Coverage Status](https://coveralls.io/repos/github/raptorf1/KattBNB_API/badge.svg?branch=development)](https://coveralls.io/github/raptorf1/KattBNB_API?branch=development)
-[![Build Status](https://semaphoreci.com/api/v1/raptorf1/kattbnb_api/branches/development/badge.svg)](https://semaphoreci.com/raptorf1/kattbnb_api)
-
 # Project Title
 
 ## **KattBNB**
@@ -25,7 +22,7 @@ This application consists of a back-end API and a front-end Client.
 
 The GitHub repository for the API is [here](https://github.com/raptorf1/KattBNB_API) and the one for the Client is [here](https://github.com/zanenkn/KattBNB_client).
 
-The application is deployed on Netlify [here](https://kattbnb.netlify.com/).
+The application is deployed on Netlify [here](https://kattbnb.se/).
 
 # Tests, Test Coverage & CI
 
@@ -41,9 +38,7 @@ After that, use `bundle exec rspec` to run all tests avoiding any conflicts with
 
 Unit and request tests can be found in the `spec/models` and `spec/requests` folders respectively.
 
-[Coveralls](https://coveralls.io/) was used to measure the API's test coverage.
-
-[Semaphore CI](https://semaphoreci.com/) was used for continious integration.
+[SimpleCov](https://github.com/simplecov-ruby/simplecov) is used to measure the API's test coverage.
 
 ### CLIENT
 
@@ -57,20 +52,13 @@ Acceptance tests can be found in the `cypress/integration` folder.
 
 # Built With
 
-- API with [Ruby on Rails](https://rubyonrails.org/) version 5.2.3.
-- API with [Ruby](https://www.ruby-lang.org/en/) version 2.4.1.
+- API with [Ruby on Rails](https://rubyonrails.org/) and [Ruby](https://www.ruby-lang.org/en/).
 - Client with [React](https://reactjs.org/).
-- Client was styled using [Semantic UI](https://react.semantic-ui.com/).
-- Client uses [gulp](https://gulpjs.com/) build runner. All relevant files can be found in `src/semantic` folder.
 
 # Authors
 
 - **Zane**- [GitHub Profile](https://github.com/zanenkn) - [Portfolio Website](https://zanenkn.netlify.com/)
-- **raptorf1** - [GitHub Profile](https://github.com/raptorf1) - [Portfolio Website](https://gtomaras-portfolio.netlify.com/)
-
-# License
-
-Our intention is to make a business out of this project, so in the near future it will be legally patented. When this happens, we will update this section with further details.
+- **raptorf1** - [GitHub Profile](https://github.com/raptorf1)
 
 # Contribute / Donate
 
@@ -82,7 +70,7 @@ Some of the expenses involved to turn this project into a sustainable business a
 - Accounting services
 - Company registration fees
 
-Those of you who are keen to what we are trying to build here and have the resourses or competences to assist us, feel free to contact us at *kattbnb@gmail.com* for a further discussion.
+Those of you who are keen to what we are trying to build here and have the resourses or competences to assist us, feel free to contact us at *hej@kattbnb.se* for a further discussion.
 
 # Acknowledgments
 

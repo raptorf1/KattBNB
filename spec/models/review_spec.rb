@@ -1,11 +1,11 @@
 RSpec.describe Review, type: :model do
-  describe 'Factory' do
-    it 'should be valid' do
+  describe "Factory" do
+    it "should be valid" do
       expect(create(:review)).to be_valid
     end
   end
 
-  describe 'Database table' do
+  describe "Database table" do
     it { is_expected.to have_db_column :score }
     it { is_expected.to have_db_column :body }
     it { is_expected.to have_db_column :host_reply }
@@ -17,7 +17,7 @@ RSpec.describe Review, type: :model do
     it { is_expected.to have_db_column :updated_at }
   end
 
-  describe 'Validations' do
+  describe "Validations" do
     it { is_expected.to validate_presence_of :score }
     it { is_expected.to validate_presence_of :body }
     it { is_expected.to validate_presence_of :host_nickname }
@@ -28,7 +28,7 @@ RSpec.describe Review, type: :model do
     it { is_expected.to validate_length_of(:host_reply).is_at_most(1000) }
   end
 
-  describe 'Associations' do
+  describe "Associations" do
     it { is_expected.to belong_to(:user) }
     it { is_expected.to belong_to(:host_profile) }
     it { is_expected.to belong_to(:booking) }

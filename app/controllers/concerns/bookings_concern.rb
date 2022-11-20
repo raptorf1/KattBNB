@@ -26,7 +26,7 @@ module BookingsConcern
 
   def cancel_payment_intent(booking_payment_intent_id)
     Stripe.api_key =
-      if ENV['OFFICIAL'] == 'yes'
+      if ENV["OFFICIAL"] == "yes"
         Rails.application.credentials.STRIPE_API_KEY_PROD
       else
         Rails.application.credentials.STRIPE_API_KEY_DEV
@@ -34,9 +34,9 @@ module BookingsConcern
     begin
       Stripe::PaymentIntent.cancel(booking_payment_intent_id)
     rescue Stripe::StripeError
-      StripeMailer
-        .delay(queue: 'stripe_email_notifications')
-        .notify_orphan_payment_intent_to_cancel(booking_payment_intent_id)
+      StripeMailer.delay(queue: "stripe_email_notifications").notify_orphan_payment_intent_to_cancel(
+        booking_payment_intent_id
+      )
     end
   end
 end

@@ -1,4 +1,4 @@
-describe 'rake conversations:delete_unassociated_conversations', type: :task do
+describe "rake conversations:delete_unassociated_conversations", type: :task do
   let(:user_1) { FactoryBot.create(:user) }
   let(:user_2) { FactoryBot.create(:user) }
   let(:user_3) { FactoryBot.create(:user) }
@@ -14,31 +14,31 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
 
   let!(:message_2) { FactoryBot.create(:message, conversation_id: conversation_2.id, user_id: user_2.id) }
 
-  it 'successfully preloads the Rails environment' do
-    expect(task.prerequisites).to include 'environment'
+  it "successfully preloads the Rails environment" do
+    expect(task.prerequisites).to include "environment"
   end
 
-  describe 'successfully for hidden conversation' do
+  describe "successfully for hidden conversation" do
     before do
       user_4.destroy
       hidden_conversation.reload
       @subject = task.execute
     end
 
-    it 'runs with no errors' do
+    it "runs with no errors" do
       expect { @subject }.not_to raise_error
     end
 
-    it 'deletes unassociated conversations that existing user has hidden' do
+    it "deletes unassociated conversations that existing user has hidden" do
       expect { Conversation.find(hidden_conversation.id) }.to raise_exception(ActiveRecord::RecordNotFound)
     end
 
-    it 'logs to stdout' do
+    it "logs to stdout" do
       expect(@std_output).to eq("Unassociated conversation with id #{hidden_conversation.id} succesfully deleted!")
     end
   end
 
-  describe 'successfully for unassociated conversations' do
+  describe "successfully for unassociated conversations" do
     before do
       user_1.destroy
       user_2.destroy
@@ -47,19 +47,19 @@ describe 'rake conversations:delete_unassociated_conversations', type: :task do
       @subject = task.execute
     end
 
-    it 'runs with no errors' do
+    it "runs with no errors" do
       expect { @subject }.not_to raise_error
     end
 
-    it 'deletes only unassociated conversations' do
+    it "deletes only unassociated conversations" do
       expect(Conversation.all.length).to eq 1
     end
 
-    it 'deletes all messages' do
+    it "deletes all messages" do
       expect(Message.all.length).to eq 0
     end
 
-    it 'logs to stdout' do
+    it "logs to stdout" do
       expect(@std_output).to eq(
         "Unassociated conversation with id #{conversation_1.id} succesfully deleted!Unassociated conversation with id #{conversation_2.id} succesfully deleted!"
       )

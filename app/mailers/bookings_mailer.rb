@@ -10,7 +10,7 @@ class BookingsMailer < ApplicationMailer
     @total = PriceService.two_decimals_converter(booking.price_total)
 
     I18n.with_locale(@host.lang_pref) do
-      mail(to: @host.email, subject: I18n.t('mailers.bookings.notify_host_create_booking'))
+      mail(to: @host.email, subject: I18n.t("mailers.bookings.notify_host_create_booking"))
     end
   end
 
@@ -28,17 +28,17 @@ class BookingsMailer < ApplicationMailer
 
     I18n.with_locale(@user.lang_pref) do
       @summary_drop =
-        I18n.t('mailers.bookings.notify_user_accepted_booking_sum_drop', total: total, host: @booking.host_nickname)
+        I18n.t("mailers.bookings.notify_user_accepted_booking_sum_drop", total: total, host: @booking.host_nickname)
       @summary_collect =
-        I18n.t('mailers.bookings.notify_user_accepted_booking_sum_collect', total: total, host: @booking.host_nickname)
+        I18n.t("mailers.bookings.notify_user_accepted_booking_sum_collect", total: total, host: @booking.host_nickname)
     end
     event_drop = create_calendar_event(@start_date, @booking.host_full_address, @summary_drop)
     event_collect = create_calendar_event(@end_date, @booking.host_full_address, @summary_collect)
-    attachments['AddToMyCalendarDropOff.ics'] = { mime_type: 'text/calendar', content: event_drop.to_ical }
-    attachments['AddToMyCalendarPickUp.ics'] = { mime_type: 'text/calendar', content: event_collect.to_ical }
+    attachments["AddToMyCalendarDropOff.ics"] = { mime_type: "text/calendar", content: event_drop.to_ical }
+    attachments["AddToMyCalendarPickUp.ics"] = { mime_type: "text/calendar", content: event_collect.to_ical }
 
     I18n.with_locale(@user.lang_pref) do
-      mail(to: @user.email, subject: I18n.t('mailers.bookings.notify_user_accepted_booking'))
+      mail(to: @user.email, subject: I18n.t("mailers.bookings.notify_user_accepted_booking"))
     end
   end
 
@@ -51,7 +51,7 @@ class BookingsMailer < ApplicationMailer
     @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
-      mail(to: @user.email, subject: I18n.t('mailers.bookings.notify_user_declined_booking'))
+      mail(to: @user.email, subject: I18n.t("mailers.bookings.notify_user_declined_booking"))
     end
   end
 
@@ -64,7 +64,7 @@ class BookingsMailer < ApplicationMailer
     @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@user.lang_pref) do
-      mail(to: @user.email, subject: I18n.t('mailers.bookings.notify_user_cancelled_booking'))
+      mail(to: @user.email, subject: I18n.t("mailers.bookings.notify_user_cancelled_booking"))
     end
   end
 
@@ -77,7 +77,7 @@ class BookingsMailer < ApplicationMailer
     @end_date = DateService.get_date(booking.dates.last)
 
     I18n.with_locale(@host.lang_pref) do
-      mail(to: @host.email, subject: I18n.t('mailers.bookings.notify_host_cancelled_booking'))
+      mail(to: @host.email, subject: I18n.t("mailers.bookings.notify_host_cancelled_booking"))
     end
   end
 
@@ -90,8 +90,8 @@ class BookingsMailer < ApplicationMailer
       e.dtend = Icalendar::Values::Date.new(date)
       e.location = host_address
       e.summary = summary
-      e.description = ''
-      e.ip_class = 'PRIVATE'
+      e.description = ""
+      e.ip_class = "PRIVATE"
     end
     cal
   end

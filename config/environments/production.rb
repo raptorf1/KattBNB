@@ -20,7 +20,7 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'
@@ -30,12 +30,12 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options)
-  config.active_storage.service = ENV['OFFICIAL'] == 'yes' ? :amazon_production : :amazon_development
+  config.active_storage.service = ENV["OFFICIAL"] == "yes" ? :amazon_production : :amazon_development
 
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
   # config.action_cable.url = 'wss://example.com/cable'
-  config.action_cable.allowed_request_origins = [ENV['ACTION_CABLE_ORIGIN']]
+  config.action_cable.allowed_request_origins = [ENV["ACTION_CABLE_ORIGIN"]]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
@@ -48,13 +48,13 @@ Rails.application.configure do
   config.log_tags = [:request_id]
 
   # Use a different cache store in production.
-  if ENV['OFFICIAL'] == 'yes'
+  if ENV["OFFICIAL"] == "yes"
     config.cache_store =
       :mem_cache_store,
-      (ENV['MEMCACHIER_SERVERS'] || '').split(','),
+      (ENV["MEMCACHIER_SERVERS"] || "").split(","),
       {
-        username: ENV['MEMCACHIER_USERNAME'],
-        password: ENV['MEMCACHIER_PASSWORD'],
+        username: ENV["MEMCACHIER_USERNAME"],
+        password: ENV["MEMCACHIER_PASSWORD"],
         failover: true,
         socket_timeout: 1.5,
         socket_failure_delay: 0.2,
@@ -70,21 +70,21 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: ENV['OFFICIAL'] == 'yes' ? 'smtp.office365.com' : 'smtp.gmail.com',
-    port: '587',
-    domain: ENV['OFFICIAL'] == 'yes' ? 'office365.com' : 'gmail.com',
-    authentication: ENV['OFFICIAL'] == 'yes' ? :login : :plain,
+    address: ENV["OFFICIAL"] == "yes" ? "smtp.office365.com" : "smtp.gmail.com",
+    port: "587",
+    domain: ENV["OFFICIAL"] == "yes" ? "office365.com" : "gmail.com",
+    authentication: ENV["OFFICIAL"] == "yes" ? :login : :plain,
     enable_starttls_auto: true,
-    user_name: ENV['OFFICIAL'] == 'yes' ? 'meow-reply@kattbnb.se' : 'kattbnb@gmail.com',
+    user_name: ENV["OFFICIAL"] == "yes" ? "meow-reply@kattbnb.se" : "kattbnb@gmail.com",
     password:
-      if ENV['OFFICIAL'] == 'yes'
+      if ENV["OFFICIAL"] == "yes"
         Rails.application.credentials.MS365_PASSWORD_PROD
       else
         Rails.application.credentials.GMAIL_PASSWORD_DEV
       end
   }
-  config.action_mailer.default_options = { from: 'meow-reply@kattbnb.se' }
-  config.action_mailer.default_url_options = { host: ENV['API_ENDPOINT'] }
+  config.action_mailer.default_options = { from: "meow-reply@kattbnb.se" }
+  config.action_mailer.default_url_options = { host: ENV["API_ENDPOINT"] }
 
   config.action_mailer.perform_caching = false
 
@@ -106,7 +106,7 @@ Rails.application.configure do
   # require 'syslog/logger'
   # config.logger = ActiveSupport::TaggedLogging.new(Syslog::Logger.new 'app-name')
 
-  if ENV['RAILS_LOG_TO_STDOUT'].present?
+  if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
     config.logger = ActiveSupport::TaggedLogging.new(logger)
