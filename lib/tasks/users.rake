@@ -14,10 +14,12 @@ namespace :users do
   task delete_inactive_hosts_after_1_year: :environment do
     profiles_of_hosts_to_delete =
       HostProfile.joins(:user).where(users: { last_sign_in_at: 5.years.ago..1.year.ago }).select("user_id")
-    profiles_of_hosts_to_delete.each do |profile|
-      host = User.find(profile.user_id)
-      print "Inactive for 1 year host with name #{host.nickname} and email #{host.email} succesfully deleted!"
-      host.destroy
+    if !profiles_of_hosts_to_delete.empty?
+      profiles_of_hosts_to_delete.each do |profile|
+        host = User.find(profile.user_id)
+        print "Inactive for 1 year host with name #{host.nickname} and email #{host.email} succesfully deleted!"
+        host.destroy
+      end
     end
   end
 end
