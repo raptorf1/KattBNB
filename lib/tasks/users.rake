@@ -14,9 +14,9 @@ namespace :users do
   task delete_inactive_hosts_after_1_year: :environment do
     all_host_profiles = HostProfile.all
     all_host_profiles.each do |profile|
-      if ((Time.current - profile.user.last_sign_in_at) / 1.year).round > 1
-        host = profile.user
-        print "Inactive for 1 year host with name #{host.nickname} and email #{host.email} succesfully deleted!"
+      host = profile.user
+      if ((Time.current - host.last_sign_in_at) / 1.year) >= 1
+        print "Inactive for 1 year host with name #{host.nickname}, email #{host.email} and host profile id #{profile.id} succesfully deleted!"
         host.destroy
       end
     end
