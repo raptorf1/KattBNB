@@ -15,7 +15,7 @@ module StripeService
     end
   end
 
-  def self.webhook_cancel_payment_intent_and_delete_booking(payment_intent_id, booking_id)
+  def self.webhook_cancel_payment_intent(payment_intent_id)
     Stripe.api_key = get_api_key
 
     begin
@@ -24,7 +24,5 @@ module StripeService
       print error
       StripeMailer.delay(queue: "stripe_email_notifications").notify_orphan_payment_intent_to_cancel(payment_intent_id)
     end
-
-    !booking_id.nil? && Booking.destroy(booking_id)
   end
 end
