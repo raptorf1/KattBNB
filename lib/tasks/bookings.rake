@@ -33,14 +33,16 @@ namespace :bookings do
     if !unpaid_bookings.empty?
       unpaid_bookings.each do |booking|
         if booking.dates.last < DateService.get_js_epoch
-          host = User.find_by(nickname: booking.host_nickname)
-          profile = HostProfile.find_by(user_id: host.id)
+          account_id =
+            HostProfile.joins(:user).where(users: { nickname: booking.host_nickname }).select("stripe_account_id")[
+              0
+            ].stripe_account_id
           begin
             Stripe::Transfer.create(
               {
                 amount: (booking.price_total * 100).to_i,
                 currency: "sek",
-                destination: profile.stripe_account_id,
+                destination: account_id,
                 metadata: {
                   booking_id: booking.id
                 }
