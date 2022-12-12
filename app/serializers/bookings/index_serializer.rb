@@ -25,36 +25,36 @@ class Bookings::IndexSerializer < ActiveModel::Serializer
 
   def host_id
     host = User.find_by(nickname: object.host_nickname)
-    return host.id unless host == nil
+    return host.id unless host.nil?
   end
 
   def host_profile_id
     host = User.find_by(nickname: object.host_nickname)
-    unless host == nil
+    unless host.nil?
       host_profile = HostProfile.find_by(user_id: host.id)
-      return host_profile.id unless host_profile == nil
+      return host_profile.id unless host_profile.nil?
     end
   end
 
   def host_profile_score
     host = User.find_by(nickname: object.host_nickname)
-    unless host == nil
+    unless host.nil?
       host_profile = HostProfile.find_by(user_id: host.id)
-      return host_profile.score unless host_profile == nil
+      return host_profile.score unless host_profile.nil?
     end
   end
 
   def host_location
     host = User.find_by(nickname: object.host_nickname)
-    return host.location unless host == nil
+    return host.location unless host.nil?
   end
 
   def host_avatar
     host = User.find_by(nickname: object.host_nickname)
-    return host.profile_avatar.attached? ? AttachmentService.get_blob_url(host) : nil unless host == nil
+    return host.profile_avatar.attached? ? AttachmentService.get_blob_url(host) : nil unless host.nil?
   end
 
   def review_id
-    return object.review.id unless object.review == nil
+    return object.review.id unless object.review.nil?
   end
 end

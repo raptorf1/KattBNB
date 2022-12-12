@@ -4,7 +4,7 @@ class Conversations::IndexSerializer < ActiveModel::Serializer
   belongs_to :user2, serializer: Users::Serializer
 
   def msg_body
-    unless object.message.last == nil
+    unless object.message.last.nil?
       if object.message.last.body == ""
         (return I18n.t("serializers.conversations.index.image_attachment"))
       else
@@ -14,6 +14,6 @@ class Conversations::IndexSerializer < ActiveModel::Serializer
   end
 
   def msg_created
-    return object.message.last.created_at unless object.message.last == nil
+    return object.message.last.created_at unless object.message.last.nil?
   end
 end

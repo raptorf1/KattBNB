@@ -11,7 +11,8 @@ namespace :bookings do
         booking.update_column(:host_message, "cancelled by system")
         begin
           Stripe::PaymentIntent.cancel(booking.payment_intent_id)
-        rescue Stripe::StripeError
+        rescue Stripe::StripeError => error
+          print error
           StripeMailer.delay(queue: "stripe_email_notifications").notify_orphan_payment_intent_to_cancel(
             booking.payment_intent_id
           )
@@ -49,7 +50,8 @@ namespace :bookings do
           else
             print "A report email was sent! Booking with id #{booking.id} successfully paid!"
           end
-        rescue Stripe::StripeError
+        rescue Stripe::StripeError => error
+          print error
           StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error(
             "Payment to host for booking id #{booking.id} failed"
           )

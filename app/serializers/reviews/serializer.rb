@@ -7,6 +7,6 @@ class Reviews::Serializer < ActiveModel::Serializer
 
   def host_avatar
     host = User.find_by(nickname: object.host_nickname)
-    return host.profile_avatar.attached? ? AttachmentService.get_blob_url(host) : nil unless host == nil
+    return host.profile_avatar.attached? ? AttachmentService.get_blob_url(host) : nil unless host.nil?
   end
 end

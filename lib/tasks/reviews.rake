@@ -4,10 +4,10 @@ namespace :reviews do
     now_epoch_javascript = DateService.get_js_epoch
     all_accepted_bookings = Booking.where(status: "accepted")
     all_accepted_bookings.each do |booking|
-      next unless booking.dates.last < now_epoch_javascript && booking.review == nil
+      next unless booking.dates.last < now_epoch_javascript && booking.review.nil?
       host = User.find_by(nickname: booking.host_nickname)
       user = User.find_by(id: booking.user_id)
-      if host != nil && user != nil
+      if !host.nil? && !user.nil?
         case (now_epoch_javascript - booking.dates.last) / 86_400_000
         when 10
           ReviewsMailer.delay(queue: "reviews_email_notifications").notify_user_pending_review_10_days(

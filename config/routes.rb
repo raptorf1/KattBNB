@@ -8,13 +8,13 @@ Rails.application.routes.draw do
       namespace :v1 do
         mount_devise_token_auth_for "User", at: "auth", skip: [:omniauth_callbacks]
         mount ActionCable.server => "/cable/conversation(/:conversation_id/)"
+
         resources :users, only: %i[show update]
-        resources :contactus, only: [:index]
+        resources :contact_us, only: [:index]
         resources :host_profiles, only: %i[index show create update]
         resources :bookings, only: %i[index create update]
         resources :conversations, only: %i[create index show update]
         resources :reviews, only: %i[index show create update]
-        resources :stripe, only: %i[create]
 
         namespace :random_reviews do
           resources :reviews, only: [:index]
@@ -26,6 +26,7 @@ Rails.application.routes.draw do
           resources :create_payment_intent, only: [:index]
           resources :update_payment_intent, only: [:index]
           resources :delete_account, only: [:index]
+          resources :receive_webhooks, only: [:create]
         end
       end
     end

@@ -24,7 +24,9 @@ sv-SE:
       update_success: "Du har uppdaterat din kattvaktsprofil!"
       stripe_create_error: "Ett problem uppstod när ditt konto skulle skapas hos vår betalväxel. Vänligen försök igen senare."
     contactus:
-      create_error: "Det uppstod ett problem med att validera din e-post! Är du säker på att den är rätt? Du kan alltid hitta oss genom att följa våra länkar till sociala medier nedan."
+      create_error_email: "Det uppstod ett problem med att validera din e-post! Är du säker på att den är rätt? Du kan alltid hitta oss genom att följa våra länkar till sociala medier nedan."
+      create_error_message: "Ditt meddelande får inte överstiga 1000 tecken!"
+      create_error_name: "Ditt namn får inte överstiga 100 tecken!"
     random_reviews:
       error: "Inte tillräckligt med recensioner!"
     users:
