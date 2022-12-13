@@ -19,7 +19,7 @@ namespace :users do
     if !profiles_of_hosts_to_delete.empty?
       profiles_of_hosts_to_delete.each do |profile|
         host = User.find(profile.user_id)
-        print "Inactive for 1 year host with name #{host.nickname} and email #{host.email} succesfully deleted!"
+        print "Inactive for 1 year host from #{host.location} with name #{host.nickname} and email #{host.email} succesfully deleted!"
         host.destroy
       end
     end

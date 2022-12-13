@@ -36,7 +36,7 @@ describe "rake users:delete_inactive_hosts_after_1_year", type: :task do
 
     it "logs to stdout" do
       expect(@std_output).to eq(
-        "Inactive for 1 year host with name #{host_to_delete.nickname} and email #{host_to_delete.email} succesfully deleted!"
+        "Inactive for 1 year host from #{host_to_delete.location} with name #{host_to_delete.nickname} and email #{host_to_delete.email} succesfully deleted!"
       )
     end
   end
