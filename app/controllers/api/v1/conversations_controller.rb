@@ -1,14 +1,10 @@
 class Api::V1::ConversationsController < ApplicationController
-  before_action :authenticate_api_v1_user!, only: %i[create index show update]
+  before_action :authenticate_api_v1_user!, only: %i[index show create update]
 
   def index
-    # pehaps send off something other then 200 on unassociated request
-    if params[:user_id].to_i == current_api_v1_user.id
-      conversations = Conversation.where(user1_id: params[:user_id]).or(Conversation.where(user2_id: params[:user_id]))
-    else
-      conversations = []
-    end
-    render json: conversations, each_serializer: Conversations::IndexSerializer
+    conversations =
+      Conversation.where(user1_id: current_api_v1_user.id).or(Conversation.where(user2_id: current_api_v1_user.id))
+    render json: conversations, each_serializer: Conversations::IndexSerializer, status: 200
   end
 
   def show
