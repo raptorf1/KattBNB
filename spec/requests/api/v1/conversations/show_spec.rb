@@ -39,7 +39,7 @@ RSpec.describe "GET /api/v1/conversations/id", type: :request do
     end
 
     it "has correct keys in the response" do
-      expect(json_response).to include("id", "message", "hidden")
+      expect(json_response).to include("id", "message", "hidden", "responder")
     end
 
     it "has correct number of keys in the response for the message" do
@@ -83,12 +83,12 @@ RSpec.describe "GET /api/v1/conversations/id", type: :request do
     describe "if not part of the conversation" do
       before { get "/api/v1/conversations/#{conversation.id}", headers: random_user_headers }
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq "You cannot perform this action!"
+        expect(json_response["errors"]).to eq ["You cannot perform this action!"]
       end
     end
   end

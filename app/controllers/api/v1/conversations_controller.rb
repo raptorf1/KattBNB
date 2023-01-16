@@ -9,16 +9,15 @@ class Api::V1::ConversationsController < ApplicationController
 
   def show
     conversation = Conversation.find(params[:id])
-    if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
-      (
-        render json: conversation,
-               include: [message: [:user]],
-               serializer: Conversations::ShowSerializer,
-               scope: current_api_v1_user
-      )
-    else
-      (render json: { error: I18n.t("controllers.reusable.update_error") }, status: 422)
+
+    if conversation.user1_id != current_api_v1_user.id && conversation.user2_id != current_api_v1_user.id
+      (render json: { errors: [I18n.t("controllers.reusable.update_error")] }, status: 400) and return
     end
+
+    render json: conversation,
+           include: [message: [:user]],
+           serializer: Conversations::ShowSerializer,
+           scope: current_api_v1_user
   end
 
   def create
