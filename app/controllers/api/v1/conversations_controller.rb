@@ -17,7 +17,8 @@ class Api::V1::ConversationsController < ApplicationController
     render json: conversation,
            include: [message: [:user]],
            serializer: Conversations::ShowSerializer,
-           scope: current_api_v1_user
+           scope: current_api_v1_user,
+           status: 200
   end
 
   def create
