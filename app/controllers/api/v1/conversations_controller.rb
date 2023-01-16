@@ -2,9 +2,9 @@ class Api::V1::ConversationsController < ApplicationController
   before_action :authenticate_api_v1_user!, only: %i[index show create update]
 
   def index
-    conversations =
-      Conversation.where(user1_id: current_api_v1_user.id).or(Conversation.where(user2_id: current_api_v1_user.id))
-    render json: conversations, each_serializer: Conversations::IndexSerializer, status: 200
+    render json: Conversation.get_and_sort_conversations(current_api_v1_user.id),
+           each_serializer: Conversations::IndexSerializer,
+           status: 200
   end
 
   def show
