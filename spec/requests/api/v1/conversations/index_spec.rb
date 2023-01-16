@@ -9,6 +9,15 @@ RSpec.describe "GET /api/v1/conversations", type: :request do
   let!(:conversation_2) do
     FactoryBot.create(:conversation, user2_id: user.id, created_at: "Thu, 01 Jan 2023 00:02:00 UTC +00:00")
   end
+  let!(:conversation_3) do
+    FactoryBot.create(
+      :conversation,
+      user1_id: user.id,
+      hidden: user.id,
+      created_at: "Thu, 01 Jan 2023 00:03:00 UTC +00:00"
+    )
+  end
+
   let!(:message_1) do
     FactoryBot.create(
       :message,
@@ -46,6 +55,10 @@ RSpec.describe "GET /api/v1/conversations", type: :request do
         expect(json_response.first["id"]).to eq conversation_2.id
       end
 
+      it "with hidden conversation not in the response" do
+        json_response.each { |conversation| expect(conversation["id"]).to_not eq conversation_3.id }
+      end
+
       it "with fixed text if last message is an image attachment" do
         expect(json_response.first["msg_body"]).to eq "Image attachment"
       end
@@ -79,12 +92,15 @@ RSpec.describe "GET /api/v1/conversations", type: :request do
       it "with no messages in either conversation in the response" do
         json_response.each { |conversation| expect(conversation["msg_body"]).to eq nil }
       end
+
+      it "with hidden conversation not in the response" do
+        json_response.each { |conversation| expect(conversation["id"]).to_not eq conversation_3.id }
+      end
     end
 
     describe "when message exists only for one conversation" do
       before do
         message_2.destroy
-        conversation_1.reload
         conversation_2.reload
         get "/api/v1/conversations", headers: headers
       end
@@ -99,6 +115,10 @@ RSpec.describe "GET /api/v1/conversations", type: :request do
 
       it "with correct order of conversations in the response (the one with the latest action appears first)" do
         expect(json_response.first["id"]).to eq conversation_1.id
+      end
+
+      it "with hidden conversation not in the response" do
+        json_response.each { |conversation| expect(conversation["id"]).to_not eq conversation_3.id }
       end
     end
   end

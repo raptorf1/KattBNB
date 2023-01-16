@@ -7,10 +7,14 @@ class Conversation < ApplicationRecord
   validates_presence_of :user1_id, :user2_id
 
   def self.get_and_sort_conversations(logged_in_user_id)
-    conversations = Conversation.where(user1_id: logged_in_user_id).or(Conversation.where(user2_id: logged_in_user_id))
+    retrieved_conversations =
+      Conversation
+        .where(user1_id: logged_in_user_id)
+        .or(Conversation.where(user2_id: logged_in_user_id))
+        .select { |conversation| conversation.hidden != logged_in_user_id }
 
     return(
-      conversations
+      retrieved_conversations
         .sort_by do |conversation|
           [conversation.message.last&.created_at ? 1 : 0, conversation.message.last&.created_at]
         end
