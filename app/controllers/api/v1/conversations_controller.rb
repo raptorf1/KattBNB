@@ -42,17 +42,20 @@ class Api::V1::ConversationsController < ApplicationController
 
   def update
     conversation = Conversation.find(params[:id])
-    if conversation.user1_id == current_api_v1_user.id || conversation.user2_id == current_api_v1_user.id
-      if conversation.hidden.nil?
-        conversation.update_attribute("hidden", params[:hidden])
-        conversation.persisted? == true &&
-          (render json: { message: I18n.t("controllers.conversations.update_success") }, status: 200)
-      else
-        conversation.destroy
-      end
-    else
-      render json: { error: I18n.t("controllers.reusable.update_error") }, status: 422
+
+    if conversation.user1_id != current_api_v1_user.id && conversation.user2_id != current_api_v1_user.id
+      (render json: { errors: [I18n.t("controllers.reusable.update_error")] }, status: 400) and return
     end
+
+    if !conversation.hidden.nil?
+      conversation.destroy
+      return
+    end
+
+    conversation.update_attribute("hidden", current_api_v1_user.id)
+    (render json: { errors: conversation.errors.full_messages }, status: 400) and return if !conversation.persisted?
+
+    render json: { message: I18n.t("controllers.conversations.update_success") }, status: 200
   end
 
   private

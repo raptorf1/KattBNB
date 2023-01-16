@@ -18,17 +18,17 @@ RSpec.describe "PATCH /api/v1/conversations/id", type: :request do
   let!(:random_conversation) { FactoryBot.create(:conversation) }
 
   describe "succesfully" do
-    describe "hides conversation from one user" do
+    describe "hides conversation from one user and updates hidden field of conversation" do
       before do
-        patch "/api/v1/conversations/#{conversation_1.id}", params: { hidden: user_1.id }, headers: headers
+        patch "/api/v1/conversations/#{conversation_1.id}", headers: headers
         conversation_1.reload
       end
 
-      it "with 200 status updates hidden field of certain conversation if action comes from associated host" do
+      it "with 200 status" do
         expect(response.status).to eq 200
       end
 
-      it "with relevant message updates hidden field of certain conversation if action comes from associated host" do
+      it "with relevant message" do
         expect(json_response["message"]).to eq "Success!"
       end
 
@@ -38,7 +38,7 @@ RSpec.describe "PATCH /api/v1/conversations/id", type: :request do
     end
 
     describe "deletes conversation when second user hides it" do
-      before { patch "/api/v1/conversations/#{conversation_2.id}", params: { hidden: user_1.id }, headers: headers }
+      before { patch "/api/v1/conversations/#{conversation_2.id}", headers: headers }
 
       it "with 204 status" do
         expect(response.status).to eq 204
@@ -56,16 +56,14 @@ RSpec.describe "PATCH /api/v1/conversations/id", type: :request do
 
   describe "unsuccessfully" do
     describe "for an unassociated user" do
-      before do
-        patch "/api/v1/conversations/#{random_conversation.id}", params: { hidden: user_1.id }, headers: headers
-      end
+      before { patch "/api/v1/conversations/#{random_conversation.id}", headers: headers }
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq "You cannot perform this action!"
+        expect(json_response["errors"]).to eq ["You cannot perform this action!"]
       end
     end
 
