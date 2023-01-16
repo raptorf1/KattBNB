@@ -17,4 +17,13 @@ class Conversation < ApplicationRecord
         .reverse
     )
   end
+
+  def self.check_conversation_exists_before_creating(params_user_1_id, params_user_2_id)
+    return(
+      Conversation.find_by(
+        user1_id: [params_user_1_id, params_user_2_id],
+        user2_id: [params_user_1_id, params_user_2_id]
+      )&.id
+    )
+  end
 end

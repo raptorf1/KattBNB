@@ -21,24 +21,23 @@ class Api::V1::ConversationsController < ApplicationController
   end
 
   def create
-    conversation_exists =
-      Conversation.where(user1_id: params[:user1_id], user2_id: params[:user2_id]).or(
-        Conversation.where(user1_id: params[:user2_id], user2_id: params[:user1_id])
-      )
-    if conversation_exists.length == 1
-      render json: {
-               message: I18n.t("controllers.conversations.create_exists"),
-               id: conversation_exists[0].id
-             },
-             status: 200
-    else
-      conversation = Conversation.create(conversation_params)
-      if conversation.persisted?
-        render json: { message: I18n.t("controllers.reusable.create_success"), id: conversation.id }, status: 200
-      else
-        render json: { error: conversation.errors.full_messages }, status: 422
-      end
+    conversation_exists = Conversation.check_conversation_exists_before_creating(params[:user1_id], params[:user2_id])
+    if !conversation_exists.nil?
+      (
+        render json: {
+                 message: I18n.t("controllers.conversations.create_exists"),
+                 id: conversation_exists
+               },
+               status: 200
+      ) and return
     end
+
+    conversation_to_create = Conversation.create(conversation_params)
+    if !conversation_to_create.persisted?
+      (render json: { errors: conversation_to_create.errors.full_messages }, status: 400) and return
+    end
+
+    render json: { message: I18n.t("controllers.reusable.create_success"), id: conversation_to_create.id }, status: 200
   end
 
   def update
