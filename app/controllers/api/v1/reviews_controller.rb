@@ -2,8 +2,7 @@ class Api::V1::ReviewsController < ApplicationController
   before_action :authenticate_api_v1_user!, only: %i[show create update]
 
   def index
-    params[:host_profile_id] ? reviews = Review.where(host_profile_id: params[:host_profile_id]) : reviews = []
-    render json: reviews, each_serializer: Reviews::Serializer
+    render json: Review.get_sorted_reviews(params[:host_profile_id]), each_serializer: Reviews::Serializer, status: 200
   end
 
   def show
