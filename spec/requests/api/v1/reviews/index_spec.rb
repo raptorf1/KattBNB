@@ -12,48 +12,104 @@ RSpec.describe "GET /api/v1/reviews", type: :request do
   end
 
   describe "successfully" do
-    before { get "/api/v1/reviews?host_profile_id=#{host_profile.id}" }
+    describe "when params are passed and reviews exist" do
+      before { get "/api/v1/reviews?host_profile_id=#{host_profile.id}" }
 
-    it "returns correct number of reviews" do
-      expect(json_response.count).to eq 3
+      it "returns correct number of reviews" do
+        expect(json_response.count).to eq 3
+      end
+
+      it "returns 200 status" do
+        expect(response.status).to eq 200
+      end
+
+      it "returns correct number of keys in the response" do
+        expect(json_response.first.count).to eq 9
+      end
+
+      it "returns correct key names in the response" do
+        expect(json_response.first).to include(
+          "id",
+          "score",
+          "body",
+          "host_reply",
+          "host_nickname",
+          "host_avatar",
+          "created_at",
+          "updated_at",
+          "user"
+        )
+      end
+
+      it "returns correct number of user keys in the response" do
+        expect(json_response.first["user"].count).to eq 4
+      end
+
+      it "returns correct user key names in the response" do
+        expect(json_response.first["user"]).to include("id", "location", "nickname", "profile_avatar")
+      end
+
+      it "returns reviews sorted correctly (newest created appears first)" do
+        expect(json_response.first["id"]).to eq review_3.id
+      end
+
+      it "returns reviews sorted correctly (oldest created appears last)" do
+        expect(json_response.last["id"]).to eq review_1.id
+      end
     end
 
-    it "returns 200 status" do
-      expect(response.status).to eq 200
+    describe "when no params are passed and no reviews exist" do
+      before do
+        Review.destroy_all
+        get "/api/v1/reviews"
+      end
+
+      it "returns empty collection" do
+        expect(json_response.count).to eq 0
+      end
+
+      it "returns 200 status" do
+        expect(response.status).to eq 200
+      end
     end
 
-    it "returns correct number of keys in the response" do
-      expect(json_response.first.count).to eq 9
+    describe "when params are passed and no reviews exist" do
+      before do
+        Review.destroy_all
+        get "/api/v1/reviews?host_profile_id=#{host_profile.id}"
+      end
+
+      it "returns empty collection" do
+        expect(json_response.count).to eq 0
+      end
+
+      it "returns 200 status" do
+        expect(response.status).to eq 200
+      end
     end
 
-    it "returns correct key names in the response" do
-      expect(json_response.first).to include(
-        "id",
-        "score",
-        "body",
-        "host_reply",
-        "host_nickname",
-        "host_avatar",
-        "created_at",
-        "updated_at",
-        "user"
-      )
+    describe "when no params are passed and reviews exist" do
+      before { get "/api/v1/reviews" }
+
+      it "returns empty collection" do
+        expect(json_response.count).to eq 0
+      end
+
+      it "returns 200 status" do
+        expect(response.status).to eq 200
+      end
     end
 
-    it "returns correct number of user keys in the response" do
-      expect(json_response.first["user"].count).to eq 4
-    end
+    describe "when invalid params are passed" do
+      before { get "/api/v1/reviews?host_profile_id=150000" }
 
-    it "returns correct user key names in the response" do
-      expect(json_response.first["user"]).to include("id", "location", "nickname", "profile_avatar")
-    end
+      it "returns empty collection" do
+        expect(json_response.count).to eq 0
+      end
 
-    it "returns reviews sorted correctly (newest created appears first)" do
-      expect(json_response.first["id"]).to eq review_3.id
-    end
-
-    it "returns reviews sorted correctly (oldest created appears last)" do
-      expect(json_response.last["id"]).to eq review_1.id
+      it "returns 200 status" do
+        expect(response.status).to eq 200
+      end
     end
   end
 end
