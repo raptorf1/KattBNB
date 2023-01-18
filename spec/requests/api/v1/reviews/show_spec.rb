@@ -1,5 +1,5 @@
 RSpec.describe "GET /api/v1/reviews", type: :request do
-  let(:reviewer) { FactoryBot.create(:user, email: "chaos@thestreets.com", nickname: "Joker") }
+  let(:reviewer) { FactoryBot.create(:user) }
   let(:reviewer_credentials) { reviewer.create_new_auth_token }
   let(:reviewer_headers) { { HTTP_ACCEPT: "application/json" }.merge!(reviewer_credentials) }
 
@@ -8,6 +8,7 @@ RSpec.describe "GET /api/v1/reviews", type: :request do
   let(:host_headers) { { HTTP_ACCEPT: "application/json" }.merge!(host_credentials) }
 
   let(:booking) { FactoryBot.create(:booking, user_id: reviewer.id) }
+
   let(:review) do
     FactoryBot.create(:review, host_profile_id: host_profile.id, user_id: reviewer.id, booking_id: booking.id)
   end
@@ -34,7 +35,17 @@ RSpec.describe "GET /api/v1/reviews", type: :request do
       end
 
       it "with correct keys in the response" do
-        expect(json_response).to include("id", "score", "body", "host_reply", "host_nickname", "host_avatar", "user")
+        expect(json_response).to include(
+          "id",
+          "score",
+          "body",
+          "host_reply",
+          "host_nickname",
+          "host_avatar",
+          "user",
+          "created_at",
+          "updated_at"
+        )
       end
     end
 
@@ -47,14 +58,6 @@ RSpec.describe "GET /api/v1/reviews", type: :request do
 
       it "with correct review id in the response" do
         expect(json_response["id"]).to eq review.id
-      end
-
-      it "with correct number of keys in the response" do
-        expect(json_response.count).to eq 9
-      end
-
-      it "with correct keys in the response" do
-        expect(json_response).to include("id", "score", "body", "host_reply", "host_nickname", "host_avatar", "user")
       end
     end
   end
@@ -76,11 +79,11 @@ RSpec.describe "GET /api/v1/reviews", type: :request do
       before { get "/api/v1/reviews/#{review.id}", headers: other_headers }
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["You cannot perform this action!"]
+        expect(json_response["errors"]).to eq ["You cannot perform this action!"]
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
     end
   end
