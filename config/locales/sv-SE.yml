@@ -29,6 +29,8 @@ sv-SE:
       create_error_name: "Ditt namn får inte överstiga 100 tecken!"
     random_reviews:
       error: "Inte tillräckligt med recensioner!"
+    reviews:
+      update_error_reply_exists: "Det finns redan ett svar för denna recension!"
     users:
       no_avatar_error: "Ingen bild medföljer! Kan inte uppdatera!"
     stripe_actions:

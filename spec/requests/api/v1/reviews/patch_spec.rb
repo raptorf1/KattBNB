@@ -1,5 +1,5 @@
 RSpec.describe "PATCH /api/v1/reviews/id", type: :request do
-  let(:host) { FactoryBot.create(:user, email: "morechaos@thestreets.com", nickname: "Harley Quinn") }
+  let(:host) { FactoryBot.create(:user, nickname: "Harley Quinn") }
   let(:host_credentials) { host.create_new_auth_token }
   let(:host_headers) { { HTTP_ACCEPT: "application/json" }.merge!(host_credentials) }
   let(:host_profile) { FactoryBot.create(:host_profile, user_id: host.id) }
@@ -14,10 +14,17 @@ RSpec.describe "PATCH /api/v1/reviews/id", type: :request do
 
   describe "successfully " do
     describe "when user and host exist" do
-      before { patch "/api/v1/reviews/#{review.id}", params: { host_reply: "Thanks a lot!" }, headers: host_headers }
+      before do
+        patch "/api/v1/reviews/#{review.id}", params: { host_reply: "Thanks!" }, headers: host_headers
+        review.reload
+      end
 
       it "with relevant message" do
         expect(json_response["message"]).to eq "Successfully updated!"
+      end
+
+      it "with correct host reply recorded" do
+        expect(review.host_reply).to eq "Thanks!"
       end
 
       it "with 200 status" do
@@ -64,26 +71,26 @@ RSpec.describe "PATCH /api/v1/reviews/id", type: :request do
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["You cannot perform this action!"]
+        expect(json_response["errors"]).to eq ["You cannot perform this action!"]
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
     end
 
-    describe "if review has already been updated by the host" do
+    describe "if review has already been updated" do
       before do
         review.update(host_reply: "Already updated!")
         patch "/api/v1/reviews/#{review.id}", params: { host_reply: "Thanks a lot!" }, headers: host_headers
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["You cannot perform this action!"]
+        expect(json_response["errors"]).to eq ["A reply already exists for this review!"]
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
     end
   end
