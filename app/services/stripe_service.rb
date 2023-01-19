@@ -15,7 +15,7 @@ module StripeService
     end
   end
 
-  def self.webhook_cancel_payment_intent(payment_intent_id)
+  def self.cancel_payment_intent(payment_intent_id)
     Stripe.api_key = get_api_key
 
     begin

@@ -78,33 +78,30 @@ class Api::V1::BookingsController < ApplicationController
   end
 
   def create
-    booking = Booking.create(booking_params)
-    if booking.persisted?
-      host = User.where(nickname: booking.host_nickname)
-      if host.length == 1
-        profile = HostProfile.where(user_id: host[0].id)
-        user = User.where(id: booking.user_id)
-        if (booking.dates - find_host_bookings(profile[0].id, booking.id)) == booking.dates
-          render json: { message: I18n.t("controllers.reusable.create_success") }, status: 200
-          BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_create_booking(
-            host[0],
-            booking,
-            user[0]
-          )
-        else
-          cancel_payment_intent(booking.payment_intent_id)
-          booking.destroy
-          render json: { error: [I18n.t("controllers.bookings.create_error_1")] }, status: 422
-        end
-      else
-        cancel_payment_intent(booking.payment_intent_id)
-        booking.destroy
-        render json: { error: [I18n.t("controllers.bookings.create_error_2")] }, status: 422
-      end
-    else
-      cancel_payment_intent(booking.payment_intent_id)
-      render json: { error: booking.errors.full_messages }, status: 422
+    host = User.find_by(nickname: params[:host_nickname])
+    if host.nil?
+      StripeService.cancel_payment_intent(params[:payment_intent_id])
+      render json: { errors: [I18n.t("controllers.bookings.create_error_2")] }, status: 400 and return
     end
+
+    if !BookingService.validate_dates(params[:host_nickname], params[:dates].map(&:to_i))
+      StripeService.cancel_payment_intent(params[:payment_intent_id])
+      render json: { errors: [I18n.t("controllers.bookings.create_error_1")] }, status: 400 and return
+    end
+
+    booking_to_create = Booking.create(booking_params)
+    if !booking_to_create.persisted?
+      StripeService.cancel_payment_intent(params[:payment_intent_id])
+      render json: { errors: booking_to_create.errors.full_messages }, status: 400 and return
+    end
+
+    user = User.find(booking_to_create.user_id)
+    BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_create_booking(
+      host,
+      booking_to_create,
+      user
+    )
+    render json: { message: I18n.t("controllers.reusable.create_success") }, status: 200
   end
 
   def update

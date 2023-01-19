@@ -71,12 +71,12 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
 
       host = User.find_by(nickname: host_nickname)
       if host.nil?
-        StripeService.webhook_cancel_payment_intent(payment_intent)
+        StripeService.cancel_payment_intent(payment_intent)
         return
       end
 
       if !BookingService.validate_dates(host_nickname, dates)
-        StripeService.webhook_cancel_payment_intent(payment_intent)
+        StripeService.cancel_payment_intent(payment_intent)
         return
       end
 
@@ -92,7 +92,7 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
           user_id: user_id
         )
       if !booking_to_create.persisted?
-        StripeService.webhook_cancel_payment_intent(payment_intent)
+        StripeService.cancel_payment_intent(payment_intent)
         return
       end
 
