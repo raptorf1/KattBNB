@@ -68,7 +68,7 @@ RSpec.describe "GET /api/v1/contact_us", type: :request do
         get "/api/v1/contact_us",
             params: {
               name: "John Doe",
-              email: "test@fakeeeeeemail.com",
+              email: "test@f.c",
               message: "Can I order pizza from your website???"
             }
       end
