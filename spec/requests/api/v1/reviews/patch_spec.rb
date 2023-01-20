@@ -93,5 +93,19 @@ RSpec.describe "PATCH /api/v1/reviews/id", type: :request do
         expect(response.status).to eq 400
       end
     end
+
+    describe "if reply message is over 1000 characters long" do
+      before do
+        patch "/api/v1/reviews/#{review.id}", params: { host_reply: "Thanks a lot!" * 80 }, headers: host_headers
+      end
+
+      it "with relevant error" do
+        expect(json_response["errors"]).to eq ["Your message cannot exceed 1000 characters!"]
+      end
+
+      it "with 400 status" do
+        expect(response.status).to eq 400
+      end
+    end
   end
 end
