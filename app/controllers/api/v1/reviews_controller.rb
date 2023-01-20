@@ -41,6 +41,10 @@ class Api::V1::ReviewsController < ApplicationController
       render json: { errors: [I18n.t("controllers.reviews.update_error_reply_exists")] }, status: 400 and return
     end
 
+    if params[:host_reply].length > 1000
+      render json: { errors: [I18n.t("controllers.contactus.create_error_message")] }, status: 400 and return
+    end
+
     review.update_attribute("host_reply", params[:host_reply])
     render json: { message: I18n.t("controllers.reusable.update_success") }, status: 200
   end
