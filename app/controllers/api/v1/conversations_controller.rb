@@ -54,8 +54,6 @@ class Api::V1::ConversationsController < ApplicationController
     end
 
     conversation.update_attribute("hidden", current_api_v1_user.id)
-    (render json: { errors: conversation.errors.full_messages }, status: 400) and return if !conversation.persisted?
-
     render json: { message: I18n.t("controllers.conversations.update_success") }, status: 200
   end
 
