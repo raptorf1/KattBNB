@@ -105,72 +105,49 @@ class Api::V1::BookingsController < ApplicationController
   end
 
   def update
-    Stripe.api_key =
-      if ENV["OFFICIAL"] == "yes"
-        Rails.application.credentials.STRIPE_API_KEY_PROD
-      else
-        Rails.application.credentials.STRIPE_API_KEY_DEV
-      end
+    Stripe.api_key = StripeService.get_api_key
     booking = Booking.find(params[:id])
-    if current_api_v1_user.nickname == booking.host_nickname
-      user = User.where(id: booking.user_id)
-      host = User.where(nickname: booking.host_nickname)
-      profile = HostProfile.where(user_id: host[0].id)
-      booking.update(status: params[:status], host_message: params[:host_message])
-      case
-      when booking.persisted? == true && booking.host_message.length < 201 && booking.status == "accepted"
-        if (booking.dates - find_host_bookings(profile[0].id, booking.id)) == booking.dates
-          begin
-            !Rails.env.test? && Stripe::PaymentIntent.capture(booking.payment_intent_id)
-            render json: { message: I18n.t("controllers.bookings.update_success") }, status: 200
-            booking.update(
-              host_description: profile[0].description,
-              host_full_address: profile[0].full_address,
-              host_real_lat: profile[0].latitude,
-              host_real_long: profile[0].longitude,
-              host_profile_id: profile[0].id
-            )
-            new_availability = profile[0].availability - booking.dates
-            profile.update(availability: new_availability)
-            BookingsMailer.delay(queue: "bookings_email_notifications").notify_user_accepted_booking(
-              host[0],
-              booking,
-              user[0]
-            )
-          rescue Stripe::StripeError
-            booking.update(status: "pending", host_message: nil)
-            render json: { error: I18n.t("controllers.reusable.stripe_error") }, status: 555
-          end
-        else
-          render json: { error: I18n.t("controllers.bookings.update_error_same_dates") }, status: 427
-          booking.update(
-            status: "canceled",
-            host_message:
-              "This booking got canceled by KattBNB. The host has accepted another booking in that date range."
-          )
-          BookingsMailer.delay(queue: "bookings_email_notifications").notify_user_declined_booking(
-            host[0],
-            booking,
-            user[0]
-          )
-          cancel_payment_intent(booking.payment_intent_id)
-        end
-      when booking.persisted? == true && booking.host_message.length < 201 && booking.status == "declined"
-        render json: { message: I18n.t("controllers.bookings.update_success") }, status: 200
-        BookingsMailer.delay(queue: "bookings_email_notifications").notify_user_declined_booking(
-          host[0],
-          booking,
-          user[0]
-        )
-        cancel_payment_intent(booking.payment_intent_id)
-      else
-        render json: { error: booking.errors.full_messages }, status: 422
-      end
-    else
-      render json: { error: I18n.t("controllers.reusable.update_error") }, status: 422
+
+    if current_api_v1_user.nickname != booking.host_nickname
+      render json: { errors: [I18n.t("controllers.reusable.update_error")] }, status: 400 and return
+    end
+
+    booking.update(status: params[:status], host_message: params[:host_message])
+
+    if booking.errors.full_messages.length > 0
+      render json: { errors: booking.errors.full_messages }, status: 400 and return
+    end
+
+    user = User.find(booking.user_id)
+    host = User.find_by(nickname: booking.host_nickname)
+    profile = HostProfile.find_by(user_id: host.id)
+
+    if booking.status == "declined"
+      StripeService.cancel_payment_intent(booking.payment_intent_id)
+      BookingsMailer.delay(queue: "bookings_email_notifications").notify_user_declined_booking(host, booking, user)
+      render json: { message: I18n.t("controllers.bookings.update_success") }, status: 200 and return
+    end
+
+    begin
+      !Rails.env.test? && Stripe::PaymentIntent.capture(booking.payment_intent_id)
+      BookingService.cancel_same_date_pending_bookings_on_upate(host, booking.dates, booking.id)
+      booking.update(
+        host_description: profile.description,
+        host_full_address: profile.full_address,
+        host_real_lat: profile.latitude,
+        host_real_long: profile.longitude,
+        host_profile_id: profile.id
+      )
+      new_availability = profile.availability - booking.dates
+      profile.update(availability: new_availability)
+      BookingsMailer.delay(queue: "bookings_email_notifications").notify_user_accepted_booking(host, booking, user)
+      render json: { message: I18n.t("controllers.bookings.update_success") }, status: 200
+    rescue Stripe::StripeError
+      booking.update(status: "pending", host_message: nil)
+      render json: { errors: [I18n.t("controllers.reusable.stripe_error")] }, status: 400
     end
   rescue ActiveRecord::RecordNotFound
-    render json: { error: [I18n.t("controllers.bookings.update_error")] }, status: :not_found
+    render json: { errors: [I18n.t("controllers.bookings.update_error")] }, status: 400
   end
 
   private
