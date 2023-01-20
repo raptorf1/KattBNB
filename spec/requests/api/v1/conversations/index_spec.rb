@@ -123,7 +123,7 @@ RSpec.describe "GET /api/v1/conversations", type: :request do
     end
   end
 
-  describe "unsuccessfulyy" do
+  describe "unsuccessfully" do
     describe "if user not logged in" do
       before { get "/api/v1/conversations/", headers: unauthenticated_headers }
 
