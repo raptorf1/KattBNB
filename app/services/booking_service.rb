@@ -11,6 +11,18 @@ module BookingService
     booking_dates - host_booked_dates.flatten.sort == booking_dates
   end
 
+  def self.get_host_unavailable_dates(host_profile_id)
+    host_bookings = Booking.where(status: "accepted", host_profile_id: host_profile_id)
+
+    return [] if host_bookings.empty?
+
+    host_booked_dates = []
+    host_bookings.each do |host_booking|
+      host_booking.dates.last >= DateService.get_js_epoch && host_booked_dates.push(host_booking.dates)
+    end
+    host_booked_dates.flatten.sort
+  end
+
   def self.cancel_same_date_pending_bookings_on_upate(host, booking_to_update_dates, booking_to_update_id)
     host_bookings = Booking.where(host_nickname: host.nickname, status: "pending")
 

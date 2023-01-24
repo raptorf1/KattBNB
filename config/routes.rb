@@ -23,6 +23,7 @@ Rails.application.routes.draw do
         namespace :fetch_booking_actions do
           resources :incoming_stats, only: [:index]
           resources :outgoing_stats, only: [:index]
+          resources :host_unavailable_dates, only: [:index]
         end
 
         namespace :stripe_actions do
