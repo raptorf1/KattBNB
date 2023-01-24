@@ -20,6 +20,10 @@ Rails.application.routes.draw do
           resources :reviews, only: [:index]
         end
 
+        namespace :fetch_booking_actions do
+          resources :incoming_stats, only: [:index]
+        end
+
         namespace :stripe_actions do
           resources :retrieve_account_details, only: [:index]
           resources :retrieve_account_login_link, only: [:index]
