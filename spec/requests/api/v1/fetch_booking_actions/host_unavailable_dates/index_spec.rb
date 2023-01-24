@@ -1,4 +1,4 @@
-RSpec.describe "GET /api/v1/bookings", type: :request do
+RSpec.describe "GET /api/v1/fetch_booking_actions/host_unavailable_dates", type: :request do
   let(:host_profile) { FactoryBot.create(:host_profile) }
   let(:host_credentials) { host_profile.user.create_new_auth_token }
   let(:host_headers) { { HTTP_ACCEPT: "application/json" }.merge!(host_credentials) }
