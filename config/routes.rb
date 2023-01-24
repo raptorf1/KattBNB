@@ -26,6 +26,7 @@ Rails.application.routes.draw do
           resources :host_unavailable_dates, only: [:index]
           resources :incoming_requests, only: [:index]
           resources :incoming_upcoming, only: [:index]
+          resources :incoming_history, only: [:index]
         end
 
         namespace :stripe_actions do
