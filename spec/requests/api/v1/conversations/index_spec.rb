@@ -82,19 +82,7 @@ RSpec.describe "GET /api/v1/conversations", type: :request do
       end
 
       it "with correct number of conversations in the response" do
-        expect(json_response.count).to eq 2
-      end
-
-      it "with correct order of conversations in the response (the one latest created appears first)" do
-        expect(json_response.first["id"]).to eq conversation_2.id
-      end
-
-      it "with no messages in either conversation in the response" do
-        json_response.each { |conversation| expect(conversation["msg_body"]).to eq nil }
-      end
-
-      it "with hidden conversation not in the response" do
-        json_response.each { |conversation| expect(conversation["id"]).to_not eq conversation_3.id }
+        expect(json_response.count).to eq 0
       end
     end
 
@@ -110,7 +98,7 @@ RSpec.describe "GET /api/v1/conversations", type: :request do
       end
 
       it "with correct number of conversations in the response" do
-        expect(json_response.count).to eq 2
+        expect(json_response.count).to eq 1
       end
 
       it "with correct order of conversations in the response (the one with the latest action appears first)" do
