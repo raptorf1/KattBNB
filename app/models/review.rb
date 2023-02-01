@@ -31,4 +31,8 @@ class Review < ApplicationRecord
       Rails.cache.fetch("reviews_length_of_host_profile_with_id#{host_profile_id}")
     end
   end
+
+  def self.get_sorted_reviews(host_profile_id)
+    Review.where(host_profile_id: host_profile_id).sort_by { |review| review.created_at }.reverse
+  end
 end

@@ -29,6 +29,8 @@ en-US:
       create_error_name: "Your name cannot exceed 100 characters!"
     random_reviews:
       error: "Not enough reviews!"
+    reviews:
+      update_error_reply_exists: "A reply already exists for this review!"
     users:
       no_avatar_error: "No image supplied! Cannot update!"
     stripe_actions:
