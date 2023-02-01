@@ -12,8 +12,8 @@ Rails.application.routes.draw do
         resources :users, only: %i[show update]
         resources :contact_us, only: [:index]
         resources :host_profiles, only: %i[index show create update]
-        resources :bookings, only: %i[index create update]
-        resources :conversations, only: %i[create index show update]
+        resources :bookings, only: %i[create update]
+        resources :conversations, only: %i[index show create update]
         resources :reviews, only: %i[index show create update]
 
         namespace :random_reviews do
