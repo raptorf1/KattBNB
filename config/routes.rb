@@ -27,6 +27,7 @@ Rails.application.routes.draw do
           resources :incoming_requests, only: [:index]
           resources :incoming_upcoming, only: [:index]
           resources :incoming_history, only: [:index]
+          resources :outgoing_requests, only: [:index]
         end
 
         namespace :stripe_actions do
