@@ -26,6 +26,10 @@ RSpec.describe "POST /api/v1/conversations", type: :request do
       it "with correct ID in the response" do
         expect(json_response["id"]).not_to eq existing_conversation.id
       end
+
+      it "with ID in the response" do
+        expect(json_response["id"]).not_to eq nil
+      end
     end
 
     describe "for existing conversation" do
@@ -58,6 +62,10 @@ RSpec.describe "POST /api/v1/conversations", type: :request do
              headers: unauthenticated_headers
       end
 
+      it "with 401 status" do
+        expect(response.status).to eq 401
+      end
+
       it "with relevant error " do
         expect(json_response["errors"]).to eq ["You need to sign in or sign up before continuing."]
       end
@@ -66,12 +74,12 @@ RSpec.describe "POST /api/v1/conversations", type: :request do
     describe "if user does not exist" do
       before { post "/api/v1/conversations", params: { user1_id: messenger.id, user2_id: 10_000 }, headers: headers }
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["User2 must exist"]
+        expect(json_response["errors"]).to eq ["User2 must exist"]
       end
     end
   end
