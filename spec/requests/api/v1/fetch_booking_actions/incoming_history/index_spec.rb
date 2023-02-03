@@ -84,12 +84,12 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/incoming_history", type: :requ
     describe "when host profile does not exist" do
       before { get "/api/v1/fetch_booking_actions/incoming_history", headers: random_user_headers }
 
-      it "with 200 status" do
-        expect(response.status).to eq 200
+      it "with 204 status" do
+        expect(response.status).to eq 204
       end
 
-      it "with empty collection as response" do
-        expect(json_response.size).to eq 0
+      it "with empty response body" do
+        expect(response.body).to eq ""
       end
     end
   end
