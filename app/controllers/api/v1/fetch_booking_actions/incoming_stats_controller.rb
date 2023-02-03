@@ -2,7 +2,7 @@ class Api::V1::FetchBookingActions::IncomingStatsController < ApplicationControl
   before_action :authenticate_api_v1_user!, only: %i[index]
 
   def index
-    render json: [], status: 200 and return if current_api_v1_user.host_profile.nil?
+    head :no_content, status: 204 and return if current_api_v1_user.host_profile.nil?
 
     pending_bookings = Booking.where(status: "pending", host_nickname: current_api_v1_user.nickname).size
     unpaid_bookings = Booking.where(status: "accepted", host_nickname: current_api_v1_user.nickname, paid: false).size

@@ -63,12 +63,12 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/incoming_stats", type: :reques
     describe "when user has no host profile" do
       before { get "/api/v1/fetch_booking_actions/incoming_stats", headers: random_user_headers }
 
-      it "with 200 status" do
-        expect(response.status).to eq 200
+      it "with 204 status" do
+        expect(response.status).to eq 204
       end
 
-      it "with empty collection in the response" do
-        expect(json_response.size).to eq 0
+      it "with empty response body" do
+        expect(response.body).to eq ""
       end
     end
   end
