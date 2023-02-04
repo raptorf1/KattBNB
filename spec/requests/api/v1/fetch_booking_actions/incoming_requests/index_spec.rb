@@ -7,8 +7,23 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/incoming_requests", type: :req
   let(:random_user_credentials) { random_user.create_new_auth_token }
   let(:random_user_headers) { { HTTP_ACCEPT: "application/json" }.merge!(random_user_credentials) }
 
-  let!(:booking_1) { FactoryBot.create(:booking, host_nickname: host_profile.user.nickname, status: "pending") }
-  let!(:booking_2) { FactoryBot.create(:booking, host_nickname: host_profile.user.nickname, status: "pending") }
+  let!(:booking_1) do
+    FactoryBot.create(
+      :booking,
+      host_nickname: host_profile.user.nickname,
+      status: "pending",
+      created_at: "Thu, 01 Jan 2023 00:03:00 UTC +00:00"
+    )
+  end
+
+  let!(:booking_2) do
+    FactoryBot.create(
+      :booking,
+      host_nickname: host_profile.user.nickname,
+      status: "pending",
+      created_at: "Fri, 02 Jan 2023 00:03:00 UTC +00:00"
+    )
+  end
 
   let(:unauthenticated_headers) { { HTTP_ACCEPT: "application/json" } }
 
@@ -22,6 +37,10 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/incoming_requests", type: :req
 
       it "with correct amount of bookings" do
         expect(json_response.size).to eq 2
+      end
+
+      it "with correct order of bookings" do
+        expect(json_response.first["id"]).to eq booking_2.id
       end
 
       it "with correct number of keys" do

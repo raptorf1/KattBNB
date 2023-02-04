@@ -3,8 +3,23 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/outgoing_requests", type: :req
   let(:cat_owner_credentials) { cat_owner.create_new_auth_token }
   let(:cat_owner_headers) { { HTTP_ACCEPT: "application/json" }.merge!(cat_owner_credentials) }
 
-  let!(:booking_1) { FactoryBot.create(:booking, user_id: cat_owner.id, status: "pending") }
-  let!(:booking_2) { FactoryBot.create(:booking, user_id: cat_owner.id, status: "pending") }
+  let!(:booking_1) do
+    FactoryBot.create(
+      :booking,
+      user_id: cat_owner.id,
+      status: "pending",
+      created_at: "Thu, 01 Jan 2023 00:03:00 UTC +00:00"
+    )
+  end
+
+  let!(:booking_2) do
+    FactoryBot.create(
+      :booking,
+      user_id: cat_owner.id,
+      status: "pending",
+      created_at: "Fri, 02 Jan 2023 00:03:00 UTC +00:00"
+    )
+  end
 
   let(:unauthenticated_headers) { { HTTP_ACCEPT: "application/json" } }
 
@@ -17,6 +32,10 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/outgoing_requests", type: :req
 
     it "with correct amount of bookings" do
       expect(json_response.size).to eq 2
+    end
+
+    it "with correct order of bookings" do
+      expect(json_response.first["id"]).to eq booking_2.id
     end
 
     it "with correct number of keys" do
