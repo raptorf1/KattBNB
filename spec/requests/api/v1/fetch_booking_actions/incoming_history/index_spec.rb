@@ -7,11 +7,16 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/incoming_history", type: :requ
   let(:random_user_credentials) { random_user.create_new_auth_token }
   let(:random_user_headers) { { HTTP_ACCEPT: "application/json" }.merge!(random_user_credentials) }
 
-  let!(:booking_declined) { FactoryBot.create(:booking, host_nickname: host_profile.user.nickname, status: "declined") }
-  let!(:booking_canceled) { FactoryBot.create(:booking, host_nickname: host_profile.user.nickname, status: "canceled") }
+  let!(:booking_declined) do
+    FactoryBot.create(:booking, host_nickname: host_profile.user.nickname, status: "declined", dates: [1, 2, 3])
+  end
+
+  let!(:booking_canceled) do
+    FactoryBot.create(:booking, host_nickname: host_profile.user.nickname, status: "canceled", dates: [4, 5, 6])
+  end
 
   let!(:booking_history) do
-    FactoryBot.create(:booking, host_nickname: host_profile.user.nickname, status: "accepted", dates: [1, 2, 3])
+    FactoryBot.create(:booking, host_nickname: host_profile.user.nickname, status: "accepted", dates: [7, 8, 9])
   end
 
   let!(:booking_future) do
@@ -19,7 +24,7 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/incoming_history", type: :requ
       :booking,
       host_nickname: host_profile.user.nickname,
       status: "accepted",
-      dates: [4, 2_562_889_600_000]
+      dates: [10, 2_562_889_600_000]
     )
   end
 
@@ -35,6 +40,14 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/incoming_history", type: :requ
 
       it "with correct amount of bookings" do
         expect(json_response.size).to eq 3
+      end
+
+      it "with correct order of bookings - first" do
+        expect(json_response.first["id"]).to eq booking_history.id
+      end
+
+      it "with correct order of bookings - last" do
+        expect(json_response.last["id"]).to eq booking_declined.id
       end
 
       it "with future booking not included in the response" do
