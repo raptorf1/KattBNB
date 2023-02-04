@@ -2,12 +2,8 @@ class Api::V1::FetchBookingActions::OutgoingUpcomingController < ApplicationCont
   before_action :authenticate_api_v1_user!, only: %i[index]
 
   def index
-    accepted_bookings = Booking.where(status: "accepted", user_id: current_api_v1_user.id)
-    upcoming_bookings =
-      accepted_bookings
-        .select { |booking| booking.dates.last >= DateService.get_js_epoch }
-        .sort_by { |booking| booking.dates.first }
-
-    render json: upcoming_bookings, each_serializer: Bookings::IndexSerializer, status: 200
+    render json: Booking.get_upcoming_bookings_sorted(nil, current_api_v1_user.id),
+           each_serializer: Bookings::IndexSerializer,
+           status: 200
   end
 end

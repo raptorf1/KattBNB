@@ -60,4 +60,20 @@ class Booking < ApplicationRecord
       )
     return pending_bookings.sort_by { |booking| booking.created_at }.reverse
   end
+
+  def self.get_upcoming_bookings_sorted(host_nickname, user_id)
+    accepted_bookings =
+      (
+        if user_id.nil?
+          Booking.where(status: "accepted", host_nickname: host_nickname)
+        else
+          Booking.where(status: "accepted", user_id: user_id)
+        end
+      )
+    upcoming_bookings =
+      accepted_bookings
+        .select { |booking| booking.dates.last >= DateService.get_js_epoch }
+        .sort_by { |booking| booking.dates.first }
+    return upcoming_bookings
+  end
 end
