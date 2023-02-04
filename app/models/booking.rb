@@ -48,4 +48,16 @@ class Booking < ApplicationRecord
       (bookings_declined_canceled + history_bookings_accepted).sort_by { |booking| booking.dates.first }.reverse
     return all_history_bookings
   end
+
+  def self.get_request_bookings_sorted(host_nickname, user_id)
+    pending_bookings =
+      (
+        if user_id.nil?
+          Booking.where(status: "pending", host_nickname: host_nickname)
+        else
+          Booking.where(status: "pending", user_id: user_id)
+        end
+      )
+    return pending_bookings.sort_by { |booking| booking.created_at }.reverse
+  end
 end
