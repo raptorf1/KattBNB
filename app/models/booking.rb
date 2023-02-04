@@ -76,4 +76,59 @@ class Booking < ApplicationRecord
         .sort_by { |booking| booking.dates.first }
     return upcoming_bookings
   end
+
+  def self.get_booking_stats(host_nickname, user_id)
+    pending_bookings =
+      (
+        if user_id.nil?
+          Booking.where(status: "pending", host_nickname: host_nickname).size
+        else
+          Booking.where(status: "pending", user_id: user_id).size
+        end
+      )
+    unpaid_bookings =
+      user_id.nil? ? Booking.where(status: "accepted", host_nickname: host_nickname, paid: false).size : 0
+    history_bookings_declined_canceled =
+      (
+        if user_id.nil?
+          Booking.where(status: %w[declined canceled], host_nickname: host_nickname).size
+        else
+          Booking.where(status: %w[declined canceled], user_id: user_id).size
+        end
+      )
+    accepted_bookings =
+      (
+        if user_id.nil?
+          Booking.where(status: "accepted", host_nickname: host_nickname).select("dates")
+        else
+          Booking.where(status: "accepted", user_id: user_id).select("dates")
+        end
+      )
+
+    upcoming_bookings = accepted_bookings.select { |booking| booking.dates.last >= DateService.get_js_epoch }.size
+    history_bookings_accepted = accepted_bookings.size - upcoming_bookings
+
+    if user_id.nil?
+      return(
+        {
+          stats: {
+            in_requests: pending_bookings,
+            in_upcoming: upcoming_bookings,
+            in_history: history_bookings_accepted + history_bookings_declined_canceled,
+            in_unpaid: unpaid_bookings
+          }
+        }.to_json
+      )
+    end
+
+    return(
+      {
+        stats: {
+          out_requests: pending_bookings,
+          out_upcoming: upcoming_bookings,
+          out_history: history_bookings_accepted + history_bookings_declined_canceled
+        }
+      }.to_json
+    )
+  end
 end
