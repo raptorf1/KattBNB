@@ -11,12 +11,21 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/incoming_upcoming", type: :req
     FactoryBot.create(:booking, host_nickname: host_profile.user.nickname, status: "accepted", dates: [1, 2, 3])
   end
 
-  let!(:booking_to_appear) do
+  let!(:booking_to_appear_1) do
     FactoryBot.create(
       :booking,
       host_nickname: host_profile.user.nickname,
       status: "accepted",
-      dates: [4, 2_562_889_600_000]
+      dates: [5, 2_562_889_600_000]
+    )
+  end
+
+  let!(:booking_to_appear_2) do
+    FactoryBot.create(
+      :booking,
+      host_nickname: host_profile.user.nickname,
+      status: "accepted",
+      dates: [4, 2_662_889_600_000]
     )
   end
 
@@ -31,11 +40,15 @@ RSpec.describe "GET /api/v1/fetch_booking_actions/incoming_upcoming", type: :req
       end
 
       it "with correct amount of bookings" do
-        expect(json_response.size).to eq 1
+        expect(json_response.size).to eq 2
       end
 
-      it "with correct booking" do
-        expect(json_response.first["id"]).to eq booking_to_appear.id
+      it "with correct order of bookings - first" do
+        expect(json_response.first["id"]).to eq booking_to_appear_2.id
+      end
+
+      it "with correct order of bookings - last" do
+        expect(json_response.last["id"]).to eq booking_to_appear_1.id
       end
 
       it "with correct number of keys" do
