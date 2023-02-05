@@ -46,20 +46,24 @@ RSpec.describe "POST /api/v1/host_profile", type: :request do
   end
 
   describe "unsuccessfully" do
-    describe "when all fields are not filled in" do
+    describe "if all fields are not filled in" do
       before { post_request("") }
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["Description can't be blank"]
+        expect(json_response["errors"]).to eq ["Description can't be blank"]
       end
     end
 
-    describe "when user is not logged in" do
+    describe "if user is not authenticated" do
       before { post "/api/v1/host_profiles", headers: unauthenticated_headers }
+
+      it "with 401 status" do
+        expect(response.status).to eq 401
+      end
 
       it "with relevant error" do
         expect(json_response["errors"]).to eq ["You need to sign in or sign up before continuing."]

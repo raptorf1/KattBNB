@@ -50,11 +50,10 @@ class Api::V1::HostProfilesController < ApplicationController
 
   def create
     profile = HostProfile.create(host_profile_params)
-    if profile.persisted?
-      (render json: { message: I18n.t("controllers.reusable.create_success") }, status: 200)
-    else
-      (render json: { error: profile.errors.full_messages }, status: 422)
-    end
+
+    !profile.persisted? && (render json: { errors: profile.errors.full_messages }, status: 400) and return
+
+    render json: { message: I18n.t("controllers.reusable.create_success") }, status: 200
   end
 
   def update
