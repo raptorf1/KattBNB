@@ -54,6 +54,10 @@ class Api::V1::BookingsController < ApplicationController
 
     begin
       !Rails.env.test? && Stripe::PaymentIntent.capture(booking.payment_intent_id)
+    rescue Stripe::StripeError
+      booking.update(status: "pending", host_message: nil)
+      render json: { errors: [I18n.t("controllers.reusable.stripe_error")] }, status: 400
+    else
       BookingService.cancel_same_date_pending_bookings_on_update(host, booking.dates, booking.id)
       booking.update(
         host_description: profile.description,
@@ -66,9 +70,6 @@ class Api::V1::BookingsController < ApplicationController
       profile.update(availability: new_availability)
       BookingsMailer.delay(queue: "bookings_email_notifications").notify_user_accepted_booking(host, booking, user)
       render json: { message: I18n.t("controllers.bookings.update_success") }, status: 200
-    rescue Stripe::StripeError
-      booking.update(status: "pending", host_message: nil)
-      render json: { errors: [I18n.t("controllers.reusable.stripe_error")] }, status: 400
     end
   rescue ActiveRecord::RecordNotFound
     render json: { errors: [I18n.t("controllers.bookings.update_error")] }, status: 400

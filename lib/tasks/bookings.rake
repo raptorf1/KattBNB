@@ -48,17 +48,18 @@ namespace :bookings do
                 }
               }
             )
+          rescue Stripe::StripeError => error
+            print error
+            StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error(
+              "Payment to host for booking id #{booking.id} failed"
+            )
+          else
             booking.update(paid: true)
             if ENV["OFFICIAL"] == "yes"
               ReportsMailer.delay(queue: "financial_reports_email_notifications").bookings_revenue_and_vat(booking)
             else
               print "A report email was sent! Booking with id #{booking.id} successfully paid!"
             end
-          rescue Stripe::StripeError => error
-            print error
-            StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error(
-              "Payment to host for booking id #{booking.id} failed"
-            )
           end
         end
       end
