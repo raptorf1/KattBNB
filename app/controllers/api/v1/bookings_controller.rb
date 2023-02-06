@@ -54,7 +54,7 @@ class Api::V1::BookingsController < ApplicationController
 
     begin
       !Rails.env.test? && Stripe::PaymentIntent.capture(booking.payment_intent_id)
-      BookingService.cancel_same_date_pending_bookings_on_upate(host, booking.dates, booking.id)
+      BookingService.cancel_same_date_pending_bookings_on_update(host, booking.dates, booking.id)
       booking.update(
         host_description: profile.description,
         host_full_address: profile.full_address,

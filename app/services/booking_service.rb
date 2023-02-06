@@ -23,7 +23,7 @@ module BookingService
     host_booked_dates.flatten.sort
   end
 
-  def self.cancel_same_date_pending_bookings_on_upate(host, booking_to_update_dates, booking_to_update_id)
+  def self.cancel_same_date_pending_bookings_on_update(host, booking_to_update_dates, booking_to_update_id)
     host_bookings = Booking.where(host_nickname: host.nickname, status: "pending")
 
     if !host_bookings.empty?
