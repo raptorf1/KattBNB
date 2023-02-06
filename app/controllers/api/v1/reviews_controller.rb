@@ -26,8 +26,8 @@ class Api::V1::ReviewsController < ApplicationController
     host = User.find_by(nickname: booking.host_nickname)
     user = User.find(booking.user_id)
 
-    render json: { message: I18n.t("controllers.reusable.create_success") }, status: 200
     ReviewsMailer.delay(queue: "reviews_email_notifications").notify_host_create_review(host, booking, user, review)
+    render json: { message: I18n.t("controllers.reusable.create_success") }, status: 200
   end
 
   def update
