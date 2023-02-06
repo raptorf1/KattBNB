@@ -1,6 +1,5 @@
 class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
   def create
-    render json: { message: "Success!" }, status: 200
     Stripe.api_key = StripeService.get_api_key
     endpoint_secret = StripeService.get_webhook_endpoint_secret
     payload = request.body.read
@@ -10,43 +9,47 @@ class Api::V1::StripeActions::ReceiveWebhooksController < ApplicationController
       Rails.env.test? ?
         event = Stripe::Event.construct_from(JSON.parse(payload, symbolize_names: true)) :
         event = Stripe::Webhook.construct_event(payload, sig_header, endpoint_secret)
-      case event.type
-      when "charge.succeeded"
-        payment_intent = event.data.object.payment_intent
-        number_of_cats = event.data.object.metadata.number_of_cats
-        message = event.data.object.metadata.message
-        host_nickname = event.data.object.metadata.host_nickname
-        price_per_day = event.data.object.metadata.price_per_day
-        price_total = event.data.object.metadata.price_total
-        user_id = event.data.object.metadata.user_id
-        Delayed::Job.enqueue CreateBookingForDummies.new(
-                               payment_intent,
-                               number_of_cats,
-                               message,
-                               DateService.handle_dates_in_stripe_webhook(event.data.object.metadata.dates),
-                               host_nickname,
-                               price_per_day,
-                               price_total,
-                               user_id
-                             )
-      when "charge.dispute.created", "issuing_dispute.created", "radar.early_fraud_warning.created"
-        StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_dispute_fraud
-      else
-        print "Unhandled event type: #{event.type}. Why are we receiving this again???"
-      end
     rescue JSON::ParserError => error
       print error
       StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error("Webhook JSON Parse Error")
+      render json: { error: error }, status: 400 and return
     rescue Stripe::SignatureVerificationError => error
       print error
       StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error(
         "Webhook Signature Verification Error"
       )
+      render json: { error: error }, status: 400 and return
     rescue Stripe::StripeError => error
       print error
       StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error(
         "General Stripe Webhook Error"
       )
+      render json: { error: error }, status: 400 and return
+    end
+    render json: { message: "Success!" }, status: 200
+    case event.type
+    when "charge.succeeded"
+      payment_intent = event.data.object.payment_intent
+      number_of_cats = event.data.object.metadata.number_of_cats
+      message = event.data.object.metadata.message
+      host_nickname = event.data.object.metadata.host_nickname
+      price_per_day = event.data.object.metadata.price_per_day
+      price_total = event.data.object.metadata.price_total
+      user_id = event.data.object.metadata.user_id
+      Delayed::Job.enqueue CreateBookingForDummies.new(
+                             payment_intent,
+                             number_of_cats,
+                             message,
+                             DateService.handle_dates_in_stripe_webhook(event.data.object.metadata.dates),
+                             host_nickname,
+                             price_per_day,
+                             price_total,
+                             user_id
+                           )
+    when "charge.dispute.created", "issuing_dispute.created", "radar.early_fraud_warning.created"
+      StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_dispute_fraud
+    else
+      print "Unhandled event type: #{event.type}. Why are we receiving this again???"
     end
   end
 

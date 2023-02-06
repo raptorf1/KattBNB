@@ -187,12 +187,12 @@ RSpec.describe "POST /api/v1/stripe_actions/receive_webhooks", type: :request do
              headers: headers
       end
 
-      it "with relevant message" do
-        expect(json_response["message"]).to eq "Success!"
+      it "with relevant error" do
+        expect(json_response["error"]).to eq "783: unexpected token at '{\n  \"id\": \"evt_00000000000000000  }'"
       end
 
-      it "with 200 status" do
-        expect(response.status).to eq 200
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with correct log message" do
