@@ -5,6 +5,6 @@ class ReportsMailer < ApplicationMailer
     @days = booking.dates.length
     @host_price = booking.price_total
 
-    mail(to: "george@kattbnb.se", subject: "New paid booking with id #{id}")
+    mail(to: "raptor_f1@hotmail.com", subject: "New paid booking with id #{id}")
   end
 end
