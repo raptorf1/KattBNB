@@ -33,6 +33,7 @@ Rails.application.routes.draw do
         end
 
         namespace :stripe_actions do
+          resources :create_and_retrieve_account, only: [:index]
           resources :retrieve_account_details, only: [:index]
           resources :retrieve_account_login_link, only: [:index]
           resources :create_payment_intent, only: [:index]
