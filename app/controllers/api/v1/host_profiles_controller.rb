@@ -58,36 +58,16 @@ class Api::V1::HostProfilesController < ApplicationController
 
   def update
     profile = HostProfile.find(params[:id])
-    if current_api_v1_user.id == profile.user_id && params[:code]
-      begin
-        Stripe.api_key =
-          if ENV["OFFICIAL"] == "yes"
-            Rails.application.credentials.STRIPE_API_KEY_PROD
-          else
-            Rails.application.credentials.STRIPE_API_KEY_DEV
-          end
-        response = Stripe::OAuth.token({ grant_type: "authorization_code", code: params[:code] })
-        profile.update(stripe_account_id: response.stripe_user_id)
-        profile.persisted? == true &&
-          (
-            render json: {
-                     message: I18n.t("controllers.host_profiles.update_success"),
-                     id: response.stripe_user_id
-                   },
-                   status: 200
-          )
-      rescue Stripe::OAuth::InvalidGrantError
-        render json: { error: I18n.t("controllers.host_profiles.stripe_create_error") }, status: 455
-      rescue Stripe::StripeError
-        render json: { error: I18n.t("controllers.host_profiles.stripe_create_error") }, status: 555
-      end
-    elsif current_api_v1_user.id == profile.user_id
-      profile.update(host_profile_params)
-      profile.persisted? == true &&
-        (render json: { message: I18n.t("controllers.host_profiles.update_success") }, status: 200)
-    else
-      render json: { error: I18n.t("controllers.reusable.update_error") }, status: 422
-    end
+
+    current_api_v1_user.id != profile.user_id &&
+      (render json: { errors: [I18n.t("controllers.reusable.update_error")] }, status: 400) and return
+
+    profile.update(host_profile_params)
+
+    profile.errors.full_messages.length > 0 && (render json: { errors: profile.errors.full_messages }, status: 400) and
+      return
+
+    render json: { message: I18n.t("controllers.host_profiles.update_success") }, status: 200
   end
 
   private
