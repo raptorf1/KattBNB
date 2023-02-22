@@ -8,7 +8,7 @@ RSpec.describe ReportsMailer, type: :mailer do
     end
 
     it "renders the receiver email" do
-      expect(new_report_mail.to).to eql(["raptor_f1@hotmail.com"])
+      expect(new_report_mail.to).to eql(["kattbnb@gmail.com"])
     end
 
     it "renders the sender email" do

@@ -8,7 +8,7 @@ RSpec.describe ContactusMailer, type: :mailer do
   end
 
   it "renders the receiver email" do
-    expect(new_visitor_message.to).to eql(["raptor_f1@hotmail.com"])
+    expect(new_visitor_message.to).to eql(["kattbnb@gmail.com"])
   end
 
   it "renders the sender email" do

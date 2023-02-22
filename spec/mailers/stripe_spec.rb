@@ -9,7 +9,7 @@ RSpec.describe StripeMailer, type: :mailer do
     end
 
     it "renders the receiver email" do
-      expect(new_stripe_mail.to).to eql(["raptor_f1@hotmail.com"])
+      expect(new_stripe_mail.to).to eql(["kattbnb@gmail.com"])
     end
 
     it "renders the sender email" do
@@ -27,7 +27,7 @@ RSpec.describe StripeMailer, type: :mailer do
     end
 
     it "renders the receiver email" do
-      expect(new_stripe_mail2.to).to eql(["raptor_f1@hotmail.com"])
+      expect(new_stripe_mail2.to).to eql(["kattbnb@gmail.com"])
     end
 
     it "renders the sender email" do
@@ -41,7 +41,7 @@ RSpec.describe StripeMailer, type: :mailer do
     end
 
     it "renders the receiver email" do
-      expect(new_stripe_mail2.to).to eql(["raptor_f1@hotmail.com"])
+      expect(new_stripe_mail2.to).to eql(["kattbnb@gmail.com"])
     end
 
     it "renders the sender email" do

@@ -5,7 +5,7 @@ class ContactusMailer < ApplicationMailer
     @message = message
 
     mail(
-      to: Rails.env == "production" ? "zane@kattbnb.se" : "raptor_f1@hotmail.com",
+      to: Rails.env == "production" ? "zane@kattbnb.se" : "kattbnb@gmail.com",
       subject: "New visitor message from contact-us form"
     )
   end
