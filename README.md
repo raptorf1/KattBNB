@@ -12,20 +12,6 @@ cat owners are going away for more than couple of days._
 
 _KattBNB is an online peer-to-peer marketplace, that lets cat sitters offer their services and cat owners pick a pet sitter that is nearest or in other ways most convenient to them._
 
-# User Stories
-
-Check out the development progress in [this](https://www.pivotaltracker.com/n/projects/2376676) Pivotal Tracker board.
-
-# Deployment & GitHub
-
-This application consists of a back-end API and a front-end Client.
-
-The GitHub repository for the API is [here](https://github.com/raptorf1/KattBNB_API) and the one for the Client is [here](https://github.com/zanenkn/KattBNB_client).
-
-The application is deployed on Netlify [here](https://kattbnb.se/).
-
-# Tests, Test Coverage & CI
-
 ### API
 
 The API part of the application was request and unit tested using [Rspec](https://rspec.info/).
@@ -59,18 +45,6 @@ Acceptance tests can be found in the `cypress/integration` folder.
 
 - **Zane**- [GitHub Profile](https://github.com/zanenkn) - [Portfolio Website](https://zanenkn.netlify.com/)
 - **raptorf1** - [GitHub Profile](https://github.com/raptorf1)
-
-# Contribute / Donate
-
-Some of the expenses involved to turn this project into a sustainable business are:
-
-- Amazon Web Services subscription
-- Domain name fees
-- Payment solution provider fees
-- Accounting services
-- Company registration fees
-
-Those of you who are keen to what we are trying to build here and have the resourses or competences to assist us, feel free to contact us at *hej@kattbnb.se* for a further discussion.
 
 # Acknowledgments
 
