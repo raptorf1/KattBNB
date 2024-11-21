@@ -10,6 +10,9 @@ namespace :bookings do
           host = User.find_by(nickname: booking.host_nickname)
           booking.update_column(:status, "canceled")
           booking.update_column(:host_message, "cancelled by system")
+          print "Pending booking with id #{booking.id} succesfully cancelled!"
+          BookingsMailer.delay(queue: "bookings_email_notifications").notify_user_cancelled_booking(host, booking, user)
+          BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_cancelled_booking(host, booking, user)
           begin
             Stripe::PaymentIntent.cancel(booking.payment_intent_id)
           rescue Stripe::StripeError => error
@@ -18,9 +21,6 @@ namespace :bookings do
               booking.payment_intent_id
             )
           end
-          print "Pending booking with id #{booking.id} succesfully cancelled!"
-          BookingsMailer.delay(queue: "bookings_email_notifications").notify_user_cancelled_booking(host, booking, user)
-          BookingsMailer.delay(queue: "bookings_email_notifications").notify_host_cancelled_booking(host, booking, user)
         end
       end
     end
@@ -48,17 +48,18 @@ namespace :bookings do
                 }
               }
             )
+          rescue Stripe::StripeError => error
+            print error
+            StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error(
+              "Payment to host for booking id #{booking.id} failed"
+            )
+          else
             booking.update(paid: true)
             if ENV["OFFICIAL"] == "yes"
               ReportsMailer.delay(queue: "financial_reports_email_notifications").bookings_revenue_and_vat(booking)
             else
               print "A report email was sent! Booking with id #{booking.id} successfully paid!"
             end
-          rescue Stripe::StripeError => error
-            print error
-            StripeMailer.delay(queue: "stripe_email_notifications").notify_stripe_webhook_error(
-              "Payment to host for booking id #{booking.id} failed"
-            )
           end
         end
       end

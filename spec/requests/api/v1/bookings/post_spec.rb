@@ -51,9 +51,61 @@ RSpec.describe "POST /api/v1/booking", type: :request do
     it "sends an email" do
       expect(Delayed::Job.all.count).to eq 1
     end
+
+    it "with relevant email to notify the host" do
+      expect(Delayed::Job.first.handler).to include("notify_host_create_booking")
+    end
   end
 
   describe "unsuccessfully" do
+    describe "if host deletes their account in the proccess" do
+      before { post_request("Lorem Ipsum is simply dummy text.", "John Doe", [1_562_803_200_000, 1_562_889_600_000]) }
+
+      it "with 400 status" do
+        expect(response.status).to eq 400
+      end
+
+      it "with relevant error" do
+        expect(json_response["errors"]).to eq [
+             "Booking cannot be created because the host requested an account deletion! Please find another host in the results page."
+           ]
+      end
+
+      it "with correct number of sent emails" do
+        expect(Delayed::Job.all.count).to eq 1
+      end
+
+      it "with relevant email for Stripe action" do
+        expect(Delayed::Job.first.handler).to include("notify_orphan_payment_intent_to_cancel")
+      end
+    end
+
+    describe "if host already accepted someone else's booking request with similar dates" do
+      before do
+        post_request(
+          "Lorem Ipsum is simply dummy text.",
+          host_profile.user.nickname,
+          [1_563_168_800_000, 1_563_188_800_000]
+        )
+      end
+
+      it "with 400 status" do
+        expect(response.status).to eq 400
+      end
+
+      it "with relevant error" do
+        expect(json_response["errors"]).to eq ["Someone else just requested to book these days with this host!"]
+      end
+
+      it "with correct number of sent emails" do
+        expect(Delayed::Job.all.count).to eq 1
+      end
+
+      it "with relevant email for Stripe action" do
+        expect(Delayed::Job.first.handler).to include("notify_orphan_payment_intent_to_cancel")
+      end
+    end
+
     describe "if not all fields are filled in" do
       before do
         post_request(
@@ -63,12 +115,12 @@ RSpec.describe "POST /api/v1/booking", type: :request do
         )
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["Message can't be blank"]
+        expect(json_response["errors"]).to eq ["Message can't be blank"]
       end
 
       it "with correct number of sent emails" do
@@ -89,44 +141,20 @@ RSpec.describe "POST /api/v1/booking", type: :request do
         )
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with 400 status" do
+        expect(response.status).to eq 400
       end
 
       it "with relevant error" do
-        expect(json_response["error"]).to eq ["Message is too long (maximum is 400 characters)"]
-      end
-    end
-
-    describe "if host already accepted someone else's booking request with similar dates" do
-      before do
-        post_request(
-          "Lorem Ipsum is simply dummy text.",
-          host_profile.user.nickname,
-          [1_563_168_800_000, 1_563_188_800_000]
-        )
+        expect(json_response["errors"]).to eq ["Message is too long (maximum is 400 characters)"]
       end
 
-      it "with 422 status" do
-        expect(response.status).to eq 422
+      it "with correct number of sent emails" do
+        expect(Delayed::Job.all.count).to eq 1
       end
 
-      it "with relevant error" do
-        expect(json_response["error"]).to eq ["Someone else just requested to book these days with this host!"]
-      end
-    end
-
-    describe "if host deletes their account in the proccess" do
-      before { post_request("Lorem Ipsum is simply dummy text.", "John Doe", [1_562_803_200_000, 1_562_889_600_000]) }
-
-      it "with 422 status" do
-        expect(response.status).to eq 422
-      end
-
-      it "with relevant error" do
-        expect(json_response["error"]).to eq [
-             "Booking cannot be created because the host requested an account deletion! Please find another host in the results page."
-           ]
+      it "with relevant email for Stripe action" do
+        expect(Delayed::Job.first.handler).to include("notify_orphan_payment_intent_to_cancel")
       end
     end
 

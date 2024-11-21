@@ -12,12 +12,24 @@ Rails.application.routes.draw do
         resources :users, only: %i[show update]
         resources :contact_us, only: [:index]
         resources :host_profiles, only: %i[index show create update]
-        resources :bookings, only: %i[index create update]
-        resources :conversations, only: %i[create index show update]
+        resources :bookings, only: %i[create update]
+        resources :conversations, only: %i[index show create update]
         resources :reviews, only: %i[index show create update]
 
         namespace :random_reviews do
           resources :reviews, only: [:index]
+        end
+
+        namespace :fetch_booking_actions do
+          resources :incoming_stats, only: [:index]
+          resources :outgoing_stats, only: [:index]
+          resources :host_unavailable_dates, only: [:index]
+          resources :incoming_requests, only: [:index]
+          resources :incoming_upcoming, only: [:index]
+          resources :incoming_history, only: [:index]
+          resources :outgoing_requests, only: [:index]
+          resources :outgoing_upcoming, only: [:index]
+          resources :outgoing_history, only: [:index]
         end
 
         namespace :stripe_actions do

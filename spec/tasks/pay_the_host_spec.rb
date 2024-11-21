@@ -68,6 +68,9 @@ describe "rake bookings:pay_the_host", type: :task do
 
     before do
       @subject = task.execute
+      unpaid_accepted_booking_past.reload
+      unpaid_accepted_booking_future.reload
+      paid_accepted_booking.reload
       @jobs = Delayed::Job.all
     end
 
@@ -85,6 +88,18 @@ describe "rake bookings:pay_the_host", type: :task do
 
     it "logs to stdout (stripe error)" do
       expect(@std_output).to match("No such destination:")
+    end
+
+    it "does not update an eligible to be paid unpaid booking" do
+      expect(unpaid_accepted_booking_past.paid).to eq false
+    end
+
+    it "does not update future booking" do
+      expect(unpaid_accepted_booking_future.paid).to eq false
+    end
+
+    it "does not update an already paid booking" do
+      expect(paid_accepted_booking.paid).to eq true
     end
   end
 end
